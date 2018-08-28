@@ -6,7 +6,7 @@
 
 ## 文档
 
-- [API 文档](http://roadofgame.com/Play-SDK-CSharp/html/)
+- [API 文档](https://leancloud.github.io/Play-SDK-CSharp/html/)
 
 ## 编译
 
