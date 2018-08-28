@@ -8,7 +8,7 @@
     <RootNamespace>SDKNet35</RootNamespace>
     <AssemblyName>Play</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <ReleaseVersion>0.4.5</ReleaseVersion>
+    <ReleaseVersion>0.4.6</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -29,9 +29,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>libs\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="websocket-sharp">
       <HintPath>libs\websocket-sharp.dll</HintPath>
     </Reference>
