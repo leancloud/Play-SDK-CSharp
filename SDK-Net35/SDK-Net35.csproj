@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{CB2D9FFF-530B-47AB-A3E4-F8117A222D32}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>SDKNet35</RootNamespace>
+    <AssemblyName>Play</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <ReleaseVersion>0.4.0</ReleaseVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ExternalConsole>true</ExternalConsole>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ExternalConsole>true</ExternalConsole>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>libs\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="websocket-sharp">
+      <HintPath>libs\websocket-sharp.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\Config.cs" />
+    <Compile Include="src\Event.cs" />
+    <Compile Include="src\LobbyRoom.cs" />
+    <Compile Include="src\Play.cs" />
+    <Compile Include="src\Player.cs" />
+    <Compile Include="src\Region.cs" />
+    <Compile Include="src\Room.cs" />
+    <Compile Include="src\handler\ErrorHandler.cs" />
+    <Compile Include="src\handler\GameHandler.cs" />
+    <Compile Include="src\handler\LobbyHandler.cs" />
+    <Compile Include="src\RoomOptions.cs" />
+    <Compile Include="src\SendEventOptions.cs" />
+    <Compile Include="src\utilities\Json.cs" />
+    <Compile Include="src\handler\EventHandler.cs" />
+    <Compile Include="src\utilities\Logger.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="src\utilities\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Unity.Compat\Unity.Compat.csproj">
+      <Project>{8473BEF6-7086-4414-AAD6-264967A7FE75}</Project>
+      <Name>Unity.Compat</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+</Project>

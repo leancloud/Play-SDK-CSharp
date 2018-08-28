@@ -1,0 +1,25 @@
+language: csharp
+solution: Play-SDK-CSharp.sln
+
+before_install:
+- sudo apt-get install doxygen
+addons:
+  apt:
+    update: true
+
+before_deploy:
+- sh ./script/package.sh
+
+deploy:
+  provider: releases
+  api_key:
+    secure: c5QRGpK/xIdzhghL5tYSBr6ARwP8HsM1vgpWoEWC0U/ha/pVdkTjQw6H2lAaJFug1e4caYAxpzB3j7LFn92WXU5dw3/euobH0ctjM5F88M0glOx+S6DGbE0Gryw1IJomj4zTYxloH2sBcE2iyekvgMIxmghulFKX77bJGXqgV21EK5xvSK0xQ6ODdpv6SCMOeekQhEfJm24PzgEkSKxC9puD87k89Qczyjl53wuKpOdq9M4P1kj1dJHFTPydc9A9Yosdf4JtmCEmIphhf4NoHmGgnNoyn9WdtbxbX7lNAvvPpkN+Vf7Mq19KP5OAWUpy0cfP9FylhuJLvezFqAObUYTaYVVMe776fEtoMzYOTUNBR+kfq/2W7Kll6Rme5H3+I1CSeolGrn160kFg5QX7+WIVFNJgfmnwLwJSvcdySxkt9EVZE+QD+Rxzyq3lOTr7h7deCpKl6P4HQrpWvWDQqQiTIr6/lB8KwxPGQ4kn00DRGb9+Nm6b3DxulXgGwMLom81XYE7ebb3UPNe+zwq1E02vFD1onaK74dpE7nU2BmQ/1cCFSBmcke/YHz0DcNxqh3xKaZVNmhzMg2ZES99TKEEMcMsYb9J2/HpDpPrzMJo508ZoqYkUPSITGcHKCpzQRc72IHTDQW+m61bse6oRKkMYd30qAj0c0HaEQCiYmCk=
+  file: "SDK.zip"
+  skip_cleanup: true
+  on:
+    repo: onerain88/Play-SDK-CSharp
+    tags: true
+    
+after_deploy:
+- doxygen Doxyfile
+- sh ./script/deploy.sh
