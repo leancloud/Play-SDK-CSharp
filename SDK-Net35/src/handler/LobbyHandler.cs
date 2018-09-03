@@ -86,6 +86,7 @@ namespace LeanCloud.Play {
 
         static void HandleSessionOpen(Play play, Dictionary<string, object> msg)
         {
+            play.PlayState = PlayState.LOBBY_OPEN;
             var player = new Player(play);
             player.UserId = play.UserId;
             play.Player = player;

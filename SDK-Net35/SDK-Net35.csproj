@@ -50,6 +50,7 @@
     <Compile Include="src\utilities\Json.cs" />
     <Compile Include="src\handler\EventHandler.cs" />
     <Compile Include="src\utilities\Logger.cs" />
+    <Compile Include="src\PlayState.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\utilities\" />

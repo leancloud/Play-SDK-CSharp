@@ -29,8 +29,10 @@ namespace Test
             thread.Start();
         }
 
-        public void Stop() {
-            this.Play.Disconnect();
+        public void Stop(bool disconnect = true) {
+            if (disconnect) {
+                this.Play.Disconnect();
+            }
             this.Flag = false;
         }
     }

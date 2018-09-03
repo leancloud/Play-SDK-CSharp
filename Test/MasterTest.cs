@@ -83,7 +83,7 @@ namespace Test
             {
                 Player newMaster = evtData["newMaster"] as Player;
                 Assert.AreEqual(p2.Room.MasterActorId, newMaster.ActorId);
-                b1.Stop();
+                b1.Stop(false);
                 b2.Stop();
                 resetEvent.Set();
             });

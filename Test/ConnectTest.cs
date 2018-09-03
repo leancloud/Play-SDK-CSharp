@@ -49,7 +49,6 @@ namespace Test
                 if (code == 4102) {
                     Console.WriteLine("connect error");
                     b1.Stop();
-                    b2.Stop();
                     resetEvent.Set();
                 }
             });
@@ -73,7 +72,7 @@ namespace Test
                     play.Reconnect();
                     reconnectFlag = true;
                 } else {
-                    beh.Stop();
+                    beh.Stop(false);
                     resetEvent.Set();
                 }
             });
@@ -97,7 +96,7 @@ namespace Test
             });
             play.On(Event.DISCONNECTED, (evtData) => {
                 Console.WriteLine("disconnected");
-                beh.Stop();
+                beh.Stop(false);
                 resetEvent.Set();
             });
 
