@@ -101,6 +101,7 @@ namespace LeanCloud.Play
 
         static void HandleSessionOpen(Play play, Dictionary<string, object> msg)
         {
+            play.PlayState = PlayState.GAME_OPEN;
             play.CachedRoomMsg["i"] = play.GetMsgId();
             play.SendGameMessage(play.CachedRoomMsg);
         }
@@ -294,8 +295,7 @@ namespace LeanCloud.Play
         static void HandleLeaveRoom(Play play, Dictionary<string, object> msg) {
             play.Room = null;
             play.Player = null;
-            play.Emit(Event.ROOM_LEFT);
-            play.ConnectToMaster();
+            play.ConnectToMaster(true);
         }
 
         static void HandleEvent(Play play, Dictionary<string, object> msg) {

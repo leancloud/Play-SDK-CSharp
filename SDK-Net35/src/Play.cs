@@ -109,11 +109,17 @@ namespace LeanCloud.Play {
             get; internal set;
         }
 
+        internal PlayState PlayState {
+            get; set;
+        }
+
 		public Play() {
 			this.eventListeners = new Dictionary<Event, List<Action<Dictionary<string, object>>>>();
             this.waitingMessageQueue = new Queue<Dictionary<string, object>>();
             this.handingMessageQueue = new Queue<Dictionary<string, object>>();
             this.AutoJoinLobby = false;
+            this.CachedRoomMsg = null;
+            this.PlayState = PlayState.CLOSED;
 		}
 
         /// <summary>
@@ -132,9 +138,14 @@ namespace LeanCloud.Play {
         /// 建立连接
         /// </summary>
         /// <param name="gameVersion">游戏版本号，不同的游戏版本号将路由到不同的服务端，默认值为 0.0.1</param>
-		public void Connect(string gameVersion = "0.0.1") {
-            if (this.UserId.IsNullOrEmpty()) {
+		public void Connect(string gameVersion = "0.0.1")
+        {
+            if (this.UserId.IsNullOrEmpty())
+            {
                 throw new Exception("UserId is null");
+            }
+            if (this.PlayState != PlayState.CLOSED) {
+                throw new Exception(string.Format("play state error: {0}", this.PlayState));
             }
             if (this.connectTimer != null) {
                 Logger.Debug("Wating for connect");
@@ -157,6 +168,9 @@ namespace LeanCloud.Play {
 		}
 
         void _Connect(string gameVer) { 
+            if (string.IsNullOrEmpty(gameVer)) {
+                throw new ArgumentException(string.Format("{0} is not a string", gameVer));
+            }
             this.gameVersion = gameVer;
             var masterURL = Config.EastCNServerURL;
             switch (this.region)
@@ -173,6 +187,7 @@ namespace LeanCloud.Play {
                 default:
                     break;
             }
+            this.PlayState = PlayState.CONNECTING;
             new Thread(() =>
             {
                 var client = new WebClient();
@@ -242,6 +257,10 @@ namespace LeanCloud.Play {
         /// 断开连接
         /// </summary>
         public void Disconnect() {
+            if (this.PlayState != PlayState.LOBBY_OPEN && this.PlayState != PlayState.GAME_OPEN) {
+                throw new Exception(string.Format("error play state: {0}", this.PlayState));
+            }
+            this.PlayState = PlayState.CLOSING;
             this.StopKeepAlive();
             if (this.webSocket != null) {
                 this.webSocket.Close();
@@ -253,6 +272,9 @@ namespace LeanCloud.Play {
         /// 加入大厅
         /// </summary>
 		public void JoinLobby() {
+            if (this.PlayState != PlayState.LOBBY_OPEN) {
+                throw new Exception(string.Format("error play state: {0}", this.PlayState));
+            }
             Dictionary<string, object> msg = new Dictionary<string, object>() {
                 { "cmd", "lobby" },
                 { "op", "add" },
@@ -265,6 +287,10 @@ namespace LeanCloud.Play {
         /// 离开大厅
         /// </summary>
         public void LeaveLobby() {
+            if (this.PlayState != PlayState.LOBBY_OPEN)
+            {
+                throw new Exception(string.Format("error play state: {0}", this.PlayState));
+            }
             Dictionary<string, object> msg = new Dictionary<string, object>() { 
                 { "cmd", "lobby" },
                 { "op", "remove" },
@@ -280,6 +306,9 @@ namespace LeanCloud.Play {
         /// <param name="roomOptions">创建房间选项，默认值为 null</param>
         /// <param name="expectedUserIds">邀请好友 ID 数组，默认值为 null</param>
         public void CreateRoom(string roomName = null, RoomOptions roomOptions = null, List<string> expectedUserIds = null) {
+            if (this.PlayState != PlayState.LOBBY_OPEN) {
+                throw new Exception(string.Format("error play state: {0}", this.PlayState));
+            }
             this.CachedRoomMsg = new Dictionary<string, object>() {
                 { "cmd", "conv" },
                 { "op", "start" },
@@ -311,6 +340,10 @@ namespace LeanCloud.Play {
             if (string.IsNullOrEmpty(roomName)) {
                 throw new ArgumentException("roomName is null");
             }
+            if (this.PlayState != PlayState.LOBBY_OPEN)
+            {
+                throw new Exception(string.Format("error play state: {0}", this.PlayState));
+            }
             this.CachedRoomMsg = new Dictionary<string, object>() {
                 { "cmd", "conv" },
                 { "op", "add" },
@@ -333,6 +366,10 @@ namespace LeanCloud.Play {
             if (string.IsNullOrEmpty(roomName)) {
                 throw new Exception("roomName is null");
             }
+            if (this.PlayState != PlayState.LOBBY_OPEN)
+            {
+                throw new Exception(string.Format("error play state: {0}", this.PlayState));
+            }
             this.CachedRoomMsg = new Dictionary<string, object>() { 
                 { "cmd", "conv" },
                 { "op", "add" },
@@ -352,6 +389,10 @@ namespace LeanCloud.Play {
         public void JoinOrCreateRoom(string roomName, RoomOptions roomOptions = null, List<string> expectedUserIds = null) {
             if (string.IsNullOrEmpty(roomName)) {
                 throw new Exception("roomName is null");
+            }
+            if (this.PlayState != PlayState.LOBBY_OPEN)
+            {
+                throw new Exception(string.Format("error play state: {0}", this.PlayState));
             }
             this.CachedRoomMsg = new Dictionary<string, object>() {
                 { "cmd", "conv" },
@@ -395,6 +436,10 @@ namespace LeanCloud.Play {
                 { "op", "add" },
                 { "i", this.GetMsgId() }
             };
+            if (this.PlayState != PlayState.LOBBY_OPEN)
+            {
+                throw new Exception(string.Format("error play state: {0}", this.PlayState));
+            }
             if (matchProperties != null) {
                 this.CachedRoomMsg.Add("expectAttr", matchProperties);
             }
@@ -427,6 +472,10 @@ namespace LeanCloud.Play {
             if (this.Room == null) {
                 throw new Exception("room is null");
             }
+            if (this.PlayState != PlayState.GAME_OPEN)
+            {
+                throw new Exception(string.Format("error play state: {0}", this.PlayState));
+            }
             var msg = new Dictionary<string, object>() {
                 { "cmd", "conv" },
                 { "op", "open" },
@@ -444,6 +493,10 @@ namespace LeanCloud.Play {
             if (this.Room == null) {
                 throw new Exception("room is null");
             }
+            if (this.PlayState != PlayState.GAME_OPEN)
+            {
+                throw new Exception(string.Format("error play state: {0}", this.PlayState));
+            }
             var msg = new Dictionary<string, object>() {
                 { "cmd", "conv" },
                 { "op", "visible" },
@@ -460,6 +513,10 @@ namespace LeanCloud.Play {
         public void SetMaster(int newMasterId) {
             if (this.Room == null) {
                 throw new ArgumentException("room is null");
+            }
+            if (this.PlayState != PlayState.GAME_OPEN)
+            {
+                throw new Exception(string.Format("error play state: {0}", this.PlayState));
             }
             var msg = new Dictionary<string, object>() {
                 { "cmd", "conv" },
@@ -483,6 +540,10 @@ namespace LeanCloud.Play {
             if (this.Player == null) {
                 throw new Exception("player is null");
             }
+            if (this.PlayState != PlayState.GAME_OPEN)
+            {
+                throw new Exception(string.Format("error play state: {0}", this.PlayState));
+            }
             var msg = new Dictionary<string, object>() { 
                 { "cmd", "direct" },
                 { "i", this.GetMsgId() },
@@ -501,6 +562,10 @@ namespace LeanCloud.Play {
         /// 离开房间
         /// </summary>
         public void LeaveRoom() {
+            if (this.PlayState != PlayState.GAME_OPEN)
+            {
+                throw new Exception(string.Format("error play state: {0}", this.PlayState));
+            }
             var msg = new Dictionary<string, object>() {
                 { "cmd", "conv" },
                 { "op", "remove" },
@@ -511,6 +576,13 @@ namespace LeanCloud.Play {
         }
 
         internal void SetRoomCustomProperties(Dictionary<string, object> properties, Dictionary<string, object> expectedValues) {
+            if (properties == null) {
+                throw new Exception("room props is null");
+            }
+            if (this.PlayState != PlayState.GAME_OPEN)
+            {
+                throw new Exception(string.Format("error play state: {0}", this.PlayState));
+            }
             Dictionary<string, object> msg = new Dictionary<string, object>() {
                 { "cmd", "conv" },
                 { "op", "update" },
@@ -524,6 +596,13 @@ namespace LeanCloud.Play {
         }
 
         internal void SetPlayerCustomProperties(int playerId, Dictionary<string, object> properties, Dictionary<string, object> expectedValues) {
+            if (properties == null) {
+                throw new Exception("player props is null");
+            }
+            if (this.PlayState != PlayState.GAME_OPEN)
+            {
+                throw new Exception(string.Format("error play state: {0}", this.PlayState));
+            }
             Dictionary<string, object> msg = new Dictionary<string, object>() { 
                 { "cmd", "conv" },
                 { "op", "update-player-prop" },
@@ -621,6 +700,7 @@ namespace LeanCloud.Play {
         }
 
         internal void ConnectToMaster(bool fromGame = false) {
+            this.PlayState = PlayState.CONNECTING;
             this.CleanUp();
             this.GameToLobby = fromGame;
             this.webSocket = new WebSocket(this.masterServer);
@@ -651,6 +731,7 @@ namespace LeanCloud.Play {
 
         void OnLobbyWebSocketClose(object sender, CloseEventArgs args) {
             Logger.Debug("Lobby websocket close");
+            this.PlayState = PlayState.CLOSED;
             this.webSocket.OnOpen -= OnLobbyWebSocketOpen;
             this.webSocket.OnMessage -= OnLobbyWebSocketMessage;
             this.webSocket.OnClose -= OnLobbyWebSocketClose;
@@ -676,6 +757,7 @@ namespace LeanCloud.Play {
         }
 
         internal void ConnectToGame() {
+            this.PlayState = PlayState.CONNECTING;
             this.CleanUp();
             this.webSocket = new WebSocket(this.GameServer);
             this.webSocket.OnOpen += OnGameWebSocketOpen;
@@ -704,6 +786,7 @@ namespace LeanCloud.Play {
 
         void OnGameWebSocketClose(object sender, CloseEventArgs args) {
             Logger.Debug("Game websocket close");
+            this.PlayState = PlayState.CLOSED;
             if (args.Code == 1006)
             {
                 if (this.masterServer == this.secondaryServer)

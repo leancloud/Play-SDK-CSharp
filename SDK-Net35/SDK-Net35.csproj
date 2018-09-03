@@ -8,7 +8,7 @@
     <RootNamespace>SDKNet35</RootNamespace>
     <AssemblyName>Play</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <ReleaseVersion>0.4.6</ReleaseVersion>
+    <ReleaseVersion>0.4.7</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -50,6 +50,7 @@
     <Compile Include="src\utilities\Json.cs" />
     <Compile Include="src\handler\EventHandler.cs" />
     <Compile Include="src\utilities\Logger.cs" />
+    <Compile Include="src\PlayState.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\utilities\" />
