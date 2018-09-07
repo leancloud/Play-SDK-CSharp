@@ -24,6 +24,7 @@ namespace LeanCloud.Play {
 
         private const int LobbyKeepAliveDuration = 120000;
         private const int GameKeepAliveDuration = 10000;
+        private const int MaxNoPongTimes = 3;
 
 		private string appId = null;
 		private string appKey = null;
@@ -34,7 +35,8 @@ namespace LeanCloud.Play {
         private int connectFailedCount = 0;
         private long nextConnectTimestamp = 0;
         private System.Timers.Timer connectTimer = null;
-        private System.Timers.Timer keepAliveTimer = null;
+        private System.Timers.Timer ping = null;
+        private System.Timers.Timer pong = null;
         private long serverValidTimestamp = 0;
 
 		private string gameVersion = null;
@@ -261,7 +263,7 @@ namespace LeanCloud.Play {
                 throw new Exception(string.Format("error play state: {0}", this.PlayState));
             }
             this.PlayState = PlayState.CLOSING;
-            this.StopKeepAlive();
+            this.StopPing();
             if (this.webSocket != null) {
                 this.webSocket.Close();
                 this.webSocket = null;
@@ -726,6 +728,8 @@ namespace LeanCloud.Play {
                 msgDict.Add(MsgTypeKey, LobbyMsgType);
                 // 2. 插入待处理队列
                 this.waitingMessageQueue.Enqueue(msgDict);
+                this.StopPong();
+                this.StartPongListener(LobbyKeepAliveDuration);
             }
         }
 
@@ -781,6 +785,8 @@ namespace LeanCloud.Play {
                 msgObj.Add(MsgTypeKey, GameMsgType);
                 // 2. 插入待处理队列
                 this.waitingMessageQueue.Enqueue(msgObj);
+                this.StopPong();
+                this.StartPongListener(GameKeepAliveDuration);
             }
         }
 
@@ -805,7 +811,7 @@ namespace LeanCloud.Play {
             {
                 this.EmitInMainThread(Event.DISCONNECTED);
             }
-            StopKeepAlive();
+            StopPing();
         }
 
         void CleanUp() {
@@ -864,19 +870,35 @@ namespace LeanCloud.Play {
             Logger.Debug("{0} => {1}", this.UserId, msgStr);
             this.webSocket.Send(msgStr);
             // 心跳包
-            this.StopKeepAlive();
-            this.keepAliveTimer = new System.Timers.Timer(duration);
-            this.keepAliveTimer.Elapsed += (sender, e) => {
+            this.StopPing();
+            this.ping = new System.Timers.Timer(duration);
+            this.ping.Elapsed += (sender, e) => {
                 this.webSocket.Ping();
             };
-            this.keepAliveTimer.Start();
+            this.ping.Start();
         }
 
-        void StopKeepAlive() {
-            if (this.keepAliveTimer != null) {
-                this.keepAliveTimer.Stop();
-                this.keepAliveTimer = null;
+        void StopPing() {
+            if (this.ping != null) {
+                this.ping.Stop();
+                this.ping = null;
             }
+        }
+
+        void StopPong() {
+            if (this.pong != null) {
+                this.pong.Stop();
+                this.pong = null;
+            }
+        }
+
+        void StartPongListener(int duration) {
+            this.pong = new System.Timers.Timer(duration * MaxNoPongTimes);
+            this.pong.Elapsed += (sender, e) =>
+            {
+                this.webSocket.Close();
+            };
+            this.pong.Start();
         }
 
 		internal int GetMsgId() {
