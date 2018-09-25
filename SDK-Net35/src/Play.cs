@@ -211,7 +211,8 @@ namespace LeanCloud.Play {
                     long ttl = (long)response["ttl"];
                     this.serverValidTimestamp = now + ttl * 1000;
                     this.ConnectToMaster();
-                } catch (WebException) {
+                } catch (WebException e) {
+                    Logger.Error(e.Message);
                     this.connectFailedCount++;
                     long now = (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds;
                     this.nextConnectTimestamp = now + (int)Math.Pow(2, this.connectFailedCount) * 1000;
