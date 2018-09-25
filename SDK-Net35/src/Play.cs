@@ -740,8 +740,8 @@ namespace LeanCloud.Play {
             this.webSocket.OnMessage -= OnLobbyWebSocketMessage;
             this.webSocket.OnClose -= OnLobbyWebSocketClose;
             this.webSocket = null;
-            if (args.Code == 1006)
-            {
+            if (this.PlayState == PlayState.CONNECTING) {
+                // 连接失败
                 if (this.masterServer == this.secondaryServer)
                 {
                     // 连接失败
@@ -754,8 +754,8 @@ namespace LeanCloud.Play {
                     this.ConnectToMaster();
                 }
             }
-            else
-            {
+            else {
+                // 断开连接
                 this.EmitInMainThread(Event.DISCONNECTED);
             }
         }
@@ -866,16 +866,22 @@ namespace LeanCloud.Play {
             if (msg == null) {
                 throw new Exception("msg is null");
             }
-            string msgStr = Json.Encode(msg);
-            Logger.Debug("{0} => {1}", this.UserId, msgStr);
-            this.webSocket.Send(msgStr);
-            // 心跳包
-            this.StopPing();
-            this.ping = new System.Timers.Timer(duration);
-            this.ping.Elapsed += (sender, e) => {
-                this.webSocket.Ping();
-            };
-            this.ping.Start();
+            if (this.webSocket.ReadyState == WebSocketState.Open) {
+                string msgStr = Json.Encode(msg);
+                Logger.Debug("{0} => {1}", this.UserId, msgStr);
+                this.webSocket.Send(msgStr);
+                // 心跳包
+                this.StopPing();
+                this.ping = new System.Timers.Timer(duration);
+                this.ping.Elapsed += (sender, e) => {
+                    this.webSocket.Ping();
+                };
+                this.ping.Start();
+            }
+            else {
+                this.StopPing();
+                this.StopPong();
+            }
         }
 
         void StopPing() {
