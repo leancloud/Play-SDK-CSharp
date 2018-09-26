@@ -6,9 +6,13 @@ namespace Test
 {
     public class Utility
     {
+        static string APP_ID = "1yzaPvxYPs2DLQXIccBzb0k1-gzGzoHsz";
+        static string APP_KEY = "Nlt1SIVxxFrMPut6SvfEJiYT";
+        static Region APP_REGION = Region.NorthChina;
+
         private static Play NewPlay(string userId) {
             var play = new Play();
-            play.Init("315XFAYyIGPbd98vHPCBnLre-9Nh9j0Va", "Y04sM6TzhMSBmCMkwfI3FpHc", Region.EastChina);
+            play.Init(APP_ID, APP_KEY, APP_REGION);
             play.UserId = userId;
             return play;
         }

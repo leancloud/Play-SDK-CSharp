@@ -33,22 +33,34 @@ namespace Test
             var b2 = Utility.NewBehavior("tc2");
             var p1 = b1.Play;
             var p2 = b2.Play;
+            var f1 = false;
+            var f2 = false;
 
             p1.On(Event.CONNECTED, (eventData) => {
                 Console.WriteLine("play1 connected");
                 p2.Connect();
             });
-
-            p2.On(Event.CONNECTED, (eventData) => {
-                Console.WriteLine("play2 connected");
-            });
-            p2.On(Event.ERROR, (eventData) =>
+            p1.On(Event.ERROR, (eventData) =>
             {
                 Console.WriteLine("error event");
                 int code = (int)eventData["code"];
-                if (code == 4102) {
+                if (code == 4102)
+                {
                     Console.WriteLine("connect error");
-                    b1.Stop();
+                    f1 = true;
+                    if (f1 && f2) {
+                        b2.Stop();
+                        resetEvent.Set();
+                    }
+                }
+            });
+
+            p2.On(Event.CONNECTED, (eventData) => {
+                Console.WriteLine("play2 connected");
+                f2 = true;
+                if (f1 && f2)
+                {
+                    b2.Stop();
                     resetEvent.Set();
                 }
             });
