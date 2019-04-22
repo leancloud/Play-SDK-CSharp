@@ -878,7 +878,7 @@ namespace LeanCloud.Play {
                 this.StopPing();
                 this.ping = new System.Timers.Timer(duration);
                 this.ping.Elapsed += (sender, e) => {
-                    this.webSocket.Ping();
+                    this.webSocket.Send("{}");
                 };
                 this.ping.Start();
             }
@@ -903,15 +903,26 @@ namespace LeanCloud.Play {
         }
 
         void StartPongListener(int duration) {
+            this.pong = new System.Timers.Timer(duration);
+            this.pong.Elapsed += (sender, e) => {
+                this.pong.Stop();
+                this.webSocket.Send("{}");
+                WaitPong(duration);
+            };
+            this.pong.Start();
+        }
+
+        void WaitPong(int duration) {
             this.pong = new System.Timers.Timer(duration * MaxNoPongTimes);
             this.pong.Elapsed += (sender, e) =>
             {
+                Logger.Debug("no pong close websocket");
                 this.webSocket.Close();
             };
             this.pong.Start();
         }
 
-		internal int GetMsgId() {
+        internal int GetMsgId() {
 			this.msgId++;
 			return this.msgId;
 		}
