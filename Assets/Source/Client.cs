@@ -262,13 +262,14 @@ namespace LeanCloud.Play {
             }
         }
 
-        public async Task<bool> SetRoomOpened(bool opened) {
+        public async Task<bool> SetRoomOpen(bool opened) {
             if (state != PlayState.GAME) {
                 throw new PlayException(PlayExceptionCode.StateError,
                     string.Format("You cannot call SetRoomOpened() on {0} state", state.ToString()));
             }
-            Room.Opened = await gameConn.SetRoomOpened(opened);
-            return Room.Opened;
+            var sysProps = await gameConn.SetRoomOpen(opened);
+            Room.MergeSystemProps(sysProps);
+            return Room.Open;
         }
 
         public async Task<bool> SetRoomVisible(bool visible) {
@@ -276,8 +277,58 @@ namespace LeanCloud.Play {
                 throw new PlayException(PlayExceptionCode.StateError,
                     string.Format("You cannot call SetRoomVisible() on {0} state", state.ToString()));
             }
-            Room.Visible = await gameConn.SetRoomVisible(visible);
+            var sysProps = await gameConn.SetRoomVisible(visible);
+            Room.MergeSystemProps(sysProps);
             return Room.Visible;
+        }
+
+        public async Task<int> SetRoomMaxPlayerCount(int count) {
+            if (state != PlayState.GAME) {
+                throw new PlayException(PlayExceptionCode.StateError,
+                    string.Format("You cannot call SetRoomMaxPlayerCount() on {0} state", state.ToString()));
+            }
+            var sysProps = await gameConn.SetRoomMaxPlayerCount(count);
+            Room.MergeSystemProps(sysProps);
+            return Room.MaxPlayerCount;
+        }
+
+        public async Task<List<string>> SetRoomExpectedUserIds(List<string> expectedUserIds) {
+            if (state != PlayState.GAME) {
+                throw new PlayException(PlayExceptionCode.StateError,
+                    string.Format("You cannot call SetRoomExpectedUserIds() on {0} state", state.ToString()));
+            }
+            var sysProps = await gameConn.SetRoomExpectedUserIds(expectedUserIds);
+            Room.MergeSystemProps(sysProps);
+            return Room.ExpectedUserIds;
+        }
+
+        public async Task ClearRoomExpectedUserIds() {
+            if (state != PlayState.GAME) {
+                throw new PlayException(PlayExceptionCode.StateError,
+                    string.Format("You cannot call ClearRoomExpectedUserIds() on {0} state", state.ToString()));
+            }
+            var sysProps = await gameConn.ClearRoomExpectedUserIds();
+            Room.MergeSystemProps(sysProps);
+        }
+
+        public async Task<List<string>> AddRoomExpectedUserIds(List<string> expectedUserIds) {
+            if (state != PlayState.GAME) {
+                throw new PlayException(PlayExceptionCode.StateError,
+                    string.Format("You cannot call AddRoomExpectedUserIds() on {0} state", state.ToString()));
+            }
+            var sysProps = await gameConn.AddRoomExpectedUserIds(expectedUserIds);
+            Room.MergeSystemProps(sysProps);
+            return Room.ExpectedUserIds;
+        }
+
+        public async Task<List<string>> RemoveRoomExpectedUserIds(List<string> expectedUserIds) {
+            if (state != PlayState.GAME) {
+                throw new PlayException(PlayExceptionCode.StateError,
+                    string.Format("You cannot call RemoveRoomExpectedUserIds() on {0} state", state.ToString()));
+            }
+            var sysProps = await gameConn.RemoveRoomExpectedUserIds(expectedUserIds);
+            Room.MergeSystemProps(sysProps);
+            return Room.ExpectedUserIds;
         }
 
         public async Task<Player> SetMaster(int newMasterId) {
@@ -532,10 +583,10 @@ namespace LeanCloud.Play {
         }
 
         void HandleRoomOpenChanged(Message msg) { 
-            if (msg.TryGetValue("toggle", out object openedObj) &&
-                bool.TryParse(openedObj.ToString(), out bool opened)) {
-                Room.Opened = opened;
-                OnRoomOpenChanged?.Invoke(opened);
+            if (msg.TryGetValue("toggle", out object openObj) &&
+                bool.TryParse(openObj.ToString(), out bool open)) {
+                Room.Open = open;
+                OnRoomOpenChanged?.Invoke(open);
             } else {
                 Logger.Error("Handle room open changed error: {0}", msg.ToJson());
             }

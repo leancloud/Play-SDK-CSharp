@@ -56,26 +56,75 @@ namespace LeanCloud.Play {
             await Send(msg);
         }
 
-        internal async Task<bool> SetRoomOpened(bool opened) {
-            var msg = Message.NewRequest("conv", "open");
-            msg["toggle"] = opened;
+        internal async Task<Dictionary<string, object>> SetRoomOpen(bool open) {
+            var msg = Message.NewRequest("conv", "update-system-property");
+            msg["sysAttr"] = new Dictionary<string, object> {
+                { "open", open }
+            };
             var res = await Send(msg);
-            if (res.TryGetValue("toggle", out object openedObj) &&
-                bool.TryParse(openedObj.ToString(), out bool open)) {
-                return open;
-            }
-            return opened;
+            return res["sysAttr"] as Dictionary<string, object>;
         }
 
-        internal async Task<bool> SetRoomVisible(bool visible) {
-            var msg = Message.NewRequest("conv", "visible");
-            msg["toggle"] = visible;
+        internal async Task<Dictionary<string, object>> SetRoomVisible(bool visible) {
+            var msg = Message.NewRequest("conv", "update-system-property");
+            msg["sysAttr"] = new Dictionary<string, object> {
+                { "open", visible }
+            };
             var res = await Send(msg);
-            if (res.TryGetValue("toggle", out object visibleObj) &&
-                bool.TryParse(visibleObj.ToString(), out bool v)) {
-                return v;
-            }
-            return visible;
+            return res["sysAttr"] as Dictionary<string, object>;
+        }
+
+        internal async Task<Dictionary<string, object>> SetRoomMaxPlayerCount(int count) {
+            var msg = Message.NewRequest("conv", "update-system-property");
+            msg["sysAttr"] = new Dictionary<string, object> {
+                { "maxMembers", count }
+            };
+            var res = await Send(msg);
+            return res["sysAttr"] as Dictionary<string, object>;
+        }
+
+        internal async Task<Dictionary<string, object>> SetRoomExpectedUserIds(List<string> expectedUserIds) {
+            var msg = Message.NewRequest("conv", "update-system-property");
+            msg["sysAttr"] = new Dictionary<string, object> {
+                { "expectMembers", new Dictionary<string, object> {
+                    { "$set", expectedUserIds.ToList<object>() }
+                } }
+            };
+            var res = await Send(msg);
+            return res["sysAttr"] as Dictionary<string, object>;
+        }
+
+        internal async Task<Dictionary<string, object>> ClearRoomExpectedUserIds() {
+            var msg = Message.NewRequest("conv", "update-system-property");
+            msg["sysAttr"] = new Dictionary<string, object> {
+                { "expectMembers", new Dictionary<string, object> {
+                    { "$drop", true }
+                } }
+            };
+            var res = await Send(msg);
+            return res["sysAttr"] as Dictionary<string, object>;
+        }
+
+        internal async Task<Dictionary<string, object>> AddRoomExpectedUserIds(List<string> expectedUserIds) {
+            var msg = Message.NewRequest("conv", "update-system-property");
+            msg["sysAttr"] = new Dictionary<string, object> {
+                { "expectMembers", new Dictionary<string, object> {
+                    { "$add", expectedUserIds.ToList<object>() }
+                } }
+            };
+            var res = await Send(msg);
+            return res["sysAttr"] as Dictionary<string, object>;
+        }
+
+        internal async Task<Dictionary<string, object>> RemoveRoomExpectedUserIds(List<string> expectedUserIds) {
+            var msg = Message.NewRequest("conv", "update-system-property");
+            msg["sysAttr"] = new Dictionary<string, object> {
+                { "expectMembers", new Dictionary<string, object> {
+                    { "$remove", expectedUserIds.ToList<object>() }
+                } }
+            };
+            var res = await Send(msg);
+            return res["sysAttr"] as Dictionary<string, object>;
         }
 
         internal async Task<int> SetMaster(int newMasterId) {
