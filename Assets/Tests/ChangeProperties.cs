@@ -51,6 +51,7 @@ namespace LeanCloud.Play.Test
             }
             c0.Close();
             c1.Close();
+            Logger.LogDelegate -= Utils.Log;
         }
 
         [Test]
@@ -79,6 +80,7 @@ namespace LeanCloud.Play.Test
             await c.SetRoomCustomProperties(newProps, expectedValues);
 
             c.Close();
+            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]
@@ -134,6 +136,7 @@ namespace LeanCloud.Play.Test
             }
             c0.Close();
             c1.Close();
+            Logger.LogDelegate -= Utils.Log;
         }
 
         [Test]
@@ -159,6 +162,7 @@ namespace LeanCloud.Play.Test
             };
             await c.Player.SetCustomProperties(newProps, expectedValues);
             c.Close();
+            Logger.LogDelegate -= Utils.Log;
         }
 
         [Test]
@@ -201,6 +205,7 @@ namespace LeanCloud.Play.Test
             await c.Player.SetCustomProperties(props);
             await c.Player.SetCustomProperties(props);
             c.Close();
+            Logger.LogDelegate -= Utils.Log;
         }
     }
 }

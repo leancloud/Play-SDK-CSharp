@@ -208,19 +208,25 @@ namespace LeanCloud.Play {
             }
         }
 
-        internal void MergeSystemProps(Dictionary<string, object> changedProps) { 
+        internal Dictionary<string, object> MergeSystemProps(Dictionary<string, object> changedProps) {
+            var props = new Dictionary<string, object>();
             if (changedProps.TryGetValue("open", out object openObj)) {
                 Open = bool.Parse(openObj.ToString());
+                props["open"] = Open;
             }
             if (changedProps.TryGetValue("visible", out object visibleObj)) {
                 Visible = bool.Parse(visibleObj.ToString());
+                props["visible"] = Visible;
             }
             if (changedProps.TryGetValue("maxMembers", out object maxPlayerCountObj)) {
                 MaxPlayerCount = int.Parse(maxPlayerCountObj.ToString());
+                props["maxPlayerCount"] = MaxPlayerCount;
             }
             if (changedProps.TryGetValue("expectMembers", out object expectedUserIdsObj)) {
-                ExpectedUserIds = expectedUserIdsObj as List<string>;
+                ExpectedUserIds = (expectedUserIdsObj as List<object>).Cast<string>().ToList();
+                props["expectedUserIds"] = ExpectedUserIds;
             }
+            return props;
         }
     }
 }

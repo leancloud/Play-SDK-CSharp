@@ -14,6 +14,7 @@ namespace LeanCloud.Play {
         public event Action<bool> OnRoomOpenChanged;
         public event Action<bool> OnRoomVisibleChanged;
         public event Action<Dictionary<string, object>> OnRoomCustomPropertiesChanged;
+        public event Action<Dictionary<string, object>> OnRoomSystemPropertiesChanged;
         public event Action<Player, Dictionary<string, object>> OnPlayerCustomPropertiesChanged;
         public event Action<Player> OnPlayerActivityChanged;
         public event Action<byte, Dictionary<string, object>, int> OnCustomEvent;
@@ -500,6 +501,9 @@ namespace LeanCloud.Play {
                             case "updated-notify":
                                 HandleRoomCustomPropertiesChanged(msg);
                                 break;
+                            case "system-property-updated-notify":
+                                HandleRoomSystemPropsChanged(msg);
+                                break;
                             case "player-props":
                                 HandlePlayerCustomPropertiesChanged(msg);
                                 break;
@@ -609,6 +613,16 @@ namespace LeanCloud.Play {
                 OnRoomCustomPropertiesChanged?.Invoke(changedProps);
             } else {
                 Logger.Error("Handle room custom properties changed error: {0}", msg.ToJson());
+            }
+        }
+
+        void HandleRoomSystemPropsChanged(Message msg) {
+            if (msg.TryGetValue("sysAttr", out object attrObj)) {
+                var changedProps = attrObj as Dictionary<string, object>;
+                var props = Room.MergeSystemProps(changedProps);
+                OnRoomSystemPropertiesChanged?.Invoke(props);
+            } else {
+                Logger.Error("Handle room system properties changed error: {0}", msg.ToJson());
             }
         }
 

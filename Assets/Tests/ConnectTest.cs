@@ -46,6 +46,7 @@ namespace LeanCloud.Play.Test
                 yield return null;
             }
             c1.Close();
+            Logger.LogDelegate -= Utils.Log;
         }
 
         [Test]
@@ -102,6 +103,7 @@ namespace LeanCloud.Play.Test
                 yield return null;
             }
             c.Close();
+            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest, Timeout(40000)]
@@ -133,6 +135,7 @@ namespace LeanCloud.Play.Test
                 yield return null;
             }
             c.Close();
+            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]
@@ -153,6 +156,7 @@ namespace LeanCloud.Play.Test
                 yield return null;
             }
             c.Close();
+            Logger.LogDelegate -= Utils.Log;
         }
     }
 }

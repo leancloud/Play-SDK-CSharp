@@ -68,7 +68,7 @@ namespace LeanCloud.Play {
         internal async Task<Dictionary<string, object>> SetRoomVisible(bool visible) {
             var msg = Message.NewRequest("conv", "update-system-property");
             msg["sysAttr"] = new Dictionary<string, object> {
-                { "open", visible }
+                { "visible", visible }
             };
             var res = await Send(msg);
             return res["sysAttr"] as Dictionary<string, object>;
