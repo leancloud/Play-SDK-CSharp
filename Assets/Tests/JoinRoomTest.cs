@@ -97,6 +97,7 @@ namespace LeanCloud.Play.Test
             }
             c0.Close();
             c1.Close();
+            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]
@@ -134,6 +135,7 @@ namespace LeanCloud.Play.Test
             }
             c0.Close();
             c1.Close();
+            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]
@@ -168,6 +170,7 @@ namespace LeanCloud.Play.Test
             }
             c0.Close();
             c1.Close();
+            Logger.LogDelegate -= Utils.Log;
         }
 
         [Test]
@@ -274,6 +277,7 @@ namespace LeanCloud.Play.Test
             c1.Close();
             c2.Close();
             c3.Close();
+            Logger.LogDelegate -= Utils.Log;
         }
     }
 }

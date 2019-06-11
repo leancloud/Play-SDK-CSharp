@@ -84,33 +84,6 @@ namespace LeanCloud.Play.Test
             c1.Close();
         }
 
-        [UnityTest]
-        public IEnumerator OpenAndVisible() {
-            var flag = false;
-            var c = Utils.NewClient("crt4");
-            Room room = null;
-            c.Connect().OnSuccess(_ => {
-                return c.CreateRoom();
-            }).Unwrap().OnSuccess(t => {
-                room = t.Result;
-                c.OnRoomOpenChanged += opened => {
-                    Assert.AreEqual(opened, false);
-                    Debug.Log($"opened: {opened} at {Thread.CurrentThread.ManagedThreadId}");
-                };
-                c.OnRoomVisibleChanged += visible => {
-                    Assert.AreEqual(visible, false);
-                    Debug.Log($"visible: {visible} at {Thread.CurrentThread.ManagedThreadId}");
-                    flag = true;
-                };
-                room.SetOpened(false);
-                room.SetVisible(false);
-            });
-            while (!flag) {
-                yield return null;
-            }
-            c.Close();
-        }
-
         [Test]
         public async void CreateRoomFailed() {
             Logger.LogDelegate += Utils.Log;
@@ -124,6 +97,7 @@ namespace LeanCloud.Play.Test
                 Assert.AreEqual(e.Code, 4316);
                 c.Close();
             }
+            Logger.LogDelegate -= Utils.Log;
         }
     }
 }

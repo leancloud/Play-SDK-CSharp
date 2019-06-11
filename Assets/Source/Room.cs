@@ -26,7 +26,7 @@ namespace LeanCloud.Play {
         /// 房间是否开启
         /// </summary>
         /// <value><c>true</c> if opened; otherwise, <c>false</c>.</value>
-		public bool Opened {
+		public bool Open {
             get; internal set;
 		}
 
@@ -116,11 +116,31 @@ namespace LeanCloud.Play {
         }
 
         public Task<bool> SetOpened(bool opened) {
-            return Client.SetRoomOpened(opened);
+            return Client.SetRoomOpen(opened);
         }
 
         public Task<bool> SetVisible(bool visible) {
             return Client.SetRoomVisible(visible);
+        }
+
+        public Task<int> SetMaxPlayerCount(int count) {
+            return Client.SetRoomMaxPlayerCount(count);
+        }
+
+        public Task<List<string>> SetExpectedUserIds(List<string> expectedUserIds) {
+            return Client.SetRoomExpectedUserIds(expectedUserIds);
+        }
+
+        public Task ClearExpectedUserIds() {
+            return Client.ClearRoomExpectedUserIds();
+        }
+
+        public Task<List<string>> AddExpectedUserIds(List<string> expectedUserIds) {
+            return Client.AddRoomExpectedUserIds(expectedUserIds);
+        }
+
+        public Task<List<string>> RemoveExpectedUserIds(List<string> expectedUserIds) {
+            return Client.RemoveRoomExpectedUserIds(expectedUserIds);
         }
 
         internal static Room NewFromDictionary(Client client, Dictionary<string, object> roomDict) {
@@ -136,7 +156,7 @@ namespace LeanCloud.Play {
 
             Room room = new Room() {
                 Name = roomDict["cid"] as string,
-                Opened = bool.Parse(roomDict["open"].ToString()),
+                Open = bool.Parse(roomDict["open"].ToString()),
                 Visible = bool.Parse(roomDict["visible"].ToString()),
                 MaxPlayerCount = int.Parse(roomDict["maxMembers"].ToString()),
                 MasterActorId = int.Parse(roomDict["masterActorId"].ToString())
@@ -187,5 +207,26 @@ namespace LeanCloud.Play {
                 }
             }
         }
-	}
+
+        internal Dictionary<string, object> MergeSystemProps(Dictionary<string, object> changedProps) {
+            var props = new Dictionary<string, object>();
+            if (changedProps.TryGetValue("open", out object openObj)) {
+                Open = bool.Parse(openObj.ToString());
+                props["open"] = Open;
+            }
+            if (changedProps.TryGetValue("visible", out object visibleObj)) {
+                Visible = bool.Parse(visibleObj.ToString());
+                props["visible"] = Visible;
+            }
+            if (changedProps.TryGetValue("maxMembers", out object maxPlayerCountObj)) {
+                MaxPlayerCount = int.Parse(maxPlayerCountObj.ToString());
+                props["maxPlayerCount"] = MaxPlayerCount;
+            }
+            if (changedProps.TryGetValue("expectMembers", out object expectedUserIdsObj)) {
+                ExpectedUserIds = (expectedUserIdsObj as List<object>).Cast<string>().ToList();
+                props["expectedUserIds"] = ExpectedUserIds;
+            }
+            return props;
+        }
+    }
 }

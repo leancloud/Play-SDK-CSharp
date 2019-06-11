@@ -49,6 +49,7 @@ namespace LeanCloud.Play.Test
             c1.Close();
             c2.Close();
             c3.Close();
+            Logger.LogDelegate -= Utils.Log;
         }
     }
 }

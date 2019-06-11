@@ -21,6 +21,7 @@ namespace LeanCloud.Play.Test
             await c.Connect();
             await c.CreateRoom();
             c.Close();
+            Logger.LogDelegate -= Utils.Log;
         }
     }
 }

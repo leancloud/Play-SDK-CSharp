@@ -9,6 +9,12 @@ namespace LeanCloud.Play.Test {
             return new Client(appId, appKey, userId);
         }
 
+        internal static Client NewQCloudClient(string userId) {
+            var appId = "FQr8l8LLvdxIwhMHN77sNluX-9Nh9j0Va";
+            var appKey = "MJSm46Uu6LjF5eNmqfbuUmt6";
+            return new Client(appId, appKey, userId);
+        }
+
         internal static void Log(LogLevel level, string info) { 
             switch (level) {
                 case LogLevel.Debug:
