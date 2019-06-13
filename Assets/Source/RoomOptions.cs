@@ -29,7 +29,7 @@ namespace LeanCloud.Play
         /// 房间是否打开
         /// </summary>
         /// <value><c>true</c> if opened; otherwise, <c>false</c>.</value>
-        public bool Opened {
+        public bool Open {
             get; set;
         }
 
@@ -90,7 +90,7 @@ namespace LeanCloud.Play
         }
 
         public RoomOptions() {
-            Opened = true;
+            Open = true;
             Visible = true;
             EmptyRoomTtl = 0;
             PlayerTtl = 0;
@@ -112,7 +112,7 @@ namespace LeanCloud.Play
             }
 
             Dictionary<string, object> msg = new Dictionary<string, object> {
-                { "open", Opened },
+                { "open", Open },
                 { "visible", Visible }
             };
             if (EmptyRoomTtl > 0) {

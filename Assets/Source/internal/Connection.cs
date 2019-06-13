@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using System.Threading;
 using WebSocketSharp;
 using System.Collections.Generic;
+using LeanCloud.Play.Protocol;
+using Google.Protobuf;
 
 namespace LeanCloud.Play {
     internal abstract class Connection {
@@ -10,6 +12,7 @@ namespace LeanCloud.Play {
 
         protected WebSocket ws;
         readonly Dictionary<int, TaskCompletionSource<Message>> requests;
+        readonly Dictionary<int, TaskCompletionSource<ResponseMessage>> responses;
 
         internal event Action<Message> OnMessage;
         internal event Action<int, string> OnClose;
@@ -24,6 +27,7 @@ namespace LeanCloud.Play {
 
         internal Connection() {
             requests = new Dictionary<int, TaskCompletionSource<Message>>();
+            responses = new Dictionary<int, TaskCompletionSource<ResponseMessage>>();
             messageQueue = new Queue<Message>();
             pingTokenSource = new CancellationTokenSource();
             pongTokenSource = new CancellationTokenSource();
@@ -33,7 +37,7 @@ namespace LeanCloud.Play {
             this.userId = userId;
             Logger.Debug("connect at {0}", Thread.CurrentThread.ManagedThreadId);
             var tcs = new TaskCompletionSource<bool>();
-            ws = new WebSocket(server);
+            ws = new WebSocket(server, "protobuf.1");
             void onOpen(object sender, EventArgs args) {
                 Logger.Debug("wss on open at {0}", Thread.CurrentThread.ManagedThreadId);
                 Connected();
@@ -73,23 +77,45 @@ namespace LeanCloud.Play {
         }
 
         protected Task OpenSession(string appId, string userId, string gameVersion) {
-            var msg = Message.NewRequest("session", "open");
-            msg["appId"] = appId;
-            msg["peerId"] = userId;
-            msg["sdkVersion"] = Config.PlayVersion;
-            msg["gameVersion"] = gameVersion;
-            return Send(msg);
+            var request = NewRequest();
+            request.SessionOpen = new SessionOpenRequest {
+                AppId = appId,
+                PeerId = userId,
+                SdkVersion = Config.PlayVersion,
+                GameVersion = gameVersion
+            };
+            return Send(CommandType.Session, OpType.Open, request);
+        }
+
+        protected Task<ResponseMessage> Send(CommandType cmd, OpType op, RequestMessage request) {
+            var tcs = new TaskCompletionSource<ResponseMessage>();
+            responses.Add(request.I, tcs);
+            Send(cmd, op, new Body {
+                Request = request
+            });
+            return tcs.Task;
+        }
+
+        protected void SendDirectCommand(DirectCommand directCommand) {
+            Send(CommandType.Direct, OpType.None, new Body {
+                Direct = directCommand
+            });
+            Ping();
+        }
+
+        protected void Send(CommandType cmd, OpType op, Body body) {
+            Logger.Debug("=> {0}/{1}: {2}", cmd, op, body.ToString());
+            var command = new Command { 
+                Cmd = cmd,
+                Op = op,
+                Body = body.ToByteString()
+            };
+            ws.Send(command.ToByteArray());
+            Ping();
         }
 
         protected Task<Message> Send(Message msg) {
-            var tcs = new TaskCompletionSource<Message>();
-            if (msg.HasI) {
-                lock (requests) {
-                    requests.Add(msg.I, tcs);
-                }
-            }
-            Send(msg.ToJson());
-            return tcs.Task;
+            return Task.FromResult<Message>(null);
         }
 
         void Send(string msg) {
@@ -112,20 +138,60 @@ namespace LeanCloud.Play {
 
         // Websocket 事件
         void OnWebSocketMessage(object sender, MessageEventArgs eventArgs) {
-            Logger.Debug("<= {0}", eventArgs.Data);
             Pong();
             if (PING.Equals(eventArgs.Data)) {
+                Logger.Debug("<= {}");
                 return;
             }
-            var message = Message.FromJson(eventArgs.Data);
-            if (isMessageQueueRunning) {
-                HandleMessage(message);
-            } else {
-                Logger.Debug($"delay: {message.ToJson()}");
-                lock (messageQueue) {
-                    messageQueue.Enqueue(message);
+            var command = Command.Parser.ParseFrom(eventArgs.RawData);
+            var cmd = command.Cmd;
+            var op = command.Op;
+            var body = Body.Parser.ParseFrom(command.Body);
+            Logger.Debug("<= {0}/{1}: {2}", cmd, op, body);
+            HandleCommand(cmd, op, body);
+
+
+            //var message = Message.FromJson(eventArgs.Data);
+            //if (isMessageQueueRunning) {
+            //    HandleMessage(message);
+            //} else {
+            //    Logger.Debug($"delay: {message.ToJson()}");
+            //    lock (messageQueue) {
+            //        messageQueue.Enqueue(message);
+            //    }
+            //}
+        }
+
+        void HandleCommand(CommandType cmd, OpType op, Body body) {
+            if (body.Response != null) {
+                var res = body.Response;
+                if (responses.TryGetValue(res.I, out var tcs)) {
+                    if (res.ErrorInfo != null) {
+                        var errorInfo = res.ErrorInfo;
+                        tcs.SetException(new PlayException(errorInfo.ReasonCode, errorInfo.Detail));
+                    } else {
+                        tcs.SetResult(res);
+                    }
                 }
+            } else if (body.Direct != null) { 
+            
+            } else if (body.RoomNotification != null) { 
+            
+            } else if (body.Events != null) { 
+            
+            } else if (body.Statistic != null) { 
+            
+            } else if (body.RoomList != null) { 
+            
+            } else { 
+                // NOT support
+
             }
+        }
+
+        void HandleResponse(CommandType command, OpType op, ResponseMessage response) {
+            Logger.Debug("<= {0}/{1}: {2}", command, op, response);
+
         }
 
         void HandleMessage(Message message) {
@@ -182,7 +248,8 @@ namespace LeanCloud.Play {
                 pingTokenSource = new CancellationTokenSource();
                 Task.Delay(TimeSpan.FromSeconds(GetPingDuration())).ContinueWith(t => {
                     Logger.Debug("------------- {0} ping", userId);
-                    Send(PING);
+                    ws.Send(PING);
+                    Ping();
                 }, pingTokenSource.Token);
             }
         }
@@ -215,5 +282,23 @@ namespace LeanCloud.Play {
         }
 
         protected abstract int GetPingDuration();
+
+        static volatile int requestI = 1;
+        static readonly object requestILock = new object();
+
+        static int RequestI {
+            get {
+                lock (requestILock) {
+                    return requestI++;
+                }
+            }
+        }
+
+        protected static RequestMessage NewRequest() {
+            var request = new RequestMessage {
+                I = RequestI
+            };
+            return request;
+        }
     }
 }

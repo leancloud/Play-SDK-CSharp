@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
+using LeanCloud.Play.Protocol;
 
 namespace LeanCloud.Play {
     internal class GameConnection : Connection {
@@ -22,22 +23,13 @@ namespace LeanCloud.Play {
         }
 
         internal async Task<Room> CreateRoom(string roomId, RoomOptions roomOptions, List<string> expectedUserIds) {
-            var msg = Message.NewRequest("conv", "start");
-            if (roomId != null) {
-                msg["cid"] = roomId;
-            }
-            if (roomOptions != null) {
-                var roomOptionsDict = roomOptions.ToDictionary();
-                foreach (var entry in roomOptionsDict) {
-                    msg[entry.Key] = entry.Value;
-                }
-            }
-            if (expectedUserIds != null) {
-                var expecteds = expectedUserIds.Cast<object>().ToList();
-                msg["expectMembers"] = expecteds;
-            }
-            var res = await Send(msg);
-            return Room.NewFromDictionary(res.Data);
+            var request = NewRequest();
+            var roomOpts = Utils.ConvertToRoomOptions(roomId, roomOptions, expectedUserIds);
+            request.CreateRoom = new CreateRoomRequest { 
+                RoomOptions = roomOpts
+            };
+            var res = await Send(CommandType.Conv, OpType.Start, request);
+            return Utils.ConvertToRoom(res.CreateRoom.RoomOptions);
         }
 
         internal async Task<Room> JoinRoom(string roomId, List<string> expectedUserIds) {

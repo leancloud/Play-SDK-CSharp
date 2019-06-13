@@ -4,12 +4,7 @@ using UnityEngine;
 namespace LeanCloud.Play.Test {
     internal static class Utils {
         internal static Client NewClient(string userId) {
-            var appId = "Eohx7L4EMfe4xmairXeT7q1w-gzGzoHsz";
-            var appKey = "GSBSGpYH9FsRdCss8TGQed0F";
-            return new Client(appId, appKey, userId);
-        }
-
-        internal static Client NewQCloudClient(string userId) {
+            // 华东节点，开发版本
             var appId = "FQr8l8LLvdxIwhMHN77sNluX-9Nh9j0Va";
             var appKey = "MJSm46Uu6LjF5eNmqfbuUmt6";
             return new Client(appId, appKey, userId);

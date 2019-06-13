@@ -13,14 +13,14 @@ namespace LeanCloud.Play {
             get; set;
         }
 
-        Dictionary<int, Player> playerDict;
+        internal Dictionary<int, Player> playerDict;
 
         /// <summary>
         /// 房间名称
         /// </summary>
         /// <value>The name.</value>
 		public string Name {
-            get; private set;
+            get; internal set;
         }
         /// <summary>
         /// 房间是否开启
@@ -43,7 +43,7 @@ namespace LeanCloud.Play {
         /// </summary>
         /// <value>The max player count.</value>
 		public int MaxPlayerCount {
-            get; private set;
+            get; internal set;
 		}
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace LeanCloud.Play {
         /// </summary>
         /// <value>The expected user identifiers.</value>
         public List<string> ExpectedUserIds {
-            get; private set;
+            get; internal set;
 		}
 
         /// <summary>

@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
+using LeanCloud.Play.Protocol;
 
 namespace LeanCloud.Play {
     internal class LobbyConnection : Connection {
@@ -23,25 +24,16 @@ namespace LeanCloud.Play {
         }
 
         internal async Task<LobbyRoomResult> CreateRoom(string roomName, RoomOptions roomOptions, List<string> expectedUserIds) {
-            var msg = Message.NewRequest("conv", "start");
-            if (!string.IsNullOrEmpty(roomName)) {
-                msg["cid"] = roomName;
-            }
-            if (roomOptions != null) {
-                var roomOptionsDict = roomOptions.ToDictionary();
-                foreach (var entry in roomOptionsDict) {
-                    msg[entry.Key] = entry.Value;
-                }
-            }
-            if (expectedUserIds != null) {
-                var expecteds = expectedUserIds.Cast<object>().ToList();
-                msg["expectMembers"] = expecteds;
-            }
-            var res = await Send(msg);
+            var request = NewRequest();
+            var roomOpts = Utils.ConvertToRoomOptions(roomName, roomOptions, expectedUserIds);
+            request.CreateRoom = new CreateRoomRequest {
+                RoomOptions = roomOpts
+            };
+            var res = await Send(CommandType.Conv, OpType.Start, request);
+            var roomRes = res.CreateRoom;
             return new LobbyRoomResult {
-                RoomId = res["cid"].ToString(),
-                PrimaryUrl = res["addr"].ToString(),
-                SecondaryUrl = res["secureAddr"].ToString()
+                RoomId = roomRes.RoomOptions.Cid,
+                PrimaryUrl = roomRes.Addr,
             };
         }
 
@@ -55,8 +47,7 @@ namespace LeanCloud.Play {
             var res = await Send(msg);
             return new LobbyRoomResult {
                 RoomId = res["cid"].ToString(),
-                PrimaryUrl = res["addr"].ToString(),
-                SecondaryUrl = res["secureAddr"].ToString()
+                PrimaryUrl = res["addr"].ToString()
             };
         }
 
@@ -67,8 +58,7 @@ namespace LeanCloud.Play {
             var res = await Send(msg);
             return new LobbyRoomResult {
                 RoomId = res["cid"].ToString(),
-                PrimaryUrl = res["addr"].ToString(),
-                SecondaryUrl = res["secureAddr"].ToString()
+                PrimaryUrl = res["addr"].ToString()
             };
         }
 
@@ -83,8 +73,7 @@ namespace LeanCloud.Play {
             var res = await Send(msg);
             return new LobbyRoomResult {
                 RoomId = res["cid"].ToString(),
-                PrimaryUrl = res["addr"].ToString(),
-                SecondaryUrl = res["secureAddr"].ToString()
+                PrimaryUrl = res["addr"].ToString()
             };
         }
 
@@ -106,8 +95,7 @@ namespace LeanCloud.Play {
             return new LobbyRoomResult {
                 Create = res.Op == "started",
                 RoomId = res["cid"].ToString(),
-                PrimaryUrl = res["addr"].ToString(),
-                SecondaryUrl = res["secureAddr"].ToString()
+                PrimaryUrl = res["addr"].ToString()
             };
         }
 
