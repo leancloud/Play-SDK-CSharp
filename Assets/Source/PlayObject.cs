@@ -18,68 +18,6 @@ namespace LeanCloud.Play {
 
         public object this[string key] { get => ((IDictionary<string, object>)Data)[key]; set => ((IDictionary<string, object>)Data)[key] = value; }
 
-        public PlayObject() {
-            Data = new Dictionary<string, object>();
-        }
-
-        public static PlayObject ToPlayObject(Dictionary<string, object> data) { 
-            if (data == null) {
-                return null;
-            }
-            var playObject = new PlayObject { 
-                Data = data
-            };
-            return playObject;
-        }
-
-
-        // Getter
-        public bool TryGetBool(string key, out bool val) {
-            if (Data.TryGetValue(key, out object obj) && bool.TryParse(obj.ToString(), out val)) {
-                return true;
-            }
-            val = false;
-            return false;
-        }
-
-        public bool TryGetInt(string key, out int val) { 
-            if (Data.TryGetValue(key, out object obj) && int.TryParse(obj.ToString(), out val)) {
-                return true;
-            }
-            val = 0;
-            return false;
-        }
-
-        public bool TryGetFloat(string key, out float val) { 
-            if (Data.TryGetValue(key, out object obj) && float.TryParse(obj.ToString(), out val)) {
-                return true;
-            }
-            val = 0f;
-            return false;
-        }
-
-        public bool TryGetString(string key, out string val) { 
-            if (Data.TryGetValue(key, out object obj)) {
-                val = (string)obj;
-                return true;
-            }
-            val = null;
-            return false;
-        }
-
-        public bool TryGetPlayObject(string key, out PlayObject val) { 
-            if (Data.TryGetValue(key, out object obj)) {
-                val = (PlayObject)obj;
-                return true;
-            }
-            val = null;
-            return false;
-        }
-
-        public T GetObject<T>(string key) {
-            return (T)Data[key];
-        }
-
         public void Add(string key, object value) {
             ((IDictionary<string, object>)Data).Add(key, value);
         }
@@ -122,6 +60,68 @@ namespace LeanCloud.Play {
 
         IEnumerator IEnumerable.GetEnumerator() {
             return ((IDictionary<string, object>)Data).GetEnumerator();
+        }
+
+        public PlayObject() {
+            Data = new Dictionary<string, object>();
+        }
+
+        public static PlayObject ToPlayObject(Dictionary<string, object> data) {
+            if (data == null) {
+                return null;
+            }
+            var playObject = new PlayObject {
+                Data = data
+            };
+            return playObject;
+        }
+
+
+        // Getter
+        public bool TryGetBool(string key, out bool val) {
+            if (Data.TryGetValue(key, out object obj) && bool.TryParse(obj.ToString(), out val)) {
+                return true;
+            }
+            val = false;
+            return false;
+        }
+
+        public bool TryGetInt(string key, out int val) {
+            if (Data.TryGetValue(key, out object obj) && int.TryParse(obj.ToString(), out val)) {
+                return true;
+            }
+            val = 0;
+            return false;
+        }
+
+        public bool TryGetFloat(string key, out float val) {
+            if (Data.TryGetValue(key, out object obj) && float.TryParse(obj.ToString(), out val)) {
+                return true;
+            }
+            val = 0f;
+            return false;
+        }
+
+        public bool TryGetString(string key, out string val) {
+            if (Data.TryGetValue(key, out object obj)) {
+                val = (string)obj;
+                return true;
+            }
+            val = null;
+            return false;
+        }
+
+        public bool TryGetPlayObject(string key, out PlayObject val) {
+            if (Data.TryGetValue(key, out object obj)) {
+                val = (PlayObject)obj;
+                return true;
+            }
+            val = null;
+            return false;
+        }
+
+        public T GetObject<T>(string key) {
+            return (T)Data[key];
         }
     }
 }

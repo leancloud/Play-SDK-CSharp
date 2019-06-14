@@ -13,24 +13,6 @@ namespace LeanCloud.Play {
 
         public object this[int index] { get => ((IList<object>)Data)[index]; set => ((IList<object>)Data)[index] = value; }
 
-        public PlayArray() {
-            Data = new List<object>();
-        }
-
-        public PlayArray(int capacity) {
-            Data = new List<object>(capacity);
-        }
-
-        public static PlayArray ToPlayArray(List<object> data) {
-            if (data == null) {
-                return null;
-            }
-            var playArray = new PlayArray {
-                Data = data
-            };
-            return playArray;
-        }
-
         public int IndexOf(object item) {
             return ((IList<object>)Data).IndexOf(item);
         }
@@ -69,6 +51,24 @@ namespace LeanCloud.Play {
 
         IEnumerator IEnumerable.GetEnumerator() {
             return ((IList<object>)Data).GetEnumerator();
+        }
+
+        public PlayArray() {
+            Data = new List<object>();
+        }
+
+        public PlayArray(int capacity) {
+            Data = new List<object>(capacity);
+        }
+
+        public static PlayArray ToPlayArray(List<object> data) {
+            if (data == null) {
+                return null;
+            }
+            var playArray = new PlayArray {
+                Data = data
+            };
+            return playArray;
         }
     }
 }

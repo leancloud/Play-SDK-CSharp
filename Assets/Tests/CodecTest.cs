@@ -1,9 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using UnityEngine;
-using UnityEngine.TestTools;
-using LeanCloud.Play.Protocol;
 
 namespace LeanCloud.Play.Test 
 {
@@ -35,6 +31,10 @@ namespace LeanCloud.Play.Test
                 ["sstr"] = "code"
             };
             playObj.Add("obj", subPlayObj);
+            var subPlayArr = new PlayArray { 
+                666, true, "engineer"
+            };
+            playObj.Add("arr", subPlayArr);
             var genericValue = CodecUtils.Encode(playObj);
             Debug.Log(genericValue);
             var newPlayObj = CodecUtils.Decode(genericValue) as PlayObject;
@@ -45,6 +45,10 @@ namespace LeanCloud.Play.Test
             Assert.AreEqual(newSubPlayObj["si"], 345);
             Assert.AreEqual(newSubPlayObj["sb"], true);
             Assert.AreEqual(newSubPlayObj["sstr"], "code");
+            var newSubPlayArr = playObj["arr"] as PlayArray;
+            Assert.AreEqual(newSubPlayArr[0], 666);
+            Assert.AreEqual(newSubPlayArr[1], true);
+            Assert.AreEqual(newSubPlayArr[2], "engineer");
         }
 
         [Test]
