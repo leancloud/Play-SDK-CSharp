@@ -197,7 +197,7 @@ namespace LeanCloud.Play.Test
 
             await c0.Connect();
             var roomOptions = new RoomOptions {
-                CustomRoomProperties = new Dictionary<string, object> {
+                CustomRoomProperties = new PlayObject {
                     { "lv", 2 }
                 },
                 CustoRoomPropertyKeysForLobby = new List<string> { "lv" }
@@ -233,7 +233,7 @@ namespace LeanCloud.Play.Test
 
             await c0.Connect();
             var roomOptions = new RoomOptions {
-                CustomRoomProperties = new Dictionary<string, object> {
+                CustomRoomProperties = new PlayObject {
                     { "lv", 5 }
                 },
                 CustoRoomPropertyKeysForLobby = new List<string> { "lv" }

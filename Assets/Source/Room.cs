@@ -76,7 +76,7 @@ namespace LeanCloud.Play {
         /// 获取自定义属性
         /// </summary>
         /// <value>The custom properties.</value>
-        public Dictionary<string, object> CustomProperties {
+        public PlayObject CustomProperties {
             get; internal set;
         }
 
@@ -141,43 +141,6 @@ namespace LeanCloud.Play {
 
         public Task<List<string>> RemoveExpectedUserIds(List<string> expectedUserIds) {
             return Client.RemoveRoomExpectedUserIds(expectedUserIds);
-        }
-
-        internal static Room NewFromDictionary(Client client, Dictionary<string, object> roomDict) {
-            Room room = NewFromDictionary(roomDict);
-            room.Client = client;
-            return room;
-        }
-
-        internal static Room NewFromDictionary(Dictionary<string, object> roomDict) {
-            if (roomDict == null) {
-                throw new ArgumentException("Room data is null");
-            }
-
-            Room room = new Room() {
-                Name = roomDict["cid"] as string,
-                Open = bool.Parse(roomDict["open"].ToString()),
-                Visible = bool.Parse(roomDict["visible"].ToString()),
-                MaxPlayerCount = int.Parse(roomDict["maxMembers"].ToString()),
-                MasterActorId = int.Parse(roomDict["masterActorId"].ToString())
-            };
-            if (roomDict.TryGetValue("expectMembers", out object expectedsObj)) {
-                var expecteds = expectedsObj as List<object>;
-                room.ExpectedUserIds = expecteds.Cast<string>().ToList();
-            }
-            room.playerDict = new Dictionary<int, Player>();
-            List<object> players = roomDict["members"] as List<object>;
-            foreach (Dictionary<string, object> playerDict in players) {
-                Player player = Player.NewFromDictionary(playerDict);
-                room.playerDict.Add(player.ActorId, player);
-            }
-            if (roomDict.TryGetValue("attr", out object propsObj)) {
-                var props = propsObj as Dictionary<string, object>;
-                room.CustomProperties = props;
-            } else {
-                room.CustomProperties = new Dictionary<string, object>();
-            }
-            return room;
         }
 
         internal void AddPlayer(Player player) {

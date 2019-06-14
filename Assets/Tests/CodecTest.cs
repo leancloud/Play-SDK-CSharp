@@ -1,7 +1,10 @@
 ﻿using NUnit.Framework;
 using UnityEngine;
+using Google.Protobuf;
+using LeanCloud.Play.Protocol;
+using System.Collections.Generic;
 
-namespace LeanCloud.Play.Test 
+namespace LeanCloud.Play
 {
     public class CodecTest
     {
@@ -71,6 +74,78 @@ namespace LeanCloud.Play.Test
             Assert.AreEqual(subPlayObj["i"], 23);
             Assert.AreEqual(subPlayObj["b"], true);
             Assert.AreEqual(subPlayObj["str"], "hello");
+        }
+
+        [Test]
+        public void Protocol() {
+            // 构造请求
+            var request = new RequestMessage() {
+                I = 1,
+            };
+            var roomOptions = new RoomOptions {
+                Visible = false,
+                EmptyRoomTtl = 60,
+                MaxPlayerCount = 2,
+                PlayerTtl = 60,
+                CustomRoomProperties = new PlayObject {
+                    { "title", "room title" },
+                    { "level", 2 },
+                },
+                CustoRoomPropertyKeysForLobby = new List<string> { "level" }
+            };
+            var expectedUserIds = new List<string> { "world" };
+            var roomOpts = ConvertToRoomOptions("abc", roomOptions, expectedUserIds);
+            request.CreateRoom = new CreateRoomRequest {
+                RoomOptions = roomOpts
+            };
+            var command = new Command {
+                Cmd = CommandType.Conv,
+                Op = OpType.Start,
+                Body = new Body {
+                    Request = request
+                }.ToByteString()
+            };
+            // 序列化请求
+            var bytes = command.ToByteArray();
+            // 反序列化请求
+            var reCommand = Command.Parser.ParseFrom(bytes);
+            Assert.AreEqual(reCommand.Cmd, CommandType.Conv);
+            Assert.AreEqual(reCommand.Op, OpType.Start);
+            var reBody = Body.Parser.ParseFrom(reCommand.Body);
+            var reRequest = reBody.Request;
+            Assert.AreEqual(reRequest.I, 1);
+            var reRoomOptions = request.CreateRoom.RoomOptions;
+            Assert.AreEqual(reRoomOptions.Visible, false);
+            Assert.AreEqual(reRoomOptions.EmptyRoomTtl, 60);
+            Assert.AreEqual(reRoomOptions.MaxMembers, 2);
+            Assert.AreEqual(reRoomOptions.PlayerTtl, 60);
+            var attrBytes = reRoomOptions.Attr;
+            var reAttr = CodecUtils.Decode(GenericCollectionValue.Parser.ParseFrom(attrBytes)) as PlayObject;
+            Debug.Log(reAttr["title"]);
+            Debug.Log(reAttr["level"]);
+            Assert.AreEqual(reAttr["title"], "room title");
+            Assert.AreEqual(reAttr["level"], 2);
+        }
+
+        internal static Protocol.RoomOptions ConvertToRoomOptions(string roomName, RoomOptions options, List<string> expectedUserIds) {
+            var roomOptions = new Protocol.RoomOptions();
+            if (!string.IsNullOrEmpty(roomName)) {
+                roomOptions.Cid = roomName;
+            }
+            if (options != null) {
+                roomOptions.Visible = options.Visible;
+                roomOptions.Open = options.Open;
+                roomOptions.EmptyRoomTtl = options.EmptyRoomTtl;
+                roomOptions.PlayerTtl = options.PlayerTtl;
+                roomOptions.MaxMembers = options.MaxPlayerCount;
+                roomOptions.Flag = options.Flag;
+                roomOptions.Attr = CodecUtils.Encode(options.CustomRoomProperties).ToByteString();
+                roomOptions.LobbyAttrKeys.AddRange(options.CustoRoomPropertyKeysForLobby);
+            }
+            if (expectedUserIds != null) {
+                roomOptions.ExpectMembers.AddRange(expectedUserIds);
+            }
+            return roomOptions;
         }
     }
 }

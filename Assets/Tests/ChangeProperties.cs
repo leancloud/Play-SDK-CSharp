@@ -63,7 +63,7 @@ namespace LeanCloud.Play.Test
             var c = Utils.NewClient("cp1");
             await c.Connect();
             var options = new RoomOptions { 
-                CustomRoomProperties = new Dictionary<string, object> {
+                CustomRoomProperties = new PlayObject {
                     { "id", 1 },
                     { "gold", 100 }
                 }

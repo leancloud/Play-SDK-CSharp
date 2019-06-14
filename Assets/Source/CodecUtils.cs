@@ -56,16 +56,10 @@ namespace LeanCloud.Play {
                     StringValue = (string)val
                 };
             } else if (val is PlayObject playObject) {
-                var collection = new GenericCollection();
-                foreach (KeyValuePair<string, object> entry in playObject) {
-                    collection.MapEntryValue.Add(new GenericCollection.Types.MapEntry {
-                        Key = entry.Key,
-                        Val = Encode(entry.Value)
-                    });
-                }
+                var bytes = EncodePlayObject(playObject);
                 genericVal = new GenericCollectionValue {
                     Type = GenericCollectionValue.Types.Type.Map,
-                    BytesValue = collection.ToByteString()
+                    BytesValue = bytes
                 };
             } else if (val is PlayArray playArray) {
                 var collection = new GenericCollection();
@@ -117,14 +111,8 @@ namespace LeanCloud.Play {
                 case GenericCollectionValue.Types.Type.String:
                     val = genericValue.StringValue;
                     break;
-                case GenericCollectionValue.Types.Type.Map: {
-                        PlayObject playObject = new PlayObject();
-                        var collection = GenericCollection.Parser.ParseFrom(genericValue.BytesValue);
-                        foreach (var entry in collection.MapEntryValue) {
-                            playObject.Add(entry.Key, Decode(entry.Val));
-                        }
-                        val = playObject;
-                    }
+                case GenericCollectionValue.Types.Type.Map:
+                    val = DecodePlayObject(genericValue.BytesValue);
                     break;
                 case GenericCollectionValue.Types.Type.Array: {
                         PlayArray playArray = new PlayArray();
@@ -146,6 +134,26 @@ namespace LeanCloud.Play {
                     break;
             }
             return val;
+        }
+
+        public static ByteString EncodePlayObject(PlayObject playObject) {
+            var collection = new GenericCollection();
+            foreach (KeyValuePair<string, object> entry in playObject) {
+                collection.MapEntryValue.Add(new GenericCollection.Types.MapEntry {
+                    Key = entry.Key,
+                    Val = Encode(entry.Value)
+                });
+            }
+            return collection.ToByteString();
+        }
+
+        public static PlayObject DecodePlayObject(ByteString bytes) {
+            var collection = GenericCollection.Parser.ParseFrom(bytes);
+            var playObject = new PlayObject();
+            foreach (var entry in collection.MapEntryValue) {
+                playObject[entry.Key] = Decode(entry.Val);
+            }
+            return playObject; 
         }
     }
 }

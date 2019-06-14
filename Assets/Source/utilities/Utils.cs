@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using LeanCloud.Play.Protocol;
+using Google.Protobuf;
 
 namespace LeanCloud.Play {
     internal static class Utils {
@@ -16,6 +17,7 @@ namespace LeanCloud.Play {
                 roomOptions.PlayerTtl = options.PlayerTtl;
                 roomOptions.MaxMembers = options.MaxPlayerCount;
                 roomOptions.Flag = options.Flag;
+                roomOptions.Attr = CodecUtils.EncodePlayObject(options.CustomRoomProperties);
                 roomOptions.LobbyAttrKeys.AddRange(options.CustoRoomPropertyKeysForLobby);
             }
             if (expectedUserIds != null) {
@@ -41,8 +43,8 @@ namespace LeanCloud.Play {
                 var player = ConvertToPlayer(member);
                 room.playerDict.Add(player.ActorId, player);
             }
-            // TODO attr
-
+            // attr
+            room.CustomProperties = CodecUtils.DecodePlayObject(options.Attr);
             return room;
         }
 

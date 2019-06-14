@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 
 namespace LeanCloud.Play {
-    // 实现 IDictionary 接口
+    /// <summary>
+    /// 字典类结构，实现 IDictionary
+    /// </summary>
     public class PlayObject : IDictionary<string, object> {
         internal Dictionary<string, object> Data {
             get; private set;

@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 
 namespace LeanCloud.Play {
+    /// <summary>
+    /// 数组类结构，实现 IList
+    /// </summary>
     public class PlayArray : IList<object> {
         internal List<object> Data {
             get; private set;

@@ -69,7 +69,7 @@ namespace LeanCloud.Play
         /// 自定义房间属性
         /// </summary>
         /// <value>The custom room properties.</value>
-        public Dictionary<string, object> CustomRoomProperties {
+        public PlayObject CustomRoomProperties {
             get; set;
         }
 

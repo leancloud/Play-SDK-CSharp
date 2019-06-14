@@ -40,7 +40,8 @@ namespace LeanCloud.Play {
                 msg["expectMembers"] = expecteds;
             }
             var res = await Send(msg);
-            return Room.NewFromDictionary(res.Data);
+            // TODO
+            return null;
         }
 
         internal async Task LeaveRoom() {

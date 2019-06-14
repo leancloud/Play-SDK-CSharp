@@ -38,6 +38,15 @@ namespace LeanCloud.Play {
         }
 
         internal async Task<LobbyRoomResult> JoinRoom(string roomName, List<string> expectedUserIds) {
+            var request = NewRequest();
+            request.JoinRoom = new JoinRoomRequest { 
+                Rejoin = false,
+                RoomOptions = new Protocol.RoomOptions { 
+                    Cid = roomName
+                },
+            };
+
+
             var msg = Message.NewRequest("conv", "add");
             msg["cid"] = roomName;
             if (expectedUserIds != null) {
