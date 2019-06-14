@@ -198,7 +198,7 @@ namespace LeanCloud.Play {
             }
         }
 
-        public async Task<Room> JoinRandomRoom(Dictionary<string, object> matchProperties = null, List<string> expectedUserIds = null) {
+        public async Task<Room> JoinRandomRoom(PlayObject matchProperties = null, List<string> expectedUserIds = null) {
             if (state != PlayState.LOBBY) {
                 throw new PlayException(PlayExceptionCode.StateError,
                     string.Format("You cannot call JoinRandomRoom() on {0} state", state.ToString()));
@@ -233,7 +233,7 @@ namespace LeanCloud.Play {
             return room;
         }
 
-        public async Task<LobbyRoom> MatchRandom(Dictionary<string, object> matchProperties = null, List<string> expectedUserIds = null) {
+        public async Task<LobbyRoom> MatchRandom(PlayObject matchProperties = null, List<string> expectedUserIds = null) {
             if (state != PlayState.LOBBY) {
                 throw new PlayException(PlayExceptionCode.StateError,
                     string.Format("You cannot call MatchRandom() on {0} state", state.ToString()));
@@ -365,16 +365,16 @@ namespace LeanCloud.Play {
             return Task.FromResult(true);
         }
 
-        public async Task SetRoomCustomProperties(Dictionary<string, object> properties, Dictionary<string, object> expectedValues = null) {
+        public async Task SetRoomCustomProperties(PlayObject properties, PlayObject expectedValues = null) {
             if (state != PlayState.GAME) {
                 throw new PlayException(PlayExceptionCode.StateError,
                     string.Format("You cannot call SetRoomCustomProperties() on {0} state", state.ToString()));
             }
             var changedProps = await gameConn.SetRoomCustomProperties(properties, expectedValues);
-            Room.MergeProperties(changedProps);
+            Room.MergeCustomProperties(changedProps);
         }
 
-        public async Task SetPlayerCustomProperties(int actorId, Dictionary<string, object> properties, Dictionary<string, object> expectedValues = null) {
+        public async Task SetPlayerCustomProperties(int actorId, PlayObject properties, PlayObject expectedValues = null) {
             if (state != PlayState.GAME) {
                 throw new PlayException(PlayExceptionCode.StateError,
                     string.Format("You cannot call SetPlayerCustomProperties() on {0} state", state.ToString()));
@@ -545,7 +545,8 @@ namespace LeanCloud.Play {
 
         void HandlePlayerJoinedRoom(Message msg) { 
             if (msg.TryGetValue("member", out object playerObj)) {
-                var player = Player.NewFromDictionary(playerObj as Dictionary<string, object>);
+                // TODO 完善 Player 对象
+                var player = new Player();
                 player.Client = this;
                 Room.AddPlayer(player);
                 OnPlayerRoomJoined?.Invoke(player);
@@ -663,7 +664,8 @@ namespace LeanCloud.Play {
                 var member = memberObj as Dictionary<string, object>;
                 if (member.TryGetValue("actorId", out object playerIdObj) &&
                     int.TryParse(playerIdObj.ToString(), out int playerId)) {
-                    var player = Player.NewFromDictionary(member);
+                    // TODO 完善 Player 对象
+                    var player = new Player();
                     player.Client = this;
                     OnPlayerActivityChanged?.Invoke(player);
                 } else {

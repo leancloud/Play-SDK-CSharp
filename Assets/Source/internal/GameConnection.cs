@@ -28,25 +28,27 @@ namespace LeanCloud.Play {
             request.CreateRoom = new CreateRoomRequest { 
                 RoomOptions = roomOpts
             };
-            var res = await Send(CommandType.Conv, OpType.Start, request);
+            var res = await SendRequest(CommandType.Conv, OpType.Start, request);
             return Utils.ConvertToRoom(res.CreateRoom.RoomOptions);
         }
 
         internal async Task<Room> JoinRoom(string roomId, List<string> expectedUserIds) {
-            var msg = Message.NewRequest("conv", "add");
-            msg["cid"] = roomId;
+            var request = NewRequest();
+            request.JoinRoom = new JoinRoomRequest {
+                Rejoin = false,
+                RoomOptions = new Protocol.RoomOptions {
+                    Cid = roomId
+                },
+            };
             if (expectedUserIds != null) {
-                List<object> expecteds = expectedUserIds.Cast<object>().ToList();
-                msg["expectMembers"] = expecteds;
+                request.JoinRoom.RoomOptions.ExpectMembers.AddRange(expectedUserIds);
             }
-            var res = await Send(msg);
-            // TODO
-            return null;
+            var res = await SendRequest(CommandType.Conv, OpType.Add, request);
+            return Utils.ConvertToRoom(res.JoinRoom.RoomOptions);
         }
 
         internal async Task LeaveRoom() {
-            var msg = Message.NewRequest("conv", "remove");
-            await Send(msg);
+            await SendRequest(CommandType.Conv, OpType.Remove, null);
         }
 
         internal async Task<Dictionary<string, object>> SetRoomOpen(bool open) {
@@ -121,27 +123,25 @@ namespace LeanCloud.Play {
         }
 
         internal async Task<int> SetMaster(int newMasterId) {
-            var msg = Message.NewRequest("conv", "update-master-client");
-            msg["masterActorId"] = newMasterId;
-            var res = await Send(msg);
-            if (res.TryGetValue("masterActorId", out object masterIdObj) &&
-                int.TryParse(masterIdObj.ToString(), out int masterId)) {
-                return masterId;
-            }
-            return -1;
+            var request = NewRequest();
+            request.UpdateMasterClient = new UpdateMasterClientRequest { 
+                MasterActorId = newMasterId
+            };
+            var res = await SendRequest(CommandType.Conv, OpType.UpdateMasterClient, request);
+            return res.UpdateMasterClient.MasterActorId;
         }
 
         internal async Task<int> KickPlayer(int actorId, int code, string reason) {
-            var msg = Message.NewRequest("conv", "kick");
-            msg["targetActorId"] = actorId;
-            msg["appCode"] = code;
-            msg["appMsg"] = reason;
-            var res = await Send(msg);
-            if (res.TryGetValue("targetActorId", out object actorIdObj) &&
-                int.TryParse(actorIdObj.ToString(), out int kickedActorId)) {
-                return kickedActorId;
-            }
-            return actorId;
+            var request = NewRequest();
+            request.KickMember = new KickMemberRequest { 
+                TargetActorId = actorId,
+                AppInfo = new AppInfo { 
+                    AppCode = code,
+                    AppMsg = reason
+                }
+            };
+            var res = await SendRequest(CommandType.Conv, OpType.Kick, request);
+            return res.KickMember.TargetActorId;
         }
 
         internal async Task SendEvent(byte eventId, Dictionary<string, object> eventData, SendEventOptions options) {
@@ -155,36 +155,35 @@ namespace LeanCloud.Play {
             await Send(msg);
         }
 
-        internal async Task<Dictionary<string, object>> SetRoomCustomProperties(Dictionary<string, object> properties, Dictionary<string, object> expectedValues) {
-            var msg = Message.NewRequest("conv", "update");
-            msg["attr"] = properties;
+        internal async Task<PlayObject> SetRoomCustomProperties(PlayObject properties, PlayObject expectedValues) {
+            var request = NewRequest();
+            request.UpdateProperty = new UpdatePropertyRequest {
+                Attr = CodecUtils.EncodePlayObject(properties)
+            };
             if (expectedValues != null) {
-                msg["expectAttr"] = expectedValues;
+                request.UpdateProperty.ExpectAttr = CodecUtils.EncodePlayObject(expectedValues);
             }
-            var res = await Send(msg);
-            if (res.TryGetValue("attr", out object attrObj)) {
-                return attrObj as Dictionary<string, object>;
-            }
-            return null;
+            var res = await SendRequest(CommandType.Conv, OpType.Update, request);
+            var props = CodecUtils.DecodePlayObject(res.UpdateProperty.Attr);
+            return props;
         }
 
-        internal async Task<Dictionary<string, object>> SetPlayerCustomProperties(int playerId, Dictionary<string, object> properties, Dictionary<string, object> expectedValues) {
-            var msg = Message.NewRequest("conv", "update-player-prop");
-            msg["targetActorId"] = playerId;
-            msg["attr"] = properties;
+        internal async Task<Dictionary<string, object>> SetPlayerCustomProperties(int playerId, PlayObject properties, PlayObject expectedValues) {
+            var request = NewRequest();
+            request.UpdateProperty = new UpdatePropertyRequest {
+                TargetActorId = playerId,
+                Attr = CodecUtils.EncodePlayObject(properties)
+            };
             if (expectedValues != null) {
-                msg["expectAttr"] = expectedValues;
+                request.UpdateProperty.ExpectAttr = CodecUtils.EncodePlayObject(expectedValues);
             }
-            var res = await Send(msg);
-            if (res.TryGetValue("actorId", out object actorIdObj) &&
-                int.TryParse(actorIdObj.ToString(), out int actorId) &&
-                res.TryGetValue("attr", out object attrObj)) {
-                return new Dictionary<string, object> {
-                        { "actorId", actorId },
-                        { "changedProps", attrObj },
+            var res = await SendRequest(CommandType.Conv, OpType.UpdatePlayerProp, request);
+            var actorId = res.UpdateProperty.ActorId;
+            var props = CodecUtils.DecodePlayObject(res.UpdateProperty.Attr);
+            return new Dictionary<string, object> {
+                    { "actorId", actorId },
+                    { "changedProps", props },
                 };
-            }
-            return null;
         }
 
         protected override int GetPingDuration() {

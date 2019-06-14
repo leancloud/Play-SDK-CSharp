@@ -39,7 +39,7 @@ namespace LeanCloud.Play.Test
                     Assert.AreEqual(int.Parse(props["gold"].ToString()), 1000);
                     f1 = true;
                 };
-                var newProps = new Dictionary<string, object> {
+                var newProps = new PlayObject {
                     { "name", "leancloud" },
                     { "gold", 1000 },
                 };
@@ -70,10 +70,10 @@ namespace LeanCloud.Play.Test
             };
             var room = await c.CreateRoom(roomName);
 
-            var newProps = new Dictionary<string, object> {
+            var newProps = new PlayObject {
                     { "gold", 200 },
                 };
-            var expectedValues = new Dictionary<string, object> {
+            var expectedValues = new PlayObject {
                     { "id", 2 }
                 };
 
@@ -119,10 +119,10 @@ namespace LeanCloud.Play.Test
                     Debug.Log("c1 check done");
                     f1 = true;
                 };
-                var props = new Dictionary<string, object> {
+                var props = new PlayObject {
                     { "nickname", "LeanCloud" },
                     { "gold", 100 },
-                    { "attr", new Dictionary<string, object> {
+                    { "attr", new PlayObject {
                             { "hp", 10 },
                             { "mp", 20 }
                         } 
@@ -148,16 +148,16 @@ namespace LeanCloud.Play.Test
 
             await c.Connect();
             await c.CreateRoom(roomName);
-            var props = new Dictionary<string, object> {
+            var props = new PlayObject {
                 { "id", 1 },
                 { "nickname", "lean" }
             };
             await c.Player.SetCustomProperties(props);
 
-            var newProps = new Dictionary<string, object> {
+            var newProps = new PlayObject {
                 { "nickname", "cloud" }
             };
-            var expectedValues = new Dictionary<string, object> {
+            var expectedValues = new PlayObject {
                 { "id", 2 }
             };
             await c.Player.SetCustomProperties(newProps, expectedValues);
@@ -173,7 +173,7 @@ namespace LeanCloud.Play.Test
 
             await c0.Connect();
             await c0.CreateRoom(roomName);
-            var props = new Dictionary<string, object> {
+            var props = new PlayObject {
                 { "ready", true }
             };
             await c0.Player.SetCustomProperties(props);
@@ -197,7 +197,7 @@ namespace LeanCloud.Play.Test
 
             await c.Connect();
             await c.CreateRoom(roomName);
-            var props = new Dictionary<string, object> {
+            var props = new PlayObject {
                 { "ready", true }
             };
             await c.Room.SetCustomProperties(props);

@@ -97,7 +97,7 @@ namespace LeanCloud.Play {
         /// </summary>
         /// <param name="properties">自定义属性</param>
         /// <param name="expectedValues">期望属性，用于 CAS 检测</param>
-        public Task SetCustomProperties(Dictionary<string, object> properties, Dictionary<string, object> expectedValues = null) {
+        public Task SetCustomProperties(PlayObject properties, PlayObject expectedValues = null) {
             return Client.SetRoomCustomProperties(properties, expectedValues);
         }
 
@@ -166,6 +166,17 @@ namespace LeanCloud.Play {
 
             lock (CustomProperties) {
                 foreach (KeyValuePair<string, object> entry in changedProps) {
+                    CustomProperties[entry.Key] = entry.Value;
+                }
+            }
+        }
+
+        internal void MergeCustomProperties(PlayObject changedProps) { 
+            if (changedProps == null) {
+                return;
+            }
+            lock (CustomProperties) { 
+                foreach (var entry in changedProps) {
                     CustomProperties[entry.Key] = entry.Value;
                 }
             }

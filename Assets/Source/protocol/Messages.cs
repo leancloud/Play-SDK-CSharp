@@ -109,73 +109,76 @@ namespace LeanCloud.Play.Protocol {
             "bnRPZlBsYXllcnNJblJvb21zGAMgASgFEhYKDmNvdW50T2ZQbGF5ZXJzGAQg",
             "ASgFIlkKEFN0YXRpc3RpY0NvbW1hbmQSRQoIYXBwU3RhdHMYASABKAsyMy5n",
             "YW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1lc3NhZ2VzLkFwcFN0YXRp",
-            "c3RpYyLIBQoOUmVxdWVzdE1lc3NhZ2USCQoBaRgBIAEoBRJQCgtzZXNzaW9u",
-            "T3BlbhgUIAEoCzI5LmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8ubWVz",
-            "c2FnZXMuU2Vzc2lvbk9wZW5SZXF1ZXN0SAASTgoKY3JlYXRlUm9vbRgVIAEo",
-            "CzI4LmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMuQ3Jl",
-            "YXRlUm9vbVJlcXVlc3RIABJKCghqb2luUm9vbRgWIAEoCzI2LmdhbWVfcHJv",
-            "dG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMuSm9pblJvb21SZXF1ZXN0",
-            "SAASVgoOdXBkYXRlUHJvcGVydHkYFyABKAsyPC5nYW1lX3Byb3RvYnVmX21l",
-            "c3NhZ2VzLnByb3RvLm1lc3NhZ2VzLlVwZGF0ZVByb3BlcnR5UmVxdWVzdEgA",
-            "ElwKEXVwZGF0ZVN5c1Byb3BlcnR5GBggASgLMj8uZ2FtZV9wcm90b2J1Zl9t",
-            "ZXNzYWdlcy5wcm90by5tZXNzYWdlcy5VcGRhdGVTeXNQcm9wZXJ0eVJlcXVl",
-            "c3RIABJeChJ1cGRhdGVNYXN0ZXJDbGllbnQYGSABKAsyQC5nYW1lX3Byb3Rv",
-            "YnVmX21lc3NhZ2VzLnByb3RvLm1lc3NhZ2VzLlVwZGF0ZU1hc3RlckNsaWVu",
-            "dFJlcXVlc3RIABJOCgpraWNrTWVtYmVyGBogASgLMjguZ2FtZV9wcm90b2J1",
-            "Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdlcy5LaWNrTWVtYmVyUmVxdWVzdEgA",
-            "EkwKCWpvaW5Mb2JieRg2IAEoCzI3LmdhbWVfcHJvdG9idWZfbWVzc2FnZXMu",
-            "cHJvdG8ubWVzc2FnZXMuSm9pbkxvYmJ5UmVxdWVzdEgAQgkKB3JlcXVlc3Qi",
-            "twUKD1Jlc3BvbnNlTWVzc2FnZRIJCgFpGAEgASgFEkMKCWVycm9ySW5mbxgC",
-            "IAEoCzIwLmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMu",
-            "RXJyb3JJbmZvEk8KCmNyZWF0ZVJvb20YFCABKAsyOS5nYW1lX3Byb3RvYnVm",
-            "X21lc3NhZ2VzLnByb3RvLm1lc3NhZ2VzLkNyZWF0ZVJvb21SZXNwb25zZUgA",
-            "EksKCGpvaW5Sb29tGBUgASgLMjcuZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5w",
-            "cm90by5tZXNzYWdlcy5Kb2luUm9vbVJlc3BvbnNlSAASVwoOdXBkYXRlUHJv",
-            "cGVydHkYFiABKAsyPS5nYW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1l",
-            "c3NhZ2VzLlVwZGF0ZVByb3BlcnR5UmVzcG9uc2VIABJdChF1cGRhdGVTeXNQ",
-            "cm9wZXJ0eRgXIAEoCzJALmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8u",
-            "bWVzc2FnZXMuVXBkYXRlU3lzUHJvcGVydHlSZXNwb25zZUgAEl8KEnVwZGF0",
-            "ZU1hc3RlckNsaWVudBgYIAEoCzJBLmdhbWVfcHJvdG9idWZfbWVzc2FnZXMu",
-            "cHJvdG8ubWVzc2FnZXMuVXBkYXRlTWFzdGVyQ2xpZW50UmVzcG9uc2VIABJP",
-            "CgpraWNrTWVtYmVyGBkgASgLMjkuZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5w",
-            "cm90by5tZXNzYWdlcy5LaWNrTWVtYmVyUmVzcG9uc2VIABJACgNhY2sYGiAB",
-            "KAsyMS5nYW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1lc3NhZ2VzLkFj",
-            "a0NvbW1hbmRIAEIKCghyZXNwb25zZSKjBAoEQm9keRJICgdyZXF1ZXN0GAEg",
-            "ASgLMjUuZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdlcy5S",
-            "ZXF1ZXN0TWVzc2FnZUgAEkoKCHJlc3BvbnNlGAIgASgLMjYuZ2FtZV9wcm90",
-            "b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdlcy5SZXNwb25zZU1lc3NhZ2VI",
-            "ABJGCgZkaXJlY3QYAyABKAsyNC5nYW1lX3Byb3RvYnVmX21lc3NhZ2VzLnBy",
-            "b3RvLm1lc3NhZ2VzLkRpcmVjdENvbW1hbmRIABJTChByb29tTm90aWZpY2F0",
-            "aW9uGAQgASgLMjcuZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNz",
-            "YWdlcy5Sb29tTm90aWZpY2F0aW9uSAASRgoGZXZlbnRzGAUgASgLMjQuZ2Ft",
-            "ZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdlcy5FdmVudHNDb21t",
-            "YW5kSAASTAoJc3RhdGlzdGljGDIgASgLMjcuZ2FtZV9wcm90b2J1Zl9tZXNz",
-            "YWdlcy5wcm90by5tZXNzYWdlcy5TdGF0aXN0aWNDb21tYW5kSAASSgoIcm9v",
-            "bUxpc3QYMyABKAsyNi5nYW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1l",
-            "c3NhZ2VzLlJvb21MaXN0Q29tbWFuZEgAQgYKBGJvZHkikwEKB0NvbW1hbmQS",
-            "PwoDY21kGAEgASgOMjIuZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5t",
-            "ZXNzYWdlcy5Db21tYW5kVHlwZRI5CgJvcBgCIAEoDjItLmdhbWVfcHJvdG9i",
-            "dWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMuT3BUeXBlEgwKBGJvZHkYAyAB",
-            "KAwqdwoLQ29tbWFuZFR5cGUSCwoHdW5rbm93bhAAEgsKB3Nlc3Npb24QARII",
-            "CgRjb252EAISCgoGZGlyZWN0EAMSCQoFZXJyb3IQBBIJCgVsb2JieRAFEg0K",
-            "CXN0YXRpc3RpYxAGEgoKBmV2ZW50cxAHEgcKA2FjaxAIKskFCgZPcFR5cGUS",
-            "CAoEbm9uZRAAEggKBG9wZW4QARIKCgZvcGVuZWQQAhIJCgVjbG9zZRADEgoK",
-            "BmNsb3NlZBAEEgkKBXN0YXJ0EB4SCwoHc3RhcnRlZBAfEg4KCmFkZF9yYW5k",
-            "b20QIBIQCgxyYW5kb21fYWRkZWQQIRIQCgxtYXRjaF9yYW5kb20QIhISCg5y",
-            "YW5kb21fbWF0Y2hlZBAjEgcKA2FkZBAkEgkKBWFkZGVkECUSEgoObWVtYmVy",
-            "c19qb2luZWQQJhISCg5tZW1iZXJzX29ubGluZRAnEgoKBnJlbW92ZRAoEgsK",
-            "B3JlbW92ZWQQKRIQCgxtZW1iZXJzX2xlZnQQKhITCg9tZW1iZXJzX29mZmxp",
-            "bmUQKxIYChR1cGRhdGVfbWFzdGVyX2NsaWVudBAsEhkKFW1hc3Rlcl9jbGll",
-            "bnRfdXBkYXRlZBAtEhkKFW1hc3Rlcl9jbGllbnRfY2hhbmdlZBAuEgoKBnVw",
-            "ZGF0ZRAvEgsKB3VwZGF0ZWQQMBISCg51cGRhdGVkX25vdGlmeRAxEhoKFnVw",
-            "ZGF0ZV9zeXN0ZW1fcHJvcGVydHkQMhIbChdzeXN0ZW1fcHJvcGVydHlfdXBk",
-            "YXRlZBAzEiIKHnN5c3RlbV9wcm9wZXJ0eV91cGRhdGVkX25vdGlmeRA0EhEK",
-            "DW9wZW5lZF9ub3RpZnkQNRILCgd2aXNpYmxlEDYSEgoOdmlzaWJsZV9ub3Rp",
-            "ZnkQNxIWChJ1cGRhdGVfcGxheWVyX3Byb3AQOBIXChNwbGF5ZXJfcHJvcF91",
-            "cGRhdGVkEDkSEAoMcGxheWVyX3Byb3BzEDoSCAoEa2ljaxA7EgoKBmtpY2tl",
-            "ZBA8EhEKDWtpY2tlZF9ub3RpY2UQPRINCglyb29tX2xpc3QQZBIQCgxmaW5k",
-            "X2ZyaWVuZHMQZRIRCg1mb3VuZF9mcmllbmRzEGZCGqoCF0xlYW5DbG91ZC5Q",
-            "bGF5LlByb3RvY29sYgZwcm90bzM="));
+            "c3RpYyJTCgxFcnJvckNvbW1hbmQSQwoJZXJyb3JJbmZvGAEgASgLMjAuZ2Ft",
+            "ZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdlcy5FcnJvckluZm8i",
+            "yAUKDlJlcXVlc3RNZXNzYWdlEgkKAWkYASABKAUSUAoLc2Vzc2lvbk9wZW4Y",
+            "FCABKAsyOS5nYW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1lc3NhZ2Vz",
+            "LlNlc3Npb25PcGVuUmVxdWVzdEgAEk4KCmNyZWF0ZVJvb20YFSABKAsyOC5n",
+            "YW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1lc3NhZ2VzLkNyZWF0ZVJv",
+            "b21SZXF1ZXN0SAASSgoIam9pblJvb20YFiABKAsyNi5nYW1lX3Byb3RvYnVm",
+            "X21lc3NhZ2VzLnByb3RvLm1lc3NhZ2VzLkpvaW5Sb29tUmVxdWVzdEgAElYK",
+            "DnVwZGF0ZVByb3BlcnR5GBcgASgLMjwuZ2FtZV9wcm90b2J1Zl9tZXNzYWdl",
+            "cy5wcm90by5tZXNzYWdlcy5VcGRhdGVQcm9wZXJ0eVJlcXVlc3RIABJcChF1",
+            "cGRhdGVTeXNQcm9wZXJ0eRgYIAEoCzI/LmdhbWVfcHJvdG9idWZfbWVzc2Fn",
+            "ZXMucHJvdG8ubWVzc2FnZXMuVXBkYXRlU3lzUHJvcGVydHlSZXF1ZXN0SAAS",
+            "XgoSdXBkYXRlTWFzdGVyQ2xpZW50GBkgASgLMkAuZ2FtZV9wcm90b2J1Zl9t",
+            "ZXNzYWdlcy5wcm90by5tZXNzYWdlcy5VcGRhdGVNYXN0ZXJDbGllbnRSZXF1",
+            "ZXN0SAASTgoKa2lja01lbWJlchgaIAEoCzI4LmdhbWVfcHJvdG9idWZfbWVz",
+            "c2FnZXMucHJvdG8ubWVzc2FnZXMuS2lja01lbWJlclJlcXVlc3RIABJMCglq",
+            "b2luTG9iYnkYNiABKAsyNy5nYW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3Rv",
+            "Lm1lc3NhZ2VzLkpvaW5Mb2JieVJlcXVlc3RIAEIJCgdyZXF1ZXN0IrcFCg9S",
+            "ZXNwb25zZU1lc3NhZ2USCQoBaRgBIAEoBRJDCgllcnJvckluZm8YAiABKAsy",
+            "MC5nYW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1lc3NhZ2VzLkVycm9y",
+            "SW5mbxJPCgpjcmVhdGVSb29tGBQgASgLMjkuZ2FtZV9wcm90b2J1Zl9tZXNz",
+            "YWdlcy5wcm90by5tZXNzYWdlcy5DcmVhdGVSb29tUmVzcG9uc2VIABJLCghq",
+            "b2luUm9vbRgVIAEoCzI3LmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8u",
+            "bWVzc2FnZXMuSm9pblJvb21SZXNwb25zZUgAElcKDnVwZGF0ZVByb3BlcnR5",
+            "GBYgASgLMj0uZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdl",
+            "cy5VcGRhdGVQcm9wZXJ0eVJlc3BvbnNlSAASXQoRdXBkYXRlU3lzUHJvcGVy",
+            "dHkYFyABKAsyQC5nYW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1lc3Nh",
+            "Z2VzLlVwZGF0ZVN5c1Byb3BlcnR5UmVzcG9uc2VIABJfChJ1cGRhdGVNYXN0",
+            "ZXJDbGllbnQYGCABKAsyQS5nYW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3Rv",
+            "Lm1lc3NhZ2VzLlVwZGF0ZU1hc3RlckNsaWVudFJlc3BvbnNlSAASTwoKa2lj",
+            "a01lbWJlchgZIAEoCzI5LmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8u",
+            "bWVzc2FnZXMuS2lja01lbWJlclJlc3BvbnNlSAASQAoDYWNrGBogASgLMjEu",
+            "Z2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdlcy5BY2tDb21t",
+            "YW5kSABCCgoIcmVzcG9uc2Ui6QQKBEJvZHkSSAoHcmVxdWVzdBgBIAEoCzI1",
+            "LmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMuUmVxdWVz",
+            "dE1lc3NhZ2VIABJKCghyZXNwb25zZRgCIAEoCzI2LmdhbWVfcHJvdG9idWZf",
+            "bWVzc2FnZXMucHJvdG8ubWVzc2FnZXMuUmVzcG9uc2VNZXNzYWdlSAASRgoG",
+            "ZGlyZWN0GAMgASgLMjQuZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5t",
+            "ZXNzYWdlcy5EaXJlY3RDb21tYW5kSAASUwoQcm9vbU5vdGlmaWNhdGlvbhgE",
+            "IAEoCzI3LmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMu",
+            "Um9vbU5vdGlmaWNhdGlvbkgAEkYKBmV2ZW50cxgFIAEoCzI0LmdhbWVfcHJv",
+            "dG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMuRXZlbnRzQ29tbWFuZEgA",
+            "EkwKCXN0YXRpc3RpYxgyIAEoCzI3LmdhbWVfcHJvdG9idWZfbWVzc2FnZXMu",
+            "cHJvdG8ubWVzc2FnZXMuU3RhdGlzdGljQ29tbWFuZEgAEkoKCHJvb21MaXN0",
+            "GDMgASgLMjYuZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdl",
+            "cy5Sb29tTGlzdENvbW1hbmRIABJECgVlcnJvchh/IAEoCzIzLmdhbWVfcHJv",
+            "dG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMuRXJyb3JDb21tYW5kSABC",
+            "BgoEYm9keSKTAQoHQ29tbWFuZBI/CgNjbWQYASABKA4yMi5nYW1lX3Byb3Rv",
+            "YnVmX21lc3NhZ2VzLnByb3RvLm1lc3NhZ2VzLkNvbW1hbmRUeXBlEjkKAm9w",
+            "GAIgASgOMi0uZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdl",
+            "cy5PcFR5cGUSDAoEYm9keRgDIAEoDCp3CgtDb21tYW5kVHlwZRILCgd1bmtu",
+            "b3duEAASCwoHc2Vzc2lvbhABEggKBGNvbnYQAhIKCgZkaXJlY3QQAxIJCgVl",
+            "cnJvchAEEgkKBWxvYmJ5EAUSDQoJc3RhdGlzdGljEAYSCgoGZXZlbnRzEAcS",
+            "BwoDYWNrEAgqyQUKBk9wVHlwZRIICgRub25lEAASCAoEb3BlbhABEgoKBm9w",
+            "ZW5lZBACEgkKBWNsb3NlEAMSCgoGY2xvc2VkEAQSCQoFc3RhcnQQHhILCgdz",
+            "dGFydGVkEB8SDgoKYWRkX3JhbmRvbRAgEhAKDHJhbmRvbV9hZGRlZBAhEhAK",
+            "DG1hdGNoX3JhbmRvbRAiEhIKDnJhbmRvbV9tYXRjaGVkECMSBwoDYWRkECQS",
+            "CQoFYWRkZWQQJRISCg5tZW1iZXJzX2pvaW5lZBAmEhIKDm1lbWJlcnNfb25s",
+            "aW5lECcSCgoGcmVtb3ZlECgSCwoHcmVtb3ZlZBApEhAKDG1lbWJlcnNfbGVm",
+            "dBAqEhMKD21lbWJlcnNfb2ZmbGluZRArEhgKFHVwZGF0ZV9tYXN0ZXJfY2xp",
+            "ZW50ECwSGQoVbWFzdGVyX2NsaWVudF91cGRhdGVkEC0SGQoVbWFzdGVyX2Ns",
+            "aWVudF9jaGFuZ2VkEC4SCgoGdXBkYXRlEC8SCwoHdXBkYXRlZBAwEhIKDnVw",
+            "ZGF0ZWRfbm90aWZ5EDESGgoWdXBkYXRlX3N5c3RlbV9wcm9wZXJ0eRAyEhsK",
+            "F3N5c3RlbV9wcm9wZXJ0eV91cGRhdGVkEDMSIgoec3lzdGVtX3Byb3BlcnR5",
+            "X3VwZGF0ZWRfbm90aWZ5EDQSEQoNb3BlbmVkX25vdGlmeRA1EgsKB3Zpc2li",
+            "bGUQNhISCg52aXNpYmxlX25vdGlmeRA3EhYKEnVwZGF0ZV9wbGF5ZXJfcHJv",
+            "cBA4EhcKE3BsYXllcl9wcm9wX3VwZGF0ZWQQORIQCgxwbGF5ZXJfcHJvcHMQ",
+            "OhIICgRraWNrEDsSCgoGa2lja2VkEDwSEQoNa2lja2VkX25vdGljZRA9Eg0K",
+            "CXJvb21fbGlzdBBkEhAKDGZpbmRfZnJpZW5kcxBlEhEKDWZvdW5kX2ZyaWVu",
+            "ZHMQZkIaqgIXTGVhbkNsb3VkLlBsYXkuUHJvdG9jb2xiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::LeanCloud.Play.Protocol.CommandType), typeof(global::LeanCloud.Play.Protocol.OpType), }, new pbr::GeneratedClrTypeInfo[] {
@@ -212,9 +215,10 @@ namespace LeanCloud.Play.Protocol {
             new pbr::GeneratedClrTypeInfo(typeof(global::LeanCloud.Play.Protocol.RoomListCommand), global::LeanCloud.Play.Protocol.RoomListCommand.Parser, new[]{ "List" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::LeanCloud.Play.Protocol.AppStatistic), global::LeanCloud.Play.Protocol.AppStatistic.Parser, new[]{ "CountOfRooms", "CountOfPlayersOnRouter", "CountOfPlayersInRooms", "CountOfPlayers" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::LeanCloud.Play.Protocol.StatisticCommand), global::LeanCloud.Play.Protocol.StatisticCommand.Parser, new[]{ "AppStats" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::LeanCloud.Play.Protocol.ErrorCommand), global::LeanCloud.Play.Protocol.ErrorCommand.Parser, new[]{ "ErrorInfo" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::LeanCloud.Play.Protocol.RequestMessage), global::LeanCloud.Play.Protocol.RequestMessage.Parser, new[]{ "I", "SessionOpen", "CreateRoom", "JoinRoom", "UpdateProperty", "UpdateSysProperty", "UpdateMasterClient", "KickMember", "JoinLobby" }, new[]{ "Request" }, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::LeanCloud.Play.Protocol.ResponseMessage), global::LeanCloud.Play.Protocol.ResponseMessage.Parser, new[]{ "I", "ErrorInfo", "CreateRoom", "JoinRoom", "UpdateProperty", "UpdateSysProperty", "UpdateMasterClient", "KickMember", "Ack" }, new[]{ "Response" }, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::LeanCloud.Play.Protocol.Body), global::LeanCloud.Play.Protocol.Body.Parser, new[]{ "Request", "Response", "Direct", "RoomNotification", "Events", "Statistic", "RoomList" }, new[]{ "Body" }, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::LeanCloud.Play.Protocol.Body), global::LeanCloud.Play.Protocol.Body.Parser, new[]{ "Request", "Response", "Direct", "RoomNotification", "Events", "Statistic", "RoomList", "Error" }, new[]{ "Body" }, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::LeanCloud.Play.Protocol.Command), global::LeanCloud.Play.Protocol.Command.Parser, new[]{ "Cmd", "Op", "Body" }, null, null, null)
           }));
     }
@@ -6374,6 +6378,141 @@ namespace LeanCloud.Play.Protocol {
 
   }
 
+  public sealed partial class ErrorCommand : pb::IMessage<ErrorCommand> {
+    private static readonly pb::MessageParser<ErrorCommand> _parser = new pb::MessageParser<ErrorCommand>(() => new ErrorCommand());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<ErrorCommand> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[33]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ErrorCommand() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ErrorCommand(ErrorCommand other) : this() {
+      errorInfo_ = other.errorInfo_ != null ? other.errorInfo_.Clone() : null;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ErrorCommand Clone() {
+      return new ErrorCommand(this);
+    }
+
+    /// <summary>Field number for the "errorInfo" field.</summary>
+    public const int ErrorInfoFieldNumber = 1;
+    private global::LeanCloud.Play.Protocol.ErrorInfo errorInfo_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::LeanCloud.Play.Protocol.ErrorInfo ErrorInfo {
+      get { return errorInfo_; }
+      set {
+        errorInfo_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as ErrorCommand);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(ErrorCommand other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (!object.Equals(ErrorInfo, other.ErrorInfo)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (errorInfo_ != null) hash ^= ErrorInfo.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (errorInfo_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(ErrorInfo);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (errorInfo_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(ErrorInfo);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(ErrorCommand other) {
+      if (other == null) {
+        return;
+      }
+      if (other.errorInfo_ != null) {
+        if (errorInfo_ == null) {
+          ErrorInfo = new global::LeanCloud.Play.Protocol.ErrorInfo();
+        }
+        ErrorInfo.MergeFrom(other.ErrorInfo);
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            if (errorInfo_ == null) {
+              ErrorInfo = new global::LeanCloud.Play.Protocol.ErrorInfo();
+            }
+            input.ReadMessage(ErrorInfo);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
   public sealed partial class RequestMessage : pb::IMessage<RequestMessage> {
     private static readonly pb::MessageParser<RequestMessage> _parser = new pb::MessageParser<RequestMessage>(() => new RequestMessage());
     private pb::UnknownFieldSet _unknownFields;
@@ -6382,7 +6521,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[33]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[34]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6848,7 +6987,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[34]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[35]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -7309,7 +7448,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[35]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[36]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -7347,6 +7486,9 @@ namespace LeanCloud.Play.Protocol {
           break;
         case BodyOneofCase.RoomList:
           RoomList = other.RoomList.Clone();
+          break;
+        case BodyOneofCase.Error:
+          Error = other.Error.Clone();
           break;
       }
 
@@ -7435,6 +7577,17 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
+    /// <summary>Field number for the "error" field.</summary>
+    public const int ErrorFieldNumber = 127;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::LeanCloud.Play.Protocol.ErrorCommand Error {
+      get { return bodyCase_ == BodyOneofCase.Error ? (global::LeanCloud.Play.Protocol.ErrorCommand) body_ : null; }
+      set {
+        body_ = value;
+        bodyCase_ = value == null ? BodyOneofCase.None : BodyOneofCase.Error;
+      }
+    }
+
     private object body_;
     /// <summary>Enum of possible cases for the "body" oneof.</summary>
     public enum BodyOneofCase {
@@ -7446,6 +7599,7 @@ namespace LeanCloud.Play.Protocol {
       Events = 5,
       Statistic = 50,
       RoomList = 51,
+      Error = 127,
     }
     private BodyOneofCase bodyCase_ = BodyOneofCase.None;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -7479,6 +7633,7 @@ namespace LeanCloud.Play.Protocol {
       if (!object.Equals(Events, other.Events)) return false;
       if (!object.Equals(Statistic, other.Statistic)) return false;
       if (!object.Equals(RoomList, other.RoomList)) return false;
+      if (!object.Equals(Error, other.Error)) return false;
       if (BodyCase != other.BodyCase) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -7493,6 +7648,7 @@ namespace LeanCloud.Play.Protocol {
       if (bodyCase_ == BodyOneofCase.Events) hash ^= Events.GetHashCode();
       if (bodyCase_ == BodyOneofCase.Statistic) hash ^= Statistic.GetHashCode();
       if (bodyCase_ == BodyOneofCase.RoomList) hash ^= RoomList.GetHashCode();
+      if (bodyCase_ == BodyOneofCase.Error) hash ^= Error.GetHashCode();
       hash ^= (int) bodyCase_;
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -7535,6 +7691,10 @@ namespace LeanCloud.Play.Protocol {
         output.WriteRawTag(154, 3);
         output.WriteMessage(RoomList);
       }
+      if (bodyCase_ == BodyOneofCase.Error) {
+        output.WriteRawTag(250, 7);
+        output.WriteMessage(Error);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -7563,6 +7723,9 @@ namespace LeanCloud.Play.Protocol {
       }
       if (bodyCase_ == BodyOneofCase.RoomList) {
         size += 2 + pb::CodedOutputStream.ComputeMessageSize(RoomList);
+      }
+      if (bodyCase_ == BodyOneofCase.Error) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(Error);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -7617,6 +7780,12 @@ namespace LeanCloud.Play.Protocol {
             RoomList = new global::LeanCloud.Play.Protocol.RoomListCommand();
           }
           RoomList.MergeFrom(other.RoomList);
+          break;
+        case BodyOneofCase.Error:
+          if (Error == null) {
+            Error = new global::LeanCloud.Play.Protocol.ErrorCommand();
+          }
+          Error.MergeFrom(other.Error);
           break;
       }
 
@@ -7694,6 +7863,15 @@ namespace LeanCloud.Play.Protocol {
             RoomList = subBuilder;
             break;
           }
+          case 1018: {
+            global::LeanCloud.Play.Protocol.ErrorCommand subBuilder = new global::LeanCloud.Play.Protocol.ErrorCommand();
+            if (bodyCase_ == BodyOneofCase.Error) {
+              subBuilder.MergeFrom(Error);
+            }
+            input.ReadMessage(subBuilder);
+            Error = subBuilder;
+            break;
+          }
         }
       }
     }
@@ -7708,7 +7886,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[36]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[37]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

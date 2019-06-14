@@ -84,10 +84,10 @@ namespace LeanCloud.Play {
                 SdkVersion = Config.PlayVersion,
                 GameVersion = gameVersion
             };
-            return Send(CommandType.Session, OpType.Open, request);
+            return SendRequest(CommandType.Session, OpType.Open, request);
         }
 
-        protected Task<ResponseMessage> Send(CommandType cmd, OpType op, RequestMessage request) {
+        protected Task<ResponseMessage> SendRequest(CommandType cmd, OpType op, RequestMessage request) {
             var tcs = new TaskCompletionSource<ResponseMessage>();
             responses.Add(request.I, tcs);
             Send(cmd, op, new Body {

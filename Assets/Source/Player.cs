@@ -40,7 +40,7 @@ namespace LeanCloud.Play {
         /// 获取自定义属性
         /// </summary>
         /// <value>The custom properties.</value>
-        public Dictionary<string, object> CustomProperties {
+        public PlayObject CustomProperties {
             get; internal set;
         }
 
@@ -69,7 +69,7 @@ namespace LeanCloud.Play {
         /// </summary>
         /// <param name="properties">Properties.</param>
         /// <param name="expectedValues">Expected values.</param>
-        public Task SetCustomProperties(Dictionary<string, object> properties, Dictionary<string, object> expectedValues = null) {
+        public Task SetCustomProperties(PlayObject properties, PlayObject expectedValues = null) {
             return Client.SetPlayerCustomProperties(ActorId, properties, expectedValues);
         }
 
@@ -77,23 +77,6 @@ namespace LeanCloud.Play {
             ActorId = -1;
             UserId = null;
 		}
-
-        internal static Player NewFromDictionary(Dictionary<string, object> playerDict) {
-            if (playerDict == null) {
-                throw new ArgumentNullException(nameof(playerDict));
-            }
-            Player player = new Player {
-                UserId = playerDict["pid"] as string,
-                ActorId = int.Parse(playerDict["actorId"].ToString())
-            };
-            if (playerDict.TryGetValue("attr", out object propsObj)) {
-                var props = propsObj as Dictionary<string, object>;
-                player.CustomProperties = props;
-            } else {
-                player.CustomProperties = new Dictionary<string, object>();
-            }
-            return player;
-        }
 
         internal void MergeProperties(Dictionary<string, object> changedProps) {
             if (changedProps == null)

@@ -4,7 +4,7 @@ using Google.Protobuf;
 using LeanCloud.Play.Protocol;
 using System.Collections.Generic;
 
-namespace LeanCloud.Play
+namespace LeanCloud.Play.Test
 {
     public class CodecTest
     {

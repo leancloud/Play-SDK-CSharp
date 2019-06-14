@@ -52,10 +52,11 @@ namespace LeanCloud.Play {
             var player = new Player { 
                 UserId = member.Pid,
                 ActorId = member.ActorId,
-                IsActive = !member.Inactive,
-                // TODO attr
-
+                IsActive = !member.Inactive
             };
+            if (member.Attr != null) {
+                player.CustomProperties = CodecUtils.DecodePlayObject(member.Attr);
+            }
             return player;
         }
     }
