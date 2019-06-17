@@ -14,7 +14,7 @@ namespace LeanCloud.Play {
         readonly Dictionary<int, TaskCompletionSource<Message>> requests;
         readonly Dictionary<int, TaskCompletionSource<ResponseMessage>> responses;
 
-        internal event Action<Message> OnMessage;
+        internal event Action<CommandType, OpType, Body> OnMessage;
         internal event Action<int, string> OnClose;
 
         readonly Queue<Message> messageQueue;
@@ -173,19 +173,8 @@ namespace LeanCloud.Play {
                         tcs.SetResult(res);
                     }
                 }
-            } else if (body.Direct != null) { 
-            
-            } else if (body.RoomNotification != null) { 
-            
-            } else if (body.Events != null) { 
-            
-            } else if (body.Statistic != null) { 
-            
-            } else if (body.RoomList != null) { 
-            
-            } else { 
-                // NOT support
-
+            } else {
+                OnMessage?.Invoke(cmd, op, body);
             }
         }
 
@@ -194,25 +183,25 @@ namespace LeanCloud.Play {
 
         }
 
-        void HandleMessage(Message message) {
-            Logger.Debug($"handle: {message.ToJson()}");
-            if (message.HasI) {
-                TaskCompletionSource<Message> tcs = null;
-                lock (requests) {
-                    if (!requests.TryGetValue(message.I, out tcs)) {
-                        Logger.Error("no requests for {0}", message.I);
-                    }
-                }
-                if (message.IsError) {
-                    tcs.SetException(new PlayException(message.ReasonCode, message.Detail));
-                } else {
-                    tcs.SetResult(message);
-                }
-            } else {
-                // 推送消息
-                OnMessage?.Invoke(message);
-            }
-        }
+        //void HandleMessage(Message message) {
+        //    Logger.Debug($"handle: {message.ToJson()}");
+        //    if (message.HasI) {
+        //        TaskCompletionSource<Message> tcs = null;
+        //        lock (requests) {
+        //            if (!requests.TryGetValue(message.I, out tcs)) {
+        //                Logger.Error("no requests for {0}", message.I);
+        //            }
+        //        }
+        //        if (message.IsError) {
+        //            tcs.SetException(new PlayException(message.ReasonCode, message.Detail));
+        //        } else {
+        //            tcs.SetResult(message);
+        //        }
+        //    } else {
+        //        // 推送消息
+        //        OnMessage?.Invoke(message);
+        //    }
+        //}
 
         void OnWebSocketClose(object sender, CloseEventArgs eventArgs) {
             StopKeepAlive();
@@ -229,14 +218,14 @@ namespace LeanCloud.Play {
         }
 
         internal void ResumeMessageQueue() {
-            if (messageQueue.Count > 0) {
-                lock (messageQueue) { 
-                    while (messageQueue.Count > 0) {
-                        var msg = messageQueue.Dequeue();
-                        HandleMessage(msg);
-                    }
-                }
-            }
+            //if (messageQueue.Count > 0) {
+            //    lock (messageQueue) { 
+            //        while (messageQueue.Count > 0) {
+            //            var msg = messageQueue.Dequeue();
+            //            HandleMessage(msg);
+            //        }
+            //    }
+            //}
             isMessageQueueRunning = true;
         }
 

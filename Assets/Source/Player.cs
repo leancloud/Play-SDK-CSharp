@@ -78,12 +78,14 @@ namespace LeanCloud.Play {
             UserId = null;
 		}
 
-        internal void MergeProperties(Dictionary<string, object> changedProps) {
+        internal void MergeCustomProperties(PlayObject changedProps) {
             if (changedProps == null)
                 return;
 
-            foreach (KeyValuePair<string, object> entry in changedProps) {
-                CustomProperties[entry.Key] = entry.Value;
+            lock (CustomProperties) { 
+                foreach (var entry in changedProps) {
+                    CustomProperties[entry.Key] = entry.Value;
+                }
             }
         }
 	}

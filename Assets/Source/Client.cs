@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
+using LeanCloud.Play.Protocol;
 
 namespace LeanCloud.Play {
     public class Client {
@@ -13,12 +14,12 @@ namespace LeanCloud.Play {
         public event Action<Player> OnMasterSwitched;
         public event Action<bool> OnRoomOpenChanged;
         public event Action<bool> OnRoomVisibleChanged;
-        public event Action<Dictionary<string, object>> OnRoomCustomPropertiesChanged;
-        public event Action<Dictionary<string, object>> OnRoomSystemPropertiesChanged;
-        public event Action<Player, Dictionary<string, object>> OnPlayerCustomPropertiesChanged;
+        public event Action<PlayObject> OnRoomCustomPropertiesChanged;
+        public event Action<PlayObject> OnRoomSystemPropertiesChanged;
+        public event Action<Player, PlayObject> OnPlayerCustomPropertiesChanged;
         public event Action<Player> OnPlayerActivityChanged;
-        public event Action<byte, Dictionary<string, object>, int> OnCustomEvent;
-        public event Action<int, string> OnRoomKicked;
+        public event Action<byte, PlayObject, int> OnCustomEvent;
+        public event Action<int?, string> OnRoomKicked;
         public event Action OnDisconnected;
         public event Action<int, string> OnError;
 
@@ -269,7 +270,7 @@ namespace LeanCloud.Play {
                     string.Format("You cannot call SetRoomOpened() on {0} state", state.ToString()));
             }
             var sysProps = await gameConn.SetRoomOpen(opened);
-            Room.MergeSystemProps(sysProps);
+            Room.MergeSystemProperties(sysProps);
             return Room.Open;
         }
 
@@ -279,7 +280,7 @@ namespace LeanCloud.Play {
                     string.Format("You cannot call SetRoomVisible() on {0} state", state.ToString()));
             }
             var sysProps = await gameConn.SetRoomVisible(visible);
-            Room.MergeSystemProps(sysProps);
+            Room.MergeSystemProperties(sysProps);
             return Room.Visible;
         }
 
@@ -289,7 +290,7 @@ namespace LeanCloud.Play {
                     string.Format("You cannot call SetRoomMaxPlayerCount() on {0} state", state.ToString()));
             }
             var sysProps = await gameConn.SetRoomMaxPlayerCount(count);
-            Room.MergeSystemProps(sysProps);
+            Room.MergeSystemProperties(sysProps);
             return Room.MaxPlayerCount;
         }
 
@@ -299,7 +300,7 @@ namespace LeanCloud.Play {
                     string.Format("You cannot call SetRoomExpectedUserIds() on {0} state", state.ToString()));
             }
             var sysProps = await gameConn.SetRoomExpectedUserIds(expectedUserIds);
-            Room.MergeSystemProps(sysProps);
+            Room.MergeSystemProperties(sysProps);
             return Room.ExpectedUserIds;
         }
 
@@ -309,7 +310,7 @@ namespace LeanCloud.Play {
                     string.Format("You cannot call ClearRoomExpectedUserIds() on {0} state", state.ToString()));
             }
             var sysProps = await gameConn.ClearRoomExpectedUserIds();
-            Room.MergeSystemProps(sysProps);
+            Room.MergeSystemProperties(sysProps);
         }
 
         public async Task<List<string>> AddRoomExpectedUserIds(List<string> expectedUserIds) {
@@ -318,7 +319,7 @@ namespace LeanCloud.Play {
                     string.Format("You cannot call AddRoomExpectedUserIds() on {0} state", state.ToString()));
             }
             var sysProps = await gameConn.AddRoomExpectedUserIds(expectedUserIds);
-            Room.MergeSystemProps(sysProps);
+            Room.MergeSystemProperties(sysProps);
             return Room.ExpectedUserIds;
         }
 
@@ -328,7 +329,7 @@ namespace LeanCloud.Play {
                     string.Format("You cannot call RemoveRoomExpectedUserIds() on {0} state", state.ToString()));
             }
             var sysProps = await gameConn.RemoveRoomExpectedUserIds(expectedUserIds);
-            Room.MergeSystemProps(sysProps);
+            Room.MergeSystemProperties(sysProps);
             return Room.ExpectedUserIds;
         }
 
@@ -350,7 +351,7 @@ namespace LeanCloud.Play {
             Room.RemovePlayer(playerId);
         }
 
-        public Task SendEvent(byte eventId, Dictionary<string, object> eventData = null, SendEventOptions options = null) {
+        public Task SendEvent(byte eventId, PlayObject eventData = null, SendEventOptions options = null) {
             if (state != PlayState.GAME) {
                 throw new PlayException(PlayExceptionCode.StateError,
                     string.Format("You cannot call SendEvent() on {0} state", state.ToString()));
@@ -361,8 +362,7 @@ namespace LeanCloud.Play {
                     ReceiverGroup = ReceiverGroup.All
                 };
             }
-            gameConn.SendEvent(eventId, eventData, opts).OnSuccess(_ => { });
-            return Task.FromResult(true);
+            return gameConn.SendEvent(eventId, eventData, opts);
         }
 
         public async Task SetRoomCustomProperties(PlayObject properties, PlayObject expectedValues = null) {
@@ -380,12 +380,10 @@ namespace LeanCloud.Play {
                     string.Format("You cannot call SetPlayerCustomProperties() on {0} state", state.ToString()));
             }
             var res = await gameConn.SetPlayerCustomProperties(actorId, properties, expectedValues);
-            if (res != null) {
-                // 如果不为空，则进行属性更新
-                var aId = int.Parse(res["actorId"].ToString());
-                var player = Room.GetPlayer(aId);
-                player.MergeProperties(res["changedProps"] as Dictionary<string, object>);
-            }
+            var playerId = res.Item1;
+            var player = Room.GetPlayer(playerId);
+            var changedProps = res.Item2;
+            player.MergeCustomProperties(changedProps);
         }
 
         public void PauseMessageQueue() { 
@@ -413,59 +411,49 @@ namespace LeanCloud.Play {
             state = PlayState.CLOSE;
         }
 
-        void OnLobbyConnMessage(Message msg) {
+        void OnLobbyConnMessage(CommandType cmd, OpType op, Body body) {
             context.Post(() => { 
-                switch (msg.Cmd) {
-                    case "lobby":
-                        switch (msg.Op) {
-                            case "room-list":
-                                HandleRoomListMsg(msg);
+                switch (cmd) {
+                    case CommandType.Lobby:
+                        switch (op) {
+                            case OpType.RoomList:
+                                HandleRoomListMsg(body);
                                 break;
                             default:
-                                HandleUnknownMsg(msg);
+                                HandleUnknownMsg(cmd, op, body);
                                 break;
                         }
                         break;
-                    case "events":
+                    case CommandType.Statistic:
                         break;
-                    case "statistic":
-                        break;
-                    case "conv":
-                        break;
-                    case "error":
-                        HandleErrorMsg(msg);
+                    case CommandType.Error:
+                        HandleErrorMsg(body);
                         break;
                     default:
-                        HandleUnknownMsg(msg);
+                        HandleUnknownMsg(cmd, op, body);
                         break;
                 }
             });
         }
 
-        void HandleRoomListMsg(Message msg) {
+        void HandleRoomListMsg(Body body) {
             LobbyRoomList = new List<LobbyRoom>();
-            if (msg.Data.TryGetValue("list", out object roomsObj)) {
-                List<object> rooms = roomsObj as List<object>;
-                foreach (Dictionary<string, object> room in rooms) {
-                    var lobbyRoom = LobbyRoom.NewFromDictionary(room);
-                    LobbyRoomList.Add(lobbyRoom);
-                }
+            foreach (var roomOpts in body.RoomList.List) {
+                var lobbyRoom = Utils.ConvertToLobbyRoom(roomOpts);
+                LobbyRoomList.Add(lobbyRoom);
             }
             OnLobbyRoomListUpdated?.Invoke(LobbyRoomList);
         }
 
-        void HandleErrorMsg(Message msg) {
-            Logger.Error("error msg: {0}", msg.ToJson());
-            if (msg.TryGetValue("reasonCode", out object codeObj) &&
-                int.TryParse(codeObj.ToString(), out int code)) {
-                var detail = msg["detail"] as string;
-                OnError?.Invoke(code, detail); 
-            }
+        void HandleErrorMsg(Body body) {
+            Logger.Error("error msg: {0}", body);
+            var errorInfo = body.Error.ErrorInfo;
+            OnError?.Invoke(errorInfo.ReasonCode, errorInfo.Detail);
         }
 
-        void HandleUnknownMsg(Message msg) {
+        void HandleUnknownMsg(CommandType cmd, OpType op, Body body) {
             try {
-                Logger.Error("unknown msg: {0}", msg);
+                Logger.Error("unknown msg: {0}/{1} {2}", cmd, op, body);
             } catch (Exception e) {
                 Logger.Error(e.Message);
             }
@@ -478,59 +466,50 @@ namespace LeanCloud.Play {
             });
         }
 
-        void OnGameConnMessage(Message msg) {
+        void OnGameConnMessage(CommandType cmd, OpType op, Body body) {
             context.Post(() => {
-                switch (msg.Cmd) {
-                    case "conv":
-                        switch (msg.Op) {
-                            case "members-joined":
-                                HandlePlayerJoinedRoom(msg);
+                switch (cmd) {
+                    case CommandType.Conv:
+                        switch (op) {
+                            case OpType.MembersJoined:
+                                HandlePlayerJoinedRoom(body.RoomNotification.JoinRoom);
                                 break;
-                            case "members-left":
-                                HandlePlayerLeftRoom(msg);
+                            case OpType.MembersLeft:
+                                HandlePlayerLeftRoom(body.RoomNotification.LeftRoom);
                                 break;
-                            case "master-client-changed":
-                                HandleMasterChanged(msg);
+                            case OpType.MasterClientChanged:
+                                HandleMasterChanged(body.RoomNotification.UpdateMasterClient);
                                 break;
-                            case "opened-notify":
-                                HandleRoomOpenChanged(msg);
+                            case OpType.SystemPropertyUpdatedNotify:
+                                HandleRoomSystemPropertiesChanged(body.RoomNotification.UpdateSysProperty);
                                 break;
-                            case "visible-notify":
-                                HandleRoomVisibleChanged(msg);
+                            case OpType.UpdatedNotify:
+                                HandleRoomCustomPropertiesChanged(body.RoomNotification.UpdateProperty);
                                 break;
-                            case "updated-notify":
-                                HandleRoomCustomPropertiesChanged(msg);
+                            case OpType.MembersOffline:
+                                //HandlePlayerOffline(msg);
                                 break;
-                            case "system-property-updated-notify":
-                                HandleRoomSystemPropsChanged(msg);
+                            case OpType.MembersOnline:
+                                //HandlePlayerOnline(msg);
                                 break;
-                            case "player-props":
-                                HandlePlayerCustomPropertiesChanged(msg);
-                                break;
-                            case "members-offline":
-                                HandlePlayerOffline(msg);
-                                break;
-                            case "members-online":
-                                HandlePlayerOnline(msg);
-                                break;
-                            case "kicked-notice":
-                                HandleRoomKicked(msg);
+                            case OpType.KickedNotice:
+                                HandleRoomKicked(body.RoomNotification);
                                 break;
                             default:
-                                HandleUnknownMsg(msg);
+                                HandleUnknownMsg(cmd, op, body);
                                 break;
                         }
                         break;
-                    case "events":
+                    case CommandType.Events:
                         break;
-                    case "direct":
-                        HandleSendEvent(msg);
+                    case CommandType.Direct:
+                        HandleSendEvent(body.Direct);
                         break;
-                    case "error":
-                        HandleErrorMsg(msg);
+                    case CommandType.Error:
+                        HandleErrorMsg(body);
                         break;
                     default:
-                        HandleUnknownMsg(msg);
+                        HandleUnknownMsg(cmd, op, body);
                         break;
                 }
             });
@@ -543,157 +522,85 @@ namespace LeanCloud.Play {
             });
         }
 
-        void HandlePlayerJoinedRoom(Message msg) { 
-            if (msg.TryGetValue("member", out object playerObj)) {
-                // TODO 完善 Player 对象
-                var player = new Player();
-                player.Client = this;
-                Room.AddPlayer(player);
-                OnPlayerRoomJoined?.Invoke(player);
+        void HandlePlayerJoinedRoom(JoinRoomNotification joinRoomNotification) {
+            var player = Utils.ConvertToPlayer(joinRoomNotification.Member);
+            player.Client = this;
+            Room.AddPlayer(player);
+            OnPlayerRoomJoined?.Invoke(player);
+        }
+
+        void HandlePlayerLeftRoom(LeftRoomNotification leftRoomNotification) {
+            var playerId = leftRoomNotification.ActorId;
+            var leftPlayer = Room.GetPlayer(playerId);
+            Room.RemovePlayer(playerId);
+            OnPlayerRoomLeft?.Invoke(leftPlayer);
+        }
+
+        void HandleMasterChanged(UpdateMasterClientNotification updateMasterClientNotification) {
+            var newMasterId = updateMasterClientNotification.MasterActorId;
+            Room.MasterActorId = newMasterId;
+            if (newMasterId == 0) {
+                OnMasterSwitched?.Invoke(null);
             } else {
-                Logger.Error("Handle player joined room error: {0}", msg.ToJson());
+                var newMaster = Room.GetPlayer(newMasterId);
+                OnMasterSwitched?.Invoke(newMaster);
             }
         }
 
-        void HandlePlayerLeftRoom(Message msg) { 
-            if (msg.TryGetValue("actorId", out object playerIdObj) &&
-                int.TryParse(playerIdObj.ToString(), out int playerId)) {
-                try {
-                    var leftPlayer = Room.GetPlayer(playerId);
-                    Room.RemovePlayer(playerId);
-                    OnPlayerRoomLeft?.Invoke(leftPlayer);
-                } catch (Exception e) {
-                    Logger.Error(e.Message);
-                }
-            } else {
-                Logger.Error("Handle player left room error: {0}", msg.ToJson());
-            }
-        }
-
-        void HandleMasterChanged(Message msg) {
-            if (msg.Data.ContainsKey("masterActorId")) {
-                if (msg.Data["masterActorId"] != null &&
-                    msg.TryGetValue("masterActorId", out object newMasterIdObj) &&
-                    int.TryParse(newMasterIdObj.ToString(), out int newMasterId)) {
-                    Room.MasterActorId = newMasterId;
-                    var newMaster = Room.GetPlayer(newMasterId);
-                    OnMasterSwitched?.Invoke(newMaster);
-                } else {
-                    Room.MasterActorId = -1;
-                    OnMasterSwitched?.Invoke(null);
-                }
-            } else {
-                Logger.Error("Handle room open changed error: {0}", msg.ToJson());
-            }
-        }
-
-        void HandleRoomOpenChanged(Message msg) { 
-            if (msg.TryGetValue("toggle", out object openObj) &&
-                bool.TryParse(openObj.ToString(), out bool open)) {
-                Room.Open = open;
-                OnRoomOpenChanged?.Invoke(open);
-            } else {
-                Logger.Error("Handle room open changed error: {0}", msg.ToJson());
-            }
-        }
-
-        void HandleRoomVisibleChanged(Message msg) { 
-            if (msg.TryGetValue("toggle", out object visibleObj) &&
-                bool.TryParse(visibleObj.ToString(), out bool visible)) {
-                Room.Visible = visible;
-                OnRoomVisibleChanged?.Invoke(visible);
-            } else {
-                Logger.Error("Handle room visible changed error: {0}", msg.ToJson());
-            }
-        }
-
-        void HandleRoomCustomPropertiesChanged(Message msg) { 
-            if (msg.TryGetValue("attr", out object attrObj)) {
-                var changedProps = attrObj as Dictionary<string, object>;
-                Room.MergeProperties(changedProps);
+        void HandleRoomCustomPropertiesChanged(UpdatePropertyNotification updatePropertyNotification) {
+            var changedProps = CodecUtils.DecodePlayObject(updatePropertyNotification.Attr);
+            if (updatePropertyNotification.ActorId == 0) {
+                // 房间属性变化
+                Room.MergeCustomProperties(changedProps);
                 OnRoomCustomPropertiesChanged?.Invoke(changedProps);
             } else {
-                Logger.Error("Handle room custom properties changed error: {0}", msg.ToJson());
-            }
-        }
-
-        void HandleRoomSystemPropsChanged(Message msg) {
-            if (msg.TryGetValue("sysAttr", out object attrObj)) {
-                var changedProps = attrObj as Dictionary<string, object>;
-                var props = Room.MergeSystemProps(changedProps);
-                OnRoomSystemPropertiesChanged?.Invoke(props);
-            } else {
-                Logger.Error("Handle room system properties changed error: {0}", msg.ToJson());
-            }
-        }
-
-        void HandlePlayerCustomPropertiesChanged(Message msg) { 
-            if (msg.TryGetValue("actorId", out object playerIdObj) && 
-                int.TryParse(playerIdObj.ToString(), out int playerId) &&
-                msg.TryGetValue("attr", out object attrObj)) {
-                var player = Room.GetPlayer(playerId);
+                // 玩家属性变化
+                var player = Room.GetPlayer(updatePropertyNotification.ActorId);
                 if (player == null) {
-                    Logger.Error("No player id: {0} when player properties changed", msg.ToJson());
+                    Logger.Error("No player id: {0} when player properties changed", updatePropertyNotification);
                     return;
                 }
-                var changedProps = attrObj as Dictionary<string, object>;
-                player.MergeProperties(changedProps);
+                player.MergeCustomProperties(changedProps);
                 OnPlayerCustomPropertiesChanged?.Invoke(player, changedProps);
-            } else {
-                Logger.Error("Handle player custom properties changed error: {0}", msg.ToJson());
             }
         }
 
-        void HandlePlayerOffline(Message msg) {
-            if (msg.TryGetValue("initByActor", out object playerIdObj) &&
-                int.TryParse(playerIdObj.ToString(), out int playerId)) {
-                var player = Room.GetPlayer(playerId);
-                if (player == null) {
-                    Logger.Error("No player id: {0} when player is offline");
-                    return;
-                }
-                player.IsActive = false;
-                OnPlayerActivityChanged?.Invoke(player);
-            } else {
-                Logger.Error("Handle player offline error: {0}", msg.ToJson());
-            }
+        void HandleRoomSystemPropertiesChanged(UpdateSysPropertyNotification updateSysPropertyNotification) {
+            var changedProps = Utils.ConvertToPlayObject(updateSysPropertyNotification.SysAttr);
+            Room.MergeSystemProperties(changedProps);
+            OnRoomSystemPropertiesChanged?.Invoke(changedProps);
         }
 
-        void HandlePlayerOnline(Message msg) { 
-            if (msg.TryGetValue("member", out object memberObj)) {
-                var member = memberObj as Dictionary<string, object>;
-                if (member.TryGetValue("actorId", out object playerIdObj) &&
-                    int.TryParse(playerIdObj.ToString(), out int playerId)) {
-                    // TODO 完善 Player 对象
-                    var player = new Player();
-                    player.Client = this;
-                    OnPlayerActivityChanged?.Invoke(player);
-                } else {
-                    Logger.Error("Handle player online error: {0}", msg.ToJson());
-                }
-            } else {
-                Logger.Error("Handle player online error: {0}", msg.ToJson());
+        void HandlePlayerOffline(RoomNotification roomNotification) {
+            var playerId = roomNotification.InitByActor;
+            var player = Room.GetPlayer(playerId);
+            if (player == null) {
+                Logger.Error("No player id: {0} when player is offline");
+                return;
             }
+            player.IsActive = false;
+            OnPlayerActivityChanged?.Invoke(player);
         }
 
-        void HandleSendEvent(Message msg) { 
-            if (msg.TryGetValue("eventId", out object eventIdObj) && 
-                byte.TryParse(eventIdObj.ToString(), out byte eventId)) {
-                var senderId = -1;
-                if (msg.TryGetValue("fromActorId", out object senderIdObj)) {
-                    int.TryParse(senderIdObj.ToString(), out senderId);
-                }
-                Dictionary<string, object> eventData = null;
-                if (msg.TryGetValue("msg", out object eventDataObj)) {
-                    eventData = eventDataObj as Dictionary<string, object>;
-                }
-                OnCustomEvent?.Invoke(eventId, eventData, senderId);
-            } else {
-                Logger.Error("Handle custom event error: {0}", msg.ToJson());
+        void HandlePlayerOnline(RoomNotification roomNotification) {
+            var playerId = roomNotification.InitByActor;
+            var player = Room.GetPlayer(playerId);
+            if (player == null) {
+                Logger.Error("No player id: {0} when player is offline");
+                return;
             }
+            player.IsActive = true;
+            OnPlayerActivityChanged?.Invoke(player);
         }
 
-        void HandleRoomKicked(Message msg) {
+        void HandleSendEvent(DirectCommand directCommand) {
+            var eventId = (byte) directCommand.EventId;
+            var eventData = CodecUtils.DecodePlayObject(directCommand.Msg);
+            var senderId = directCommand.FromActorId;
+            OnCustomEvent?.Invoke(eventId, eventData, senderId);
+        }
+
+        void HandleRoomKicked(RoomNotification roomNotification) {
             state = PlayState.GAME_TO_LOBBY;
             // 建立连接
             ConnectLobby().ContinueWith(t => {
@@ -703,14 +610,15 @@ namespace LeanCloud.Play {
                         throw t.Exception.InnerException;
                     }
                     GameToLobby(t.Result);
-                    int code = -1;
-                    string reason = string.Empty;
-                    if (msg.TryGetValue("appCode", out object codeObj) &&
-                        int.TryParse(codeObj.ToString(), out code)) { }
-                    if (msg.TryGetValue("appMsg", out object reasonObj)) {
-                        reason = reasonObj.ToString();
+                    var appInfo = roomNotification.AppInfo;
+                    if (appInfo != null) {
+                        var code = appInfo.AppCode;
+                        var reason = appInfo.AppMsg;
+                        OnRoomKicked?.Invoke(code, reason);
+                    } else {
+                        // TODO
+                        OnRoomKicked?.Invoke(null, null);
                     }
-                    OnRoomKicked?.Invoke(code, reason);
                 });
             });
         }

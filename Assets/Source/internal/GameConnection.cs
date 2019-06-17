@@ -51,75 +51,93 @@ namespace LeanCloud.Play {
             await SendRequest(CommandType.Conv, OpType.Remove, null);
         }
 
-        internal async Task<Dictionary<string, object>> SetRoomOpen(bool open) {
-            var msg = Message.NewRequest("conv", "update-system-property");
-            msg["sysAttr"] = new Dictionary<string, object> {
-                { "open", open }
+        internal async Task<PlayObject> SetRoomOpen(bool open) {
+            var request = NewRequest();
+            request.UpdateSysProperty = new UpdateSysPropertyRequest { 
+                SysAttr = new RoomSystemProperty { 
+                    Open = open
+                }
             };
-            var res = await Send(msg);
-            return res["sysAttr"] as Dictionary<string, object>;
+            var res = await SendRequest(CommandType.Conv, OpType.UpdateSystemProperty, request);
+            return Utils.ConvertToPlayObject(res.UpdateSysProperty.SysAttr);
         }
 
-        internal async Task<Dictionary<string, object>> SetRoomVisible(bool visible) {
-            var msg = Message.NewRequest("conv", "update-system-property");
-            msg["sysAttr"] = new Dictionary<string, object> {
-                { "visible", visible }
+        internal async Task<PlayObject> SetRoomVisible(bool visible) {
+            var request = NewRequest();
+            request.UpdateSysProperty = new UpdateSysPropertyRequest { 
+                SysAttr = new RoomSystemProperty { 
+                    Visible = visible
+                }
             };
-            var res = await Send(msg);
-            return res["sysAttr"] as Dictionary<string, object>;
+            var res = await SendRequest(CommandType.Conv, OpType.UpdateSystemProperty, request);
+            return Utils.ConvertToPlayObject(res.UpdateSysProperty.SysAttr);
         }
 
-        internal async Task<Dictionary<string, object>> SetRoomMaxPlayerCount(int count) {
-            var msg = Message.NewRequest("conv", "update-system-property");
-            msg["sysAttr"] = new Dictionary<string, object> {
-                { "maxMembers", count }
+        internal async Task<PlayObject> SetRoomMaxPlayerCount(int count) {
+            var request = NewRequest();
+            request.UpdateSysProperty = new UpdateSysPropertyRequest { 
+                SysAttr = new RoomSystemProperty { 
+                    MaxMembers = count
+                }
             };
-            var res = await Send(msg);
-            return res["sysAttr"] as Dictionary<string, object>;
+            var res = await SendRequest(CommandType.Conv, OpType.UpdateSystemProperty, request);
+            return Utils.ConvertToPlayObject(res.UpdateSysProperty.SysAttr);
         }
 
-        internal async Task<Dictionary<string, object>> SetRoomExpectedUserIds(List<string> expectedUserIds) {
-            var msg = Message.NewRequest("conv", "update-system-property");
-            msg["sysAttr"] = new Dictionary<string, object> {
-                { "expectMembers", new Dictionary<string, object> {
-                    { "$set", expectedUserIds.ToList<object>() }
-                } }
+        internal async Task<PlayObject> SetRoomExpectedUserIds(List<string> expectedUserIds) {
+            var request = NewRequest();
+            var args = new Dictionary<string, object> {
+                { "$set", expectedUserIds.ToList<object>() }
             };
-            var res = await Send(msg);
-            return res["sysAttr"] as Dictionary<string, object>;
+            request.UpdateSysProperty = new UpdateSysPropertyRequest {
+                SysAttr = new RoomSystemProperty { 
+                    ExpectMembers = Json.Encode(args)
+                }
+            };
+            var res = await SendRequest(CommandType.Conv, OpType.UpdateSystemProperty, request);
+            return Utils.ConvertToPlayObject(res.UpdateSysProperty.SysAttr);
         }
 
-        internal async Task<Dictionary<string, object>> ClearRoomExpectedUserIds() {
-            var msg = Message.NewRequest("conv", "update-system-property");
-            msg["sysAttr"] = new Dictionary<string, object> {
-                { "expectMembers", new Dictionary<string, object> {
-                    { "$drop", true }
-                } }
+        internal async Task<PlayObject> ClearRoomExpectedUserIds() {
+            var request = NewRequest();
+            var args = new Dictionary<string, object> {
+                { "$drop", true }
             };
-            var res = await Send(msg);
-            return res["sysAttr"] as Dictionary<string, object>;
+            request.UpdateSysProperty = new UpdateSysPropertyRequest {
+                SysAttr = new RoomSystemProperty { 
+                    ExpectMembers = Json.Encode(args)
+                }
+            };
+            var res = await SendRequest(CommandType.Conv, OpType.UpdateSystemProperty, request);
+            return Utils.ConvertToPlayObject(res.UpdateSysProperty.SysAttr);
         }
 
-        internal async Task<Dictionary<string, object>> AddRoomExpectedUserIds(List<string> expectedUserIds) {
-            var msg = Message.NewRequest("conv", "update-system-property");
-            msg["sysAttr"] = new Dictionary<string, object> {
-                { "expectMembers", new Dictionary<string, object> {
-                    { "$add", expectedUserIds.ToList<object>() }
-                } }
+        internal async Task<PlayObject> AddRoomExpectedUserIds(List<string> expectedUserIds) {
+            var request = NewRequest();
+            var args = new Dictionary<string, object> {
+                { "$add", expectedUserIds.ToList<object>() }
             };
-            var res = await Send(msg);
-            return res["sysAttr"] as Dictionary<string, object>;
+            request.UpdateSysProperty = new UpdateSysPropertyRequest {
+                SysAttr = new RoomSystemProperty {
+                    ExpectMembers = Json.Encode(args)
+                }
+            };
+            var res = await SendRequest(CommandType.Conv, OpType.UpdateSystemProperty, request);
+            return Utils.ConvertToPlayObject(res.UpdateSysProperty.SysAttr);
         }
 
-        internal async Task<Dictionary<string, object>> RemoveRoomExpectedUserIds(List<string> expectedUserIds) {
-            var msg = Message.NewRequest("conv", "update-system-property");
-            msg["sysAttr"] = new Dictionary<string, object> {
-                { "expectMembers", new Dictionary<string, object> {
-                    { "$remove", expectedUserIds.ToList<object>() }
-                } }
+        internal async Task<PlayObject> RemoveRoomExpectedUserIds(List<string> expectedUserIds) {
+            var request = NewRequest();
+            var args = new Dictionary<string, object> {
+                { "$remove", expectedUserIds.ToList<object>() }
             };
-            var res = await Send(msg);
-            return res["sysAttr"] as Dictionary<string, object>;
+            request.UpdateSysProperty = new UpdateSysPropertyRequest {
+                SysAttr = new RoomSystemProperty { 
+                    ExpectMembers = Json.Encode(args)
+                }
+            };
+            var res = await SendRequest(CommandType.Conv, OpType.UpdateSystemProperty, request);
+            return Utils.ConvertToPlayObject(res.UpdateSysProperty.SysAttr);
         }
 
         internal async Task<int> SetMaster(int newMasterId) {
@@ -144,15 +162,22 @@ namespace LeanCloud.Play {
             return res.KickMember.TargetActorId;
         }
 
-        internal async Task SendEvent(byte eventId, Dictionary<string, object> eventData, SendEventOptions options) {
-            var msg = Message.NewRequest("direct", null);
-            msg["eventId"] = eventId;
-            msg["msg"] = eventData;
-            msg["receiverGroup"] = (int) options.ReceiverGroup;
-            if (options.TargetActorIds != null) {
-                msg["toActorIds"] = options.TargetActorIds.Cast<object>().ToList();
+        internal Task SendEvent(byte eventId, PlayObject eventData, SendEventOptions options) {
+            var request = NewRequest();
+            var direct = new DirectCommand { 
+                EventId = eventId
+            };
+            if (eventData != null) {
+                direct.Msg = CodecUtils.EncodePlayObject(eventData);
             }
-            await Send(msg);
+            direct.ReceiverGroup = (int) options.ReceiverGroup;
+            if (options.TargetActorIds != null) {
+                direct.ToActorIds.AddRange(options.TargetActorIds);
+            }
+            Send(CommandType.Direct, OpType.None, new Body { 
+                Direct = direct
+            });
+            return Task.FromResult(true);
         }
 
         internal async Task<PlayObject> SetRoomCustomProperties(PlayObject properties, PlayObject expectedValues) {
@@ -168,7 +193,7 @@ namespace LeanCloud.Play {
             return props;
         }
 
-        internal async Task<Dictionary<string, object>> SetPlayerCustomProperties(int playerId, PlayObject properties, PlayObject expectedValues) {
+        internal async Task<Tuple<int, PlayObject>> SetPlayerCustomProperties(int playerId, PlayObject properties, PlayObject expectedValues) {
             var request = NewRequest();
             request.UpdateProperty = new UpdatePropertyRequest {
                 TargetActorId = playerId,
@@ -180,10 +205,7 @@ namespace LeanCloud.Play {
             var res = await SendRequest(CommandType.Conv, OpType.UpdatePlayerProp, request);
             var actorId = res.UpdateProperty.ActorId;
             var props = CodecUtils.DecodePlayObject(res.UpdateProperty.Attr);
-            return new Dictionary<string, object> {
-                    { "actorId", actorId },
-                    { "changedProps", props },
-                };
+            return new Tuple<int, PlayObject>(actorId, props);
         }
 
         protected override int GetPingDuration() {

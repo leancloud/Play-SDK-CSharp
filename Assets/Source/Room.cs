@@ -182,25 +182,22 @@ namespace LeanCloud.Play {
             }
         }
 
-        internal Dictionary<string, object> MergeSystemProps(Dictionary<string, object> changedProps) {
-            var props = new Dictionary<string, object>();
-            if (changedProps.TryGetValue("open", out object openObj)) {
-                Open = bool.Parse(openObj.ToString());
-                props["open"] = Open;
+        internal void MergeSystemProperties(PlayObject changedProps) { 
+            if (changedProps == null) {
+                return;
             }
-            if (changedProps.TryGetValue("visible", out object visibleObj)) {
-                Visible = bool.Parse(visibleObj.ToString());
-                props["visible"] = Visible;
+            if (changedProps.TryGetBool("open", out var open)) {
+                Open = open;
             }
-            if (changedProps.TryGetValue("maxMembers", out object maxPlayerCountObj)) {
-                MaxPlayerCount = int.Parse(maxPlayerCountObj.ToString());
-                props["maxPlayerCount"] = MaxPlayerCount;
+            if (changedProps.TryGetBool("visible", out var visible)) {
+                Visible = visible;
             }
-            if (changedProps.TryGetValue("expectMembers", out object expectedUserIdsObj)) {
-                ExpectedUserIds = (expectedUserIdsObj as List<object>).Cast<string>().ToList();
-                props["expectedUserIds"] = ExpectedUserIds;
+            if (changedProps.TryGetInt("maxPlayerCount", out var maxPlayerCount)) {
+                MaxPlayerCount = maxPlayerCount;
             }
-            return props;
+            if (changedProps["expectedUserIds"] != null) {
+                ExpectedUserIds = changedProps["expectedUserIds"] as List<string>;
+            }
         }
     }
 }

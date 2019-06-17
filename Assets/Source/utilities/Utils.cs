@@ -29,8 +29,8 @@ namespace LeanCloud.Play {
         internal static Room ConvertToRoom(Protocol.RoomOptions options) {
             var room = new Room {
                 Name = options.Cid,
-                Open = options.Open,
-                Visible = options.Visible,
+                Open = options.Open.Value,
+                Visible = options.Visible.Value,
                 MaxPlayerCount = options.MaxMembers,
                 MasterActorId = options.MasterActorId
             };
@@ -48,6 +48,25 @@ namespace LeanCloud.Play {
             return room;
         }
 
+        internal static LobbyRoom ConvertToLobbyRoom(Protocol.RoomOptions options) {
+            var lobbyRoom = new LobbyRoom {
+                RoomName = options.Cid,
+                Open = options.Open.Value,
+                Visible = options.Visible.Value,
+                MaxPlayerCount = options.MaxMembers,
+                PlayerCount = options.MemberCount,
+                EmptyRoomTtl = options.EmptyRoomTtl,
+                PlayerTtl = options.PlayerTtl
+            };
+            if (options.ExpectMembers != null) {
+                lobbyRoom.ExpectedUserIds.AddRange(options.ExpectMembers);
+            }
+            if (options.Attr != null) {
+                lobbyRoom.CustomRoomProperties = CodecUtils.DecodePlayObject(options.Attr);
+            }
+            return lobbyRoom;
+        }
+
         internal static Player ConvertToPlayer(RoomMember member) {
             var player = new Player { 
                 UserId = member.Pid,
@@ -58,6 +77,26 @@ namespace LeanCloud.Play {
                 player.CustomProperties = CodecUtils.DecodePlayObject(member.Attr);
             }
             return player;
+        }
+
+        internal static PlayObject ConvertToPlayObject(RoomSystemProperty property) { 
+            if (property == null) {
+                return null;
+            }
+            var obj = new PlayObject();
+            if (property.Open != null) {
+                obj["open"] = property.Open;
+            }
+            if (property.Visible != null) {
+                obj["visible"] = property.Visible;
+            }
+            if (property.MaxMembers > 0) {
+                obj["maxPlayerCount"] = property.MaxMembers;
+            }
+            if (property.ExpectMembers != null) {
+                obj["expectedUserIds"] = Json.Parse(property.ExpectMembers) as List<string>;
+            }
+            return obj;
         }
     }
 }

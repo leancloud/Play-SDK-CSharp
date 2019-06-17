@@ -25,164 +25,164 @@ namespace LeanCloud.Play.Protocol {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "Cg5tZXNzYWdlcy5wcm90bxIlZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90",
-            "by5tZXNzYWdlcyIbCgxCb29sZWFuVmFsdWUSCwoDdmFsGAEgASgIIhcKCElu",
-            "dFZhbHVlEgsKA3ZhbBgBIAEoBSLIAQoSUm9vbVN5c3RlbVByb3BlcnR5EkEK",
-            "BG9wZW4YASABKAsyMy5nYW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1l",
-            "c3NhZ2VzLkJvb2xlYW5WYWx1ZRJECgd2aXNpYmxlGAIgASgLMjMuZ2FtZV9w",
-            "cm90b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdlcy5Cb29sZWFuVmFsdWUS",
-            "FQoNZXhwZWN0TWVtYmVycxgDIAEoCRISCgptYXhNZW1iZXJzGAQgASgFIkoK",
-            "ClJvb21NZW1iZXISCwoDcGlkGAEgASgJEg8KB2FjdG9ySWQYAiABKAUSDAoE",
-            "YXR0chgDIAEoDBIQCghpbmFjdGl2ZRgEIAEoCCIqCgdBcHBJbmZvEg8KB2Fw",
-            "cENvZGUYASABKAUSDgoGYXBwTXNnGAIgASgJInAKCUVycm9ySW5mbxISCgpy",
-            "ZWFzb25Db2RlGAEgASgFEg4KBmRldGFpbBgCIAEoCRI/CgdhcHBJbmZvGAMg",
-            "ASgLMi4uZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdlcy5B",
-            "cHBJbmZvIsQCCgtSb29tT3B0aW9ucxILCgNjaWQYASABKAkSDwoHdmlzaWJs",
-            "ZRgCIAEoCBIMCgRvcGVuGAMgASgIEhQKDGVtcHR5Um9vbVR0bBgEIAEoBRIR",
-            "CglwbGF5ZXJUdGwYBSABKAUSEgoKbWF4TWVtYmVycxgGIAEoBRIMCgRmbGFn",
-            "GAcgASgDEhIKCnBsdWdpbk5hbWUYCCABKAkSDAoEYXR0chgJIAEoDBIVCg1l",
-            "eHBlY3RNZW1iZXJzGAogAygJEhUKDWxvYmJ5QXR0cktleXMYCyADKAkSQgoH",
-            "bWVtYmVycxgMIAMoCzIxLmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8u",
-            "bWVzc2FnZXMuUm9vbU1lbWJlchITCgttZW1iZXJDb3VudBgNIAEoBRIVCg1t",
-            "YXN0ZXJBY3RvcklkGA4gASgFIqwBChJTZXNzaW9uT3BlblJlcXVlc3QSDQoF",
-            "YXBwSWQYASABKAkSDgoGcGVlcklkGAIgASgJEhMKC2dhbWVWZXJzaW9uGAMg",
-            "ASgJEhIKCnNka1ZlcnNpb24YBCABKAkSFwoPcHJvdG9jb2xWZXJzaW9uGAUg",
-            "ASgJEgkKAXQYBiABKAMSCQoBbhgHIAEoCRIJCgFzGAggASgJEhQKDGNvbmZp",
-            "Z0JpdG1hcBgJIAEoAyJcChFDcmVhdGVSb29tUmVxdWVzdBJHCgtyb29tT3B0",
-            "aW9ucxgBIAEoCzIyLmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8ubWVz",
-            "c2FnZXMuUm9vbU9wdGlvbnMiawoSQ3JlYXRlUm9vbVJlc3BvbnNlEkcKC3Jv",
-            "b21PcHRpb25zGAEgASgLMjIuZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90",
-            "by5tZXNzYWdlcy5Sb29tT3B0aW9ucxIMCgRhZGRyGAIgASgJIpcBCg9Kb2lu",
-            "Um9vbVJlcXVlc3QSDgoGcmVqb2luGAEgASgIEkcKC3Jvb21PcHRpb25zGAIg",
-            "ASgLMjIuZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdlcy5S",
-            "b29tT3B0aW9ucxISCgpleHBlY3RBdHRyGAMgASgMEhcKD3BpZ2d5YmFja1Bl",
-            "ZXJJZBgEIAEoCSJpChBKb2luUm9vbVJlc3BvbnNlEkcKC3Jvb21PcHRpb25z",
-            "GAEgASgLMjIuZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdl",
-            "cy5Sb29tT3B0aW9ucxIMCgRhZGRyGAIgASgJIlkKFEpvaW5Sb29tTm90aWZp",
-            "Y2F0aW9uEkEKBm1lbWJlchgBIAEoCzIxLmdhbWVfcHJvdG9idWZfbWVzc2Fn",
-            "ZXMucHJvdG8ubWVzc2FnZXMuUm9vbU1lbWJlciInChRMZWZ0Um9vbU5vdGlm",
-            "aWNhdGlvbhIPCgdhY3RvcklkGAEgASgFImsKEUtpY2tNZW1iZXJSZXF1ZXN0",
-            "EhUKDXRhcmdldEFjdG9ySWQYASABKAUSPwoHYXBwSW5mbxgCIAEoCzIuLmdh",
-            "bWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMuQXBwSW5mbyIr",
-            "ChJLaWNrTWVtYmVyUmVzcG9uc2USFQoNdGFyZ2V0QWN0b3JJZBgBIAEoBSJQ",
-            "ChVVcGRhdGVQcm9wZXJ0eVJlcXVlc3QSFQoNdGFyZ2V0QWN0b3JJZBgBIAEo",
-            "BRISCgpleHBlY3RBdHRyGAIgASgMEgwKBGF0dHIYAyABKAwiNwoWVXBkYXRl",
-            "UHJvcGVydHlSZXNwb25zZRIMCgRhdHRyGAEgASgMEg8KB2FjdG9ySWQYAiAB",
-            "KAUiOwoaVXBkYXRlUHJvcGVydHlOb3RpZmljYXRpb24SDAoEYXR0chgBIAEo",
-            "DBIPCgdhY3RvcklkGAIgASgFIrgBChhVcGRhdGVTeXNQcm9wZXJ0eVJlcXVl",
-            "c3QSUAoNZXhwZWN0U3lzQXR0chgBIAEoCzI5LmdhbWVfcHJvdG9idWZfbWVz",
-            "c2FnZXMucHJvdG8ubWVzc2FnZXMuUm9vbVN5c3RlbVByb3BlcnR5EkoKB3N5",
-            "c0F0dHIYAiABKAsyOS5nYW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1l",
-            "c3NhZ2VzLlJvb21TeXN0ZW1Qcm9wZXJ0eSJnChlVcGRhdGVTeXNQcm9wZXJ0",
-            "eVJlc3BvbnNlEkoKB3N5c0F0dHIYASABKAsyOS5nYW1lX3Byb3RvYnVmX21l",
-            "c3NhZ2VzLnByb3RvLm1lc3NhZ2VzLlJvb21TeXN0ZW1Qcm9wZXJ0eSJrCh1V",
-            "cGRhdGVTeXNQcm9wZXJ0eU5vdGlmaWNhdGlvbhJKCgdzeXNBdHRyGAEgASgL",
-            "MjkuZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdlcy5Sb29t",
-            "U3lzdGVtUHJvcGVydHkiMgoZVXBkYXRlTWFzdGVyQ2xpZW50UmVxdWVzdBIV",
-            "Cg1tYXN0ZXJBY3RvcklkGAEgASgFIjMKGlVwZGF0ZU1hc3RlckNsaWVudFJl",
-            "c3BvbnNlEhUKDW1hc3RlckFjdG9ySWQYASABKAUiNwoeVXBkYXRlTWFzdGVy",
-            "Q2xpZW50Tm90aWZpY2F0aW9uEhUKDW1hc3RlckFjdG9ySWQYASABKAUi0QQK",
-            "EFJvb21Ob3RpZmljYXRpb24SEwoLaW5pdEJ5QWN0b3IYASABKAUSPwoHYXBw",
-            "SW5mbxgDIAEoCzIuLmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8ubWVz",
-            "c2FnZXMuQXBwSW5mbxIQCghieU1hc3RlchgEIAEoCBJPCghqb2luUm9vbRgU",
-            "IAEoCzI7LmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMu",
-            "Sm9pblJvb21Ob3RpZmljYXRpb25IABJbCg51cGRhdGVQcm9wZXJ0eRgVIAEo",
-            "CzJBLmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMuVXBk",
-            "YXRlUHJvcGVydHlOb3RpZmljYXRpb25IABJhChF1cGRhdGVTeXNQcm9wZXJ0",
-            "eRgWIAEoCzJELmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2Fn",
-            "ZXMuVXBkYXRlU3lzUHJvcGVydHlOb3RpZmljYXRpb25IABJjChJ1cGRhdGVN",
-            "YXN0ZXJDbGllbnQYFyABKAsyRS5nYW1lX3Byb3RvYnVmX21lc3NhZ2VzLnBy",
-            "b3RvLm1lc3NhZ2VzLlVwZGF0ZU1hc3RlckNsaWVudE5vdGlmaWNhdGlvbkgA",
-            "Ek8KCGxlZnRSb29tGBggASgLMjsuZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5w",
-            "cm90by5tZXNzYWdlcy5MZWZ0Um9vbU5vdGlmaWNhdGlvbkgAQg4KDG5vdGlm",
-            "aWNhdGlvbiLIAQoNRGlyZWN0Q29tbWFuZBIOCgZjYWNoZWQYASABKAgSDwoH",
-            "ZXZlbnRJZBgCIAEoBRIVCg1yZWNlaXZlckdyb3VwGAMgASgFEhUKDWNhY2hp",
-            "bmdPcHRpb24YBCABKAUSFAoMZXZlbnRPcHRpb25zGAUgASgFEhIKCnRvQWN0",
-            "b3JJZHMYBiADKAUSCwoDbXNnGAcgASgMEhEKCXRpbWVzdGFtcBgIIAEoAxIT",
-            "Cgtmcm9tQWN0b3JJZBgJIAEoBRIJCgFpGAogASgFIioKCkFja0NvbW1hbmQS",
-            "EQoJdGltZXN0YW1wGAEgASgDEgkKAWkYCyABKAUiVQoNRXZlbnRzQ29tbWFu",
-            "ZBJECgZldmVudHMYASADKAsyNC5nYW1lX3Byb3RvYnVmX21lc3NhZ2VzLnBy",
-            "b3RvLm1lc3NhZ2VzLkRpcmVjdENvbW1hbmQiIwoQSm9pbkxvYmJ5UmVxdWVz",
-            "dBIPCgdsb2JieUlkGAEgASgJIlMKD1Jvb21MaXN0Q29tbWFuZBJACgRsaXN0",
-            "GAEgAygLMjIuZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdl",
-            "cy5Sb29tT3B0aW9ucyJ7CgxBcHBTdGF0aXN0aWMSFAoMY291bnRPZlJvb21z",
-            "GAEgASgFEh4KFmNvdW50T2ZQbGF5ZXJzT25Sb3V0ZXIYAiABKAUSHQoVY291",
-            "bnRPZlBsYXllcnNJblJvb21zGAMgASgFEhYKDmNvdW50T2ZQbGF5ZXJzGAQg",
-            "ASgFIlkKEFN0YXRpc3RpY0NvbW1hbmQSRQoIYXBwU3RhdHMYASABKAsyMy5n",
-            "YW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1lc3NhZ2VzLkFwcFN0YXRp",
-            "c3RpYyJTCgxFcnJvckNvbW1hbmQSQwoJZXJyb3JJbmZvGAEgASgLMjAuZ2Ft",
-            "ZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdlcy5FcnJvckluZm8i",
-            "yAUKDlJlcXVlc3RNZXNzYWdlEgkKAWkYASABKAUSUAoLc2Vzc2lvbk9wZW4Y",
-            "FCABKAsyOS5nYW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1lc3NhZ2Vz",
-            "LlNlc3Npb25PcGVuUmVxdWVzdEgAEk4KCmNyZWF0ZVJvb20YFSABKAsyOC5n",
-            "YW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1lc3NhZ2VzLkNyZWF0ZVJv",
-            "b21SZXF1ZXN0SAASSgoIam9pblJvb20YFiABKAsyNi5nYW1lX3Byb3RvYnVm",
-            "X21lc3NhZ2VzLnByb3RvLm1lc3NhZ2VzLkpvaW5Sb29tUmVxdWVzdEgAElYK",
-            "DnVwZGF0ZVByb3BlcnR5GBcgASgLMjwuZ2FtZV9wcm90b2J1Zl9tZXNzYWdl",
-            "cy5wcm90by5tZXNzYWdlcy5VcGRhdGVQcm9wZXJ0eVJlcXVlc3RIABJcChF1",
-            "cGRhdGVTeXNQcm9wZXJ0eRgYIAEoCzI/LmdhbWVfcHJvdG9idWZfbWVzc2Fn",
-            "ZXMucHJvdG8ubWVzc2FnZXMuVXBkYXRlU3lzUHJvcGVydHlSZXF1ZXN0SAAS",
-            "XgoSdXBkYXRlTWFzdGVyQ2xpZW50GBkgASgLMkAuZ2FtZV9wcm90b2J1Zl9t",
-            "ZXNzYWdlcy5wcm90by5tZXNzYWdlcy5VcGRhdGVNYXN0ZXJDbGllbnRSZXF1",
-            "ZXN0SAASTgoKa2lja01lbWJlchgaIAEoCzI4LmdhbWVfcHJvdG9idWZfbWVz",
-            "c2FnZXMucHJvdG8ubWVzc2FnZXMuS2lja01lbWJlclJlcXVlc3RIABJMCglq",
-            "b2luTG9iYnkYNiABKAsyNy5nYW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3Rv",
-            "Lm1lc3NhZ2VzLkpvaW5Mb2JieVJlcXVlc3RIAEIJCgdyZXF1ZXN0IrcFCg9S",
-            "ZXNwb25zZU1lc3NhZ2USCQoBaRgBIAEoBRJDCgllcnJvckluZm8YAiABKAsy",
-            "MC5nYW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1lc3NhZ2VzLkVycm9y",
-            "SW5mbxJPCgpjcmVhdGVSb29tGBQgASgLMjkuZ2FtZV9wcm90b2J1Zl9tZXNz",
-            "YWdlcy5wcm90by5tZXNzYWdlcy5DcmVhdGVSb29tUmVzcG9uc2VIABJLCghq",
-            "b2luUm9vbRgVIAEoCzI3LmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8u",
-            "bWVzc2FnZXMuSm9pblJvb21SZXNwb25zZUgAElcKDnVwZGF0ZVByb3BlcnR5",
-            "GBYgASgLMj0uZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdl",
-            "cy5VcGRhdGVQcm9wZXJ0eVJlc3BvbnNlSAASXQoRdXBkYXRlU3lzUHJvcGVy",
-            "dHkYFyABKAsyQC5nYW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1lc3Nh",
-            "Z2VzLlVwZGF0ZVN5c1Byb3BlcnR5UmVzcG9uc2VIABJfChJ1cGRhdGVNYXN0",
-            "ZXJDbGllbnQYGCABKAsyQS5nYW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3Rv",
-            "Lm1lc3NhZ2VzLlVwZGF0ZU1hc3RlckNsaWVudFJlc3BvbnNlSAASTwoKa2lj",
-            "a01lbWJlchgZIAEoCzI5LmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8u",
-            "bWVzc2FnZXMuS2lja01lbWJlclJlc3BvbnNlSAASQAoDYWNrGBogASgLMjEu",
-            "Z2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdlcy5BY2tDb21t",
-            "YW5kSABCCgoIcmVzcG9uc2Ui6QQKBEJvZHkSSAoHcmVxdWVzdBgBIAEoCzI1",
-            "LmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMuUmVxdWVz",
-            "dE1lc3NhZ2VIABJKCghyZXNwb25zZRgCIAEoCzI2LmdhbWVfcHJvdG9idWZf",
-            "bWVzc2FnZXMucHJvdG8ubWVzc2FnZXMuUmVzcG9uc2VNZXNzYWdlSAASRgoG",
-            "ZGlyZWN0GAMgASgLMjQuZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5t",
-            "ZXNzYWdlcy5EaXJlY3RDb21tYW5kSAASUwoQcm9vbU5vdGlmaWNhdGlvbhgE",
+            "by5tZXNzYWdlcxoeZ29vZ2xlL3Byb3RvYnVmL3dyYXBwZXJzLnByb3RvIhcK",
+            "CEludFZhbHVlEgsKA3ZhbBgBIAEoBSKWAQoSUm9vbVN5c3RlbVByb3BlcnR5",
+            "EigKBG9wZW4YASABKAsyGi5nb29nbGUucHJvdG9idWYuQm9vbFZhbHVlEisK",
+            "B3Zpc2libGUYAiABKAsyGi5nb29nbGUucHJvdG9idWYuQm9vbFZhbHVlEhUK",
+            "DWV4cGVjdE1lbWJlcnMYAyABKAkSEgoKbWF4TWVtYmVycxgEIAEoBSJKCgpS",
+            "b29tTWVtYmVyEgsKA3BpZBgBIAEoCRIPCgdhY3RvcklkGAIgASgFEgwKBGF0",
+            "dHIYAyABKAwSEAoIaW5hY3RpdmUYBCABKAgiKgoHQXBwSW5mbxIPCgdhcHBD",
+            "b2RlGAEgASgFEg4KBmFwcE1zZxgCIAEoCSJwCglFcnJvckluZm8SEgoKcmVh",
+            "c29uQ29kZRgBIAEoBRIOCgZkZXRhaWwYAiABKAkSPwoHYXBwSW5mbxgDIAEo",
+            "CzIuLmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMuQXBw",
+            "SW5mbyL8AgoLUm9vbU9wdGlvbnMSCwoDY2lkGAEgASgJEisKB3Zpc2libGUY",
+            "AiABKAsyGi5nb29nbGUucHJvdG9idWYuQm9vbFZhbHVlEigKBG9wZW4YAyAB",
+            "KAsyGi5nb29nbGUucHJvdG9idWYuQm9vbFZhbHVlEhQKDGVtcHR5Um9vbVR0",
+            "bBgEIAEoBRIRCglwbGF5ZXJUdGwYBSABKAUSEgoKbWF4TWVtYmVycxgGIAEo",
+            "BRIMCgRmbGFnGAcgASgDEhIKCnBsdWdpbk5hbWUYCCABKAkSDAoEYXR0chgJ",
+            "IAEoDBIVCg1leHBlY3RNZW1iZXJzGAogAygJEhUKDWxvYmJ5QXR0cktleXMY",
+            "CyADKAkSQgoHbWVtYmVycxgMIAMoCzIxLmdhbWVfcHJvdG9idWZfbWVzc2Fn",
+            "ZXMucHJvdG8ubWVzc2FnZXMuUm9vbU1lbWJlchITCgttZW1iZXJDb3VudBgN",
+            "IAEoBRIVCg1tYXN0ZXJBY3RvcklkGA4gASgFIqwBChJTZXNzaW9uT3BlblJl",
+            "cXVlc3QSDQoFYXBwSWQYASABKAkSDgoGcGVlcklkGAIgASgJEhMKC2dhbWVW",
+            "ZXJzaW9uGAMgASgJEhIKCnNka1ZlcnNpb24YBCABKAkSFwoPcHJvdG9jb2xW",
+            "ZXJzaW9uGAUgASgJEgkKAXQYBiABKAMSCQoBbhgHIAEoCRIJCgFzGAggASgJ",
+            "EhQKDGNvbmZpZ0JpdG1hcBgJIAEoAyJcChFDcmVhdGVSb29tUmVxdWVzdBJH",
+            "Cgtyb29tT3B0aW9ucxgBIAEoCzIyLmdhbWVfcHJvdG9idWZfbWVzc2FnZXMu",
+            "cHJvdG8ubWVzc2FnZXMuUm9vbU9wdGlvbnMiawoSQ3JlYXRlUm9vbVJlc3Bv",
+            "bnNlEkcKC3Jvb21PcHRpb25zGAEgASgLMjIuZ2FtZV9wcm90b2J1Zl9tZXNz",
+            "YWdlcy5wcm90by5tZXNzYWdlcy5Sb29tT3B0aW9ucxIMCgRhZGRyGAIgASgJ",
+            "IrEBCg9Kb2luUm9vbVJlcXVlc3QSDgoGcmVqb2luGAEgASgIEkcKC3Jvb21P",
+            "cHRpb25zGAIgASgLMjIuZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5t",
+            "ZXNzYWdlcy5Sb29tT3B0aW9ucxISCgpleHBlY3RBdHRyGAMgASgMEhcKD3Bp",
+            "Z2d5YmFja1BlZXJJZBgEIAEoCRIYChBjcmVhdGVPbk5vdEZvdW5kGAUgASgI",
+            "ImkKEEpvaW5Sb29tUmVzcG9uc2USRwoLcm9vbU9wdGlvbnMYASABKAsyMi5n",
+            "YW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1lc3NhZ2VzLlJvb21PcHRp",
+            "b25zEgwKBGFkZHIYAiABKAkiWQoUSm9pblJvb21Ob3RpZmljYXRpb24SQQoG",
+            "bWVtYmVyGAEgASgLMjEuZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5t",
+            "ZXNzYWdlcy5Sb29tTWVtYmVyIicKFExlZnRSb29tTm90aWZpY2F0aW9uEg8K",
+            "B2FjdG9ySWQYASABKAUiawoRS2lja01lbWJlclJlcXVlc3QSFQoNdGFyZ2V0",
+            "QWN0b3JJZBgBIAEoBRI/CgdhcHBJbmZvGAIgASgLMi4uZ2FtZV9wcm90b2J1",
+            "Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdlcy5BcHBJbmZvIisKEktpY2tNZW1i",
+            "ZXJSZXNwb25zZRIVCg10YXJnZXRBY3RvcklkGAEgASgFIlAKFVVwZGF0ZVBy",
+            "b3BlcnR5UmVxdWVzdBIVCg10YXJnZXRBY3RvcklkGAEgASgFEhIKCmV4cGVj",
+            "dEF0dHIYAiABKAwSDAoEYXR0chgDIAEoDCI3ChZVcGRhdGVQcm9wZXJ0eVJl",
+            "c3BvbnNlEgwKBGF0dHIYASABKAwSDwoHYWN0b3JJZBgCIAEoBSI7ChpVcGRh",
+            "dGVQcm9wZXJ0eU5vdGlmaWNhdGlvbhIMCgRhdHRyGAEgASgMEg8KB2FjdG9y",
+            "SWQYAiABKAUiuAEKGFVwZGF0ZVN5c1Byb3BlcnR5UmVxdWVzdBJQCg1leHBl",
+            "Y3RTeXNBdHRyGAEgASgLMjkuZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90",
+            "by5tZXNzYWdlcy5Sb29tU3lzdGVtUHJvcGVydHkSSgoHc3lzQXR0chgCIAEo",
+            "CzI5LmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMuUm9v",
+            "bVN5c3RlbVByb3BlcnR5ImcKGVVwZGF0ZVN5c1Byb3BlcnR5UmVzcG9uc2US",
+            "SgoHc3lzQXR0chgBIAEoCzI5LmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJv",
+            "dG8ubWVzc2FnZXMuUm9vbVN5c3RlbVByb3BlcnR5ImsKHVVwZGF0ZVN5c1By",
+            "b3BlcnR5Tm90aWZpY2F0aW9uEkoKB3N5c0F0dHIYASABKAsyOS5nYW1lX3By",
+            "b3RvYnVmX21lc3NhZ2VzLnByb3RvLm1lc3NhZ2VzLlJvb21TeXN0ZW1Qcm9w",
+            "ZXJ0eSIyChlVcGRhdGVNYXN0ZXJDbGllbnRSZXF1ZXN0EhUKDW1hc3RlckFj",
+            "dG9ySWQYASABKAUiMwoaVXBkYXRlTWFzdGVyQ2xpZW50UmVzcG9uc2USFQoN",
+            "bWFzdGVyQWN0b3JJZBgBIAEoBSI3Ch5VcGRhdGVNYXN0ZXJDbGllbnROb3Rp",
+            "ZmljYXRpb24SFQoNbWFzdGVyQWN0b3JJZBgBIAEoBSLRBAoQUm9vbU5vdGlm",
+            "aWNhdGlvbhITCgtpbml0QnlBY3RvchgBIAEoBRI/CgdhcHBJbmZvGAMgASgL",
+            "Mi4uZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdlcy5BcHBJ",
+            "bmZvEhAKCGJ5TWFzdGVyGAQgASgIEk8KCGpvaW5Sb29tGBQgASgLMjsuZ2Ft",
+            "ZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdlcy5Kb2luUm9vbU5v",
+            "dGlmaWNhdGlvbkgAElsKDnVwZGF0ZVByb3BlcnR5GBUgASgLMkEuZ2FtZV9w",
+            "cm90b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdlcy5VcGRhdGVQcm9wZXJ0",
+            "eU5vdGlmaWNhdGlvbkgAEmEKEXVwZGF0ZVN5c1Byb3BlcnR5GBYgASgLMkQu",
+            "Z2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdlcy5VcGRhdGVT",
+            "eXNQcm9wZXJ0eU5vdGlmaWNhdGlvbkgAEmMKEnVwZGF0ZU1hc3RlckNsaWVu",
+            "dBgXIAEoCzJFLmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2Fn",
+            "ZXMuVXBkYXRlTWFzdGVyQ2xpZW50Tm90aWZpY2F0aW9uSAASTwoIbGVmdFJv",
+            "b20YGCABKAsyOy5nYW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1lc3Nh",
+            "Z2VzLkxlZnRSb29tTm90aWZpY2F0aW9uSABCDgoMbm90aWZpY2F0aW9uIsgB",
+            "Cg1EaXJlY3RDb21tYW5kEg4KBmNhY2hlZBgBIAEoCBIPCgdldmVudElkGAIg",
+            "ASgFEhUKDXJlY2VpdmVyR3JvdXAYAyABKAUSFQoNY2FjaGluZ09wdGlvbhgE",
+            "IAEoBRIUCgxldmVudE9wdGlvbnMYBSABKAUSEgoKdG9BY3RvcklkcxgGIAMo",
+            "BRILCgNtc2cYByABKAwSEQoJdGltZXN0YW1wGAggASgDEhMKC2Zyb21BY3Rv",
+            "cklkGAkgASgFEgkKAWkYCiABKAUiKgoKQWNrQ29tbWFuZBIRCgl0aW1lc3Rh",
+            "bXAYASABKAMSCQoBaRgLIAEoBSJVCg1FdmVudHNDb21tYW5kEkQKBmV2ZW50",
+            "cxgBIAMoCzI0LmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2Fn",
+            "ZXMuRGlyZWN0Q29tbWFuZCIjChBKb2luTG9iYnlSZXF1ZXN0Eg8KB2xvYmJ5",
+            "SWQYASABKAkiUwoPUm9vbUxpc3RDb21tYW5kEkAKBGxpc3QYASADKAsyMi5n",
+            "YW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1lc3NhZ2VzLlJvb21PcHRp",
+            "b25zInsKDEFwcFN0YXRpc3RpYxIUCgxjb3VudE9mUm9vbXMYASABKAUSHgoW",
+            "Y291bnRPZlBsYXllcnNPblJvdXRlchgCIAEoBRIdChVjb3VudE9mUGxheWVy",
+            "c0luUm9vbXMYAyABKAUSFgoOY291bnRPZlBsYXllcnMYBCABKAUiWQoQU3Rh",
+            "dGlzdGljQ29tbWFuZBJFCghhcHBTdGF0cxgBIAEoCzIzLmdhbWVfcHJvdG9i",
+            "dWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMuQXBwU3RhdGlzdGljIlMKDEVy",
+            "cm9yQ29tbWFuZBJDCgllcnJvckluZm8YASABKAsyMC5nYW1lX3Byb3RvYnVm",
+            "X21lc3NhZ2VzLnByb3RvLm1lc3NhZ2VzLkVycm9ySW5mbyLIBQoOUmVxdWVz",
+            "dE1lc3NhZ2USCQoBaRgBIAEoBRJQCgtzZXNzaW9uT3BlbhgUIAEoCzI5Lmdh",
+            "bWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMuU2Vzc2lvbk9w",
+            "ZW5SZXF1ZXN0SAASTgoKY3JlYXRlUm9vbRgVIAEoCzI4LmdhbWVfcHJvdG9i",
+            "dWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMuQ3JlYXRlUm9vbVJlcXVlc3RI",
+            "ABJKCghqb2luUm9vbRgWIAEoCzI2LmdhbWVfcHJvdG9idWZfbWVzc2FnZXMu",
+            "cHJvdG8ubWVzc2FnZXMuSm9pblJvb21SZXF1ZXN0SAASVgoOdXBkYXRlUHJv",
+            "cGVydHkYFyABKAsyPC5nYW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1l",
+            "c3NhZ2VzLlVwZGF0ZVByb3BlcnR5UmVxdWVzdEgAElwKEXVwZGF0ZVN5c1By",
+            "b3BlcnR5GBggASgLMj8uZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5t",
+            "ZXNzYWdlcy5VcGRhdGVTeXNQcm9wZXJ0eVJlcXVlc3RIABJeChJ1cGRhdGVN",
+            "YXN0ZXJDbGllbnQYGSABKAsyQC5nYW1lX3Byb3RvYnVmX21lc3NhZ2VzLnBy",
+            "b3RvLm1lc3NhZ2VzLlVwZGF0ZU1hc3RlckNsaWVudFJlcXVlc3RIABJOCgpr",
+            "aWNrTWVtYmVyGBogASgLMjguZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90",
+            "by5tZXNzYWdlcy5LaWNrTWVtYmVyUmVxdWVzdEgAEkwKCWpvaW5Mb2JieRg2",
             "IAEoCzI3LmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMu",
-            "Um9vbU5vdGlmaWNhdGlvbkgAEkYKBmV2ZW50cxgFIAEoCzI0LmdhbWVfcHJv",
-            "dG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMuRXZlbnRzQ29tbWFuZEgA",
-            "EkwKCXN0YXRpc3RpYxgyIAEoCzI3LmdhbWVfcHJvdG9idWZfbWVzc2FnZXMu",
-            "cHJvdG8ubWVzc2FnZXMuU3RhdGlzdGljQ29tbWFuZEgAEkoKCHJvb21MaXN0",
-            "GDMgASgLMjYuZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdl",
-            "cy5Sb29tTGlzdENvbW1hbmRIABJECgVlcnJvchh/IAEoCzIzLmdhbWVfcHJv",
-            "dG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMuRXJyb3JDb21tYW5kSABC",
-            "BgoEYm9keSKTAQoHQ29tbWFuZBI/CgNjbWQYASABKA4yMi5nYW1lX3Byb3Rv",
-            "YnVmX21lc3NhZ2VzLnByb3RvLm1lc3NhZ2VzLkNvbW1hbmRUeXBlEjkKAm9w",
-            "GAIgASgOMi0uZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdl",
-            "cy5PcFR5cGUSDAoEYm9keRgDIAEoDCp3CgtDb21tYW5kVHlwZRILCgd1bmtu",
-            "b3duEAASCwoHc2Vzc2lvbhABEggKBGNvbnYQAhIKCgZkaXJlY3QQAxIJCgVl",
-            "cnJvchAEEgkKBWxvYmJ5EAUSDQoJc3RhdGlzdGljEAYSCgoGZXZlbnRzEAcS",
-            "BwoDYWNrEAgqyQUKBk9wVHlwZRIICgRub25lEAASCAoEb3BlbhABEgoKBm9w",
-            "ZW5lZBACEgkKBWNsb3NlEAMSCgoGY2xvc2VkEAQSCQoFc3RhcnQQHhILCgdz",
-            "dGFydGVkEB8SDgoKYWRkX3JhbmRvbRAgEhAKDHJhbmRvbV9hZGRlZBAhEhAK",
-            "DG1hdGNoX3JhbmRvbRAiEhIKDnJhbmRvbV9tYXRjaGVkECMSBwoDYWRkECQS",
-            "CQoFYWRkZWQQJRISCg5tZW1iZXJzX2pvaW5lZBAmEhIKDm1lbWJlcnNfb25s",
-            "aW5lECcSCgoGcmVtb3ZlECgSCwoHcmVtb3ZlZBApEhAKDG1lbWJlcnNfbGVm",
-            "dBAqEhMKD21lbWJlcnNfb2ZmbGluZRArEhgKFHVwZGF0ZV9tYXN0ZXJfY2xp",
-            "ZW50ECwSGQoVbWFzdGVyX2NsaWVudF91cGRhdGVkEC0SGQoVbWFzdGVyX2Ns",
-            "aWVudF9jaGFuZ2VkEC4SCgoGdXBkYXRlEC8SCwoHdXBkYXRlZBAwEhIKDnVw",
-            "ZGF0ZWRfbm90aWZ5EDESGgoWdXBkYXRlX3N5c3RlbV9wcm9wZXJ0eRAyEhsK",
-            "F3N5c3RlbV9wcm9wZXJ0eV91cGRhdGVkEDMSIgoec3lzdGVtX3Byb3BlcnR5",
-            "X3VwZGF0ZWRfbm90aWZ5EDQSEQoNb3BlbmVkX25vdGlmeRA1EgsKB3Zpc2li",
-            "bGUQNhISCg52aXNpYmxlX25vdGlmeRA3EhYKEnVwZGF0ZV9wbGF5ZXJfcHJv",
-            "cBA4EhcKE3BsYXllcl9wcm9wX3VwZGF0ZWQQORIQCgxwbGF5ZXJfcHJvcHMQ",
-            "OhIICgRraWNrEDsSCgoGa2lja2VkEDwSEQoNa2lja2VkX25vdGljZRA9Eg0K",
-            "CXJvb21fbGlzdBBkEhAKDGZpbmRfZnJpZW5kcxBlEhEKDWZvdW5kX2ZyaWVu",
-            "ZHMQZkIaqgIXTGVhbkNsb3VkLlBsYXkuUHJvdG9jb2xiBnByb3RvMw=="));
+            "Sm9pbkxvYmJ5UmVxdWVzdEgAQgkKB3JlcXVlc3QitwUKD1Jlc3BvbnNlTWVz",
+            "c2FnZRIJCgFpGAEgASgFEkMKCWVycm9ySW5mbxgCIAEoCzIwLmdhbWVfcHJv",
+            "dG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMuRXJyb3JJbmZvEk8KCmNy",
+            "ZWF0ZVJvb20YFCABKAsyOS5nYW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3Rv",
+            "Lm1lc3NhZ2VzLkNyZWF0ZVJvb21SZXNwb25zZUgAEksKCGpvaW5Sb29tGBUg",
+            "ASgLMjcuZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdlcy5K",
+            "b2luUm9vbVJlc3BvbnNlSAASVwoOdXBkYXRlUHJvcGVydHkYFiABKAsyPS5n",
+            "YW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1lc3NhZ2VzLlVwZGF0ZVBy",
+            "b3BlcnR5UmVzcG9uc2VIABJdChF1cGRhdGVTeXNQcm9wZXJ0eRgXIAEoCzJA",
+            "LmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMuVXBkYXRl",
+            "U3lzUHJvcGVydHlSZXNwb25zZUgAEl8KEnVwZGF0ZU1hc3RlckNsaWVudBgY",
+            "IAEoCzJBLmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMu",
+            "VXBkYXRlTWFzdGVyQ2xpZW50UmVzcG9uc2VIABJPCgpraWNrTWVtYmVyGBkg",
+            "ASgLMjkuZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdlcy5L",
+            "aWNrTWVtYmVyUmVzcG9uc2VIABJACgNhY2sYGiABKAsyMS5nYW1lX3Byb3Rv",
+            "YnVmX21lc3NhZ2VzLnByb3RvLm1lc3NhZ2VzLkFja0NvbW1hbmRIAEIKCghy",
+            "ZXNwb25zZSLpBAoEQm9keRJICgdyZXF1ZXN0GAEgASgLMjUuZ2FtZV9wcm90",
+            "b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdlcy5SZXF1ZXN0TWVzc2FnZUgA",
+            "EkoKCHJlc3BvbnNlGAIgASgLMjYuZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5w",
+            "cm90by5tZXNzYWdlcy5SZXNwb25zZU1lc3NhZ2VIABJGCgZkaXJlY3QYAyAB",
+            "KAsyNC5nYW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1lc3NhZ2VzLkRp",
+            "cmVjdENvbW1hbmRIABJTChByb29tTm90aWZpY2F0aW9uGAQgASgLMjcuZ2Ft",
+            "ZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdlcy5Sb29tTm90aWZp",
+            "Y2F0aW9uSAASRgoGZXZlbnRzGAUgASgLMjQuZ2FtZV9wcm90b2J1Zl9tZXNz",
+            "YWdlcy5wcm90by5tZXNzYWdlcy5FdmVudHNDb21tYW5kSAASTAoJc3RhdGlz",
+            "dGljGDIgASgLMjcuZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNz",
+            "YWdlcy5TdGF0aXN0aWNDb21tYW5kSAASSgoIcm9vbUxpc3QYMyABKAsyNi5n",
+            "YW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1lc3NhZ2VzLlJvb21MaXN0",
+            "Q29tbWFuZEgAEkQKBWVycm9yGH8gASgLMjMuZ2FtZV9wcm90b2J1Zl9tZXNz",
+            "YWdlcy5wcm90by5tZXNzYWdlcy5FcnJvckNvbW1hbmRIAEIGCgRib2R5IpMB",
+            "CgdDb21tYW5kEj8KA2NtZBgBIAEoDjIyLmdhbWVfcHJvdG9idWZfbWVzc2Fn",
+            "ZXMucHJvdG8ubWVzc2FnZXMuQ29tbWFuZFR5cGUSOQoCb3AYAiABKA4yLS5n",
+            "YW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1lc3NhZ2VzLk9wVHlwZRIM",
+            "CgRib2R5GAMgASgMKncKC0NvbW1hbmRUeXBlEgsKB3Vua25vd24QABILCgdz",
+            "ZXNzaW9uEAESCAoEY29udhACEgoKBmRpcmVjdBADEgkKBWVycm9yEAQSCQoF",
+            "bG9iYnkQBRINCglzdGF0aXN0aWMQBhIKCgZldmVudHMQBxIHCgNhY2sQCCrJ",
+            "BQoGT3BUeXBlEggKBG5vbmUQABIICgRvcGVuEAESCgoGb3BlbmVkEAISCQoF",
+            "Y2xvc2UQAxIKCgZjbG9zZWQQBBIJCgVzdGFydBAeEgsKB3N0YXJ0ZWQQHxIO",
+            "CgphZGRfcmFuZG9tECASEAoMcmFuZG9tX2FkZGVkECESEAoMbWF0Y2hfcmFu",
+            "ZG9tECISEgoOcmFuZG9tX21hdGNoZWQQIxIHCgNhZGQQJBIJCgVhZGRlZBAl",
+            "EhIKDm1lbWJlcnNfam9pbmVkECYSEgoObWVtYmVyc19vbmxpbmUQJxIKCgZy",
+            "ZW1vdmUQKBILCgdyZW1vdmVkECkSEAoMbWVtYmVyc19sZWZ0ECoSEwoPbWVt",
+            "YmVyc19vZmZsaW5lECsSGAoUdXBkYXRlX21hc3Rlcl9jbGllbnQQLBIZChVt",
+            "YXN0ZXJfY2xpZW50X3VwZGF0ZWQQLRIZChVtYXN0ZXJfY2xpZW50X2NoYW5n",
+            "ZWQQLhIKCgZ1cGRhdGUQLxILCgd1cGRhdGVkEDASEgoOdXBkYXRlZF9ub3Rp",
+            "ZnkQMRIaChZ1cGRhdGVfc3lzdGVtX3Byb3BlcnR5EDISGwoXc3lzdGVtX3By",
+            "b3BlcnR5X3VwZGF0ZWQQMxIiCh5zeXN0ZW1fcHJvcGVydHlfdXBkYXRlZF9u",
+            "b3RpZnkQNBIRCg1vcGVuZWRfbm90aWZ5EDUSCwoHdmlzaWJsZRA2EhIKDnZp",
+            "c2libGVfbm90aWZ5EDcSFgoSdXBkYXRlX3BsYXllcl9wcm9wEDgSFwoTcGxh",
+            "eWVyX3Byb3BfdXBkYXRlZBA5EhAKDHBsYXllcl9wcm9wcxA6EggKBGtpY2sQ",
+            "OxIKCgZraWNrZWQQPBIRCg1raWNrZWRfbm90aWNlED0SDQoJcm9vbV9saXN0",
+            "EGQSEAoMZmluZF9mcmllbmRzEGUSEQoNZm91bmRfZnJpZW5kcxBmQhqqAhdM",
+            "ZWFuQ2xvdWQuUGxheS5Qcm90b2NvbGIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { },
+          new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.WrappersReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::LeanCloud.Play.Protocol.CommandType), typeof(global::LeanCloud.Play.Protocol.OpType), }, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::LeanCloud.Play.Protocol.BooleanValue), global::LeanCloud.Play.Protocol.BooleanValue.Parser, new[]{ "Val" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::LeanCloud.Play.Protocol.IntValue), global::LeanCloud.Play.Protocol.IntValue.Parser, new[]{ "Val" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::LeanCloud.Play.Protocol.RoomSystemProperty), global::LeanCloud.Play.Protocol.RoomSystemProperty.Parser, new[]{ "Open", "Visible", "ExpectMembers", "MaxMembers" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::LeanCloud.Play.Protocol.RoomMember), global::LeanCloud.Play.Protocol.RoomMember.Parser, new[]{ "Pid", "ActorId", "Attr", "Inactive" }, null, null, null),
@@ -192,7 +192,7 @@ namespace LeanCloud.Play.Protocol {
             new pbr::GeneratedClrTypeInfo(typeof(global::LeanCloud.Play.Protocol.SessionOpenRequest), global::LeanCloud.Play.Protocol.SessionOpenRequest.Parser, new[]{ "AppId", "PeerId", "GameVersion", "SdkVersion", "ProtocolVersion", "T", "N", "S", "ConfigBitmap" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::LeanCloud.Play.Protocol.CreateRoomRequest), global::LeanCloud.Play.Protocol.CreateRoomRequest.Parser, new[]{ "RoomOptions" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::LeanCloud.Play.Protocol.CreateRoomResponse), global::LeanCloud.Play.Protocol.CreateRoomResponse.Parser, new[]{ "RoomOptions", "Addr" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::LeanCloud.Play.Protocol.JoinRoomRequest), global::LeanCloud.Play.Protocol.JoinRoomRequest.Parser, new[]{ "Rejoin", "RoomOptions", "ExpectAttr", "PiggybackPeerId" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::LeanCloud.Play.Protocol.JoinRoomRequest), global::LeanCloud.Play.Protocol.JoinRoomRequest.Parser, new[]{ "Rejoin", "RoomOptions", "ExpectAttr", "PiggybackPeerId", "CreateOnNotFound" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::LeanCloud.Play.Protocol.JoinRoomResponse), global::LeanCloud.Play.Protocol.JoinRoomResponse.Parser, new[]{ "RoomOptions", "Addr" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::LeanCloud.Play.Protocol.JoinRoomNotification), global::LeanCloud.Play.Protocol.JoinRoomNotification.Parser, new[]{ "Member" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::LeanCloud.Play.Protocol.LeftRoomNotification), global::LeanCloud.Play.Protocol.LeftRoomNotification.Parser, new[]{ "ActorId" }, null, null, null),
@@ -290,135 +290,6 @@ namespace LeanCloud.Play.Protocol {
   #endregion
 
   #region Messages
-  public sealed partial class BooleanValue : pb::IMessage<BooleanValue> {
-    private static readonly pb::MessageParser<BooleanValue> _parser = new pb::MessageParser<BooleanValue>(() => new BooleanValue());
-    private pb::UnknownFieldSet _unknownFields;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pb::MessageParser<BooleanValue> Parser { get { return _parser; } }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[0]; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    pbr::MessageDescriptor pb::IMessage.Descriptor {
-      get { return Descriptor; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public BooleanValue() {
-      OnConstruction();
-    }
-
-    partial void OnConstruction();
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public BooleanValue(BooleanValue other) : this() {
-      val_ = other.val_;
-      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public BooleanValue Clone() {
-      return new BooleanValue(this);
-    }
-
-    /// <summary>Field number for the "val" field.</summary>
-    public const int ValFieldNumber = 1;
-    private bool val_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Val {
-      get { return val_; }
-      set {
-        val_ = value;
-      }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public override bool Equals(object other) {
-      return Equals(other as BooleanValue);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Equals(BooleanValue other) {
-      if (ReferenceEquals(other, null)) {
-        return false;
-      }
-      if (ReferenceEquals(other, this)) {
-        return true;
-      }
-      if (Val != other.Val) return false;
-      return Equals(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public override int GetHashCode() {
-      int hash = 1;
-      if (Val != false) hash ^= Val.GetHashCode();
-      if (_unknownFields != null) {
-        hash ^= _unknownFields.GetHashCode();
-      }
-      return hash;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public override string ToString() {
-      return pb::JsonFormatter.ToDiagnosticString(this);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void WriteTo(pb::CodedOutputStream output) {
-      if (Val != false) {
-        output.WriteRawTag(8);
-        output.WriteBool(Val);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(output);
-      }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public int CalculateSize() {
-      int size = 0;
-      if (Val != false) {
-        size += 1 + 1;
-      }
-      if (_unknownFields != null) {
-        size += _unknownFields.CalculateSize();
-      }
-      return size;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(BooleanValue other) {
-      if (other == null) {
-        return;
-      }
-      if (other.Val != false) {
-        Val = other.Val;
-      }
-      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(pb::CodedInputStream input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
-            break;
-          case 8: {
-            Val = input.ReadBool();
-            break;
-          }
-        }
-      }
-    }
-
-  }
-
   public sealed partial class IntValue : pb::IMessage<IntValue> {
     private static readonly pb::MessageParser<IntValue> _parser = new pb::MessageParser<IntValue>(() => new IntValue());
     private pb::UnknownFieldSet _unknownFields;
@@ -427,7 +298,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[1]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -556,7 +427,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[2]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -573,8 +444,8 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public RoomSystemProperty(RoomSystemProperty other) : this() {
-      open_ = other.open_ != null ? other.open_.Clone() : null;
-      visible_ = other.visible_ != null ? other.visible_.Clone() : null;
+      Open = other.Open;
+      Visible = other.Visible;
       expectMembers_ = other.expectMembers_;
       maxMembers_ = other.maxMembers_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -587,25 +458,29 @@ namespace LeanCloud.Play.Protocol {
 
     /// <summary>Field number for the "open" field.</summary>
     public const int OpenFieldNumber = 1;
-    private global::LeanCloud.Play.Protocol.BooleanValue open_;
+    private static readonly pb::FieldCodec<bool?> _single_open_codec = pb::FieldCodec.ForStructWrapper<bool>(10);
+    private bool? open_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::LeanCloud.Play.Protocol.BooleanValue Open {
+    public bool? Open {
       get { return open_; }
       set {
         open_ = value;
       }
     }
 
+
     /// <summary>Field number for the "visible" field.</summary>
     public const int VisibleFieldNumber = 2;
-    private global::LeanCloud.Play.Protocol.BooleanValue visible_;
+    private static readonly pb::FieldCodec<bool?> _single_visible_codec = pb::FieldCodec.ForStructWrapper<bool>(18);
+    private bool? visible_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::LeanCloud.Play.Protocol.BooleanValue Visible {
+    public bool? Visible {
       get { return visible_; }
       set {
         visible_ = value;
       }
     }
+
 
     /// <summary>Field number for the "expectMembers" field.</summary>
     public const int ExpectMembersFieldNumber = 3;
@@ -642,8 +517,8 @@ namespace LeanCloud.Play.Protocol {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (!object.Equals(Open, other.Open)) return false;
-      if (!object.Equals(Visible, other.Visible)) return false;
+      if (Open != other.Open) return false;
+      if (Visible != other.Visible) return false;
       if (ExpectMembers != other.ExpectMembers) return false;
       if (MaxMembers != other.MaxMembers) return false;
       return Equals(_unknownFields, other._unknownFields);
@@ -670,12 +545,10 @@ namespace LeanCloud.Play.Protocol {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
       if (open_ != null) {
-        output.WriteRawTag(10);
-        output.WriteMessage(Open);
+        _single_open_codec.WriteTagAndValue(output, Open);
       }
       if (visible_ != null) {
-        output.WriteRawTag(18);
-        output.WriteMessage(Visible);
+        _single_visible_codec.WriteTagAndValue(output, Visible);
       }
       if (ExpectMembers.Length != 0) {
         output.WriteRawTag(26);
@@ -694,10 +567,10 @@ namespace LeanCloud.Play.Protocol {
     public int CalculateSize() {
       int size = 0;
       if (open_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Open);
+        size += _single_open_codec.CalculateSizeWithTag(Open);
       }
       if (visible_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Visible);
+        size += _single_visible_codec.CalculateSizeWithTag(Visible);
       }
       if (ExpectMembers.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(ExpectMembers);
@@ -717,16 +590,14 @@ namespace LeanCloud.Play.Protocol {
         return;
       }
       if (other.open_ != null) {
-        if (open_ == null) {
-          Open = new global::LeanCloud.Play.Protocol.BooleanValue();
+        if (open_ == null || other.Open != false) {
+          Open = other.Open;
         }
-        Open.MergeFrom(other.Open);
       }
       if (other.visible_ != null) {
-        if (visible_ == null) {
-          Visible = new global::LeanCloud.Play.Protocol.BooleanValue();
+        if (visible_ == null || other.Visible != false) {
+          Visible = other.Visible;
         }
-        Visible.MergeFrom(other.Visible);
       }
       if (other.ExpectMembers.Length != 0) {
         ExpectMembers = other.ExpectMembers;
@@ -746,17 +617,17 @@ namespace LeanCloud.Play.Protocol {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
-            if (open_ == null) {
-              Open = new global::LeanCloud.Play.Protocol.BooleanValue();
+            bool? value = _single_open_codec.Read(input);
+            if (open_ == null || value != false) {
+              Open = value;
             }
-            input.ReadMessage(Open);
             break;
           }
           case 18: {
-            if (visible_ == null) {
-              Visible = new global::LeanCloud.Play.Protocol.BooleanValue();
+            bool? value = _single_visible_codec.Read(input);
+            if (visible_ == null || value != false) {
+              Visible = value;
             }
-            input.ReadMessage(Visible);
             break;
           }
           case 26: {
@@ -781,7 +652,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[3]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[2]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -994,7 +865,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[4]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[3]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1151,7 +1022,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[5]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[4]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1342,7 +1213,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[6]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[5]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1360,8 +1231,8 @@ namespace LeanCloud.Play.Protocol {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public RoomOptions(RoomOptions other) : this() {
       cid_ = other.cid_;
-      visible_ = other.visible_;
-      open_ = other.open_;
+      Visible = other.Visible;
+      Open = other.Open;
       emptyRoomTtl_ = other.emptyRoomTtl_;
       playerTtl_ = other.playerTtl_;
       maxMembers_ = other.maxMembers_;
@@ -1394,25 +1265,29 @@ namespace LeanCloud.Play.Protocol {
 
     /// <summary>Field number for the "visible" field.</summary>
     public const int VisibleFieldNumber = 2;
-    private bool visible_;
+    private static readonly pb::FieldCodec<bool?> _single_visible_codec = pb::FieldCodec.ForStructWrapper<bool>(18);
+    private bool? visible_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Visible {
+    public bool? Visible {
       get { return visible_; }
       set {
         visible_ = value;
       }
     }
 
+
     /// <summary>Field number for the "open" field.</summary>
     public const int OpenFieldNumber = 3;
-    private bool open_;
+    private static readonly pb::FieldCodec<bool?> _single_open_codec = pb::FieldCodec.ForStructWrapper<bool>(26);
+    private bool? open_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Open {
+    public bool? Open {
       get { return open_; }
       set {
         open_ = value;
       }
     }
+
 
     /// <summary>Field number for the "emptyRoomTtl" field.</summary>
     public const int EmptyRoomTtlFieldNumber = 4;
@@ -1566,8 +1441,8 @@ namespace LeanCloud.Play.Protocol {
     public override int GetHashCode() {
       int hash = 1;
       if (Cid.Length != 0) hash ^= Cid.GetHashCode();
-      if (Visible != false) hash ^= Visible.GetHashCode();
-      if (Open != false) hash ^= Open.GetHashCode();
+      if (visible_ != null) hash ^= Visible.GetHashCode();
+      if (open_ != null) hash ^= Open.GetHashCode();
       if (EmptyRoomTtl != 0) hash ^= EmptyRoomTtl.GetHashCode();
       if (PlayerTtl != 0) hash ^= PlayerTtl.GetHashCode();
       if (MaxMembers != 0) hash ^= MaxMembers.GetHashCode();
@@ -1596,13 +1471,11 @@ namespace LeanCloud.Play.Protocol {
         output.WriteRawTag(10);
         output.WriteString(Cid);
       }
-      if (Visible != false) {
-        output.WriteRawTag(16);
-        output.WriteBool(Visible);
+      if (visible_ != null) {
+        _single_visible_codec.WriteTagAndValue(output, Visible);
       }
-      if (Open != false) {
-        output.WriteRawTag(24);
-        output.WriteBool(Open);
+      if (open_ != null) {
+        _single_open_codec.WriteTagAndValue(output, Open);
       }
       if (EmptyRoomTtl != 0) {
         output.WriteRawTag(32);
@@ -1650,11 +1523,11 @@ namespace LeanCloud.Play.Protocol {
       if (Cid.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Cid);
       }
-      if (Visible != false) {
-        size += 1 + 1;
+      if (visible_ != null) {
+        size += _single_visible_codec.CalculateSizeWithTag(Visible);
       }
-      if (Open != false) {
-        size += 1 + 1;
+      if (open_ != null) {
+        size += _single_open_codec.CalculateSizeWithTag(Open);
       }
       if (EmptyRoomTtl != 0) {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(EmptyRoomTtl);
@@ -1697,11 +1570,15 @@ namespace LeanCloud.Play.Protocol {
       if (other.Cid.Length != 0) {
         Cid = other.Cid;
       }
-      if (other.Visible != false) {
-        Visible = other.Visible;
+      if (other.visible_ != null) {
+        if (visible_ == null || other.Visible != false) {
+          Visible = other.Visible;
+        }
       }
-      if (other.Open != false) {
-        Open = other.Open;
+      if (other.open_ != null) {
+        if (open_ == null || other.Open != false) {
+          Open = other.Open;
+        }
       }
       if (other.EmptyRoomTtl != 0) {
         EmptyRoomTtl = other.EmptyRoomTtl;
@@ -1745,12 +1622,18 @@ namespace LeanCloud.Play.Protocol {
             Cid = input.ReadString();
             break;
           }
-          case 16: {
-            Visible = input.ReadBool();
+          case 18: {
+            bool? value = _single_visible_codec.Read(input);
+            if (visible_ == null || value != false) {
+              Visible = value;
+            }
             break;
           }
-          case 24: {
-            Open = input.ReadBool();
+          case 26: {
+            bool? value = _single_open_codec.Read(input);
+            if (open_ == null || value != false) {
+              Open = value;
+            }
             break;
           }
           case 32: {
@@ -1811,7 +1694,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[7]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[6]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2164,7 +2047,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[8]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[7]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2299,7 +2182,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[9]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[8]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2462,7 +2345,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[10]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[9]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2483,6 +2366,7 @@ namespace LeanCloud.Play.Protocol {
       roomOptions_ = other.roomOptions_ != null ? other.roomOptions_.Clone() : null;
       expectAttr_ = other.expectAttr_;
       piggybackPeerId_ = other.piggybackPeerId_;
+      createOnNotFound_ = other.createOnNotFound_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -2535,6 +2419,17 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
+    /// <summary>Field number for the "createOnNotFound" field.</summary>
+    public const int CreateOnNotFoundFieldNumber = 5;
+    private bool createOnNotFound_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool CreateOnNotFound {
+      get { return createOnNotFound_; }
+      set {
+        createOnNotFound_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as JoinRoomRequest);
@@ -2552,6 +2447,7 @@ namespace LeanCloud.Play.Protocol {
       if (!object.Equals(RoomOptions, other.RoomOptions)) return false;
       if (ExpectAttr != other.ExpectAttr) return false;
       if (PiggybackPeerId != other.PiggybackPeerId) return false;
+      if (CreateOnNotFound != other.CreateOnNotFound) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -2562,6 +2458,7 @@ namespace LeanCloud.Play.Protocol {
       if (roomOptions_ != null) hash ^= RoomOptions.GetHashCode();
       if (ExpectAttr.Length != 0) hash ^= ExpectAttr.GetHashCode();
       if (PiggybackPeerId.Length != 0) hash ^= PiggybackPeerId.GetHashCode();
+      if (CreateOnNotFound != false) hash ^= CreateOnNotFound.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -2591,6 +2488,10 @@ namespace LeanCloud.Play.Protocol {
         output.WriteRawTag(34);
         output.WriteString(PiggybackPeerId);
       }
+      if (CreateOnNotFound != false) {
+        output.WriteRawTag(40);
+        output.WriteBool(CreateOnNotFound);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -2610,6 +2511,9 @@ namespace LeanCloud.Play.Protocol {
       }
       if (PiggybackPeerId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(PiggybackPeerId);
+      }
+      if (CreateOnNotFound != false) {
+        size += 1 + 1;
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -2636,6 +2540,9 @@ namespace LeanCloud.Play.Protocol {
       }
       if (other.PiggybackPeerId.Length != 0) {
         PiggybackPeerId = other.PiggybackPeerId;
+      }
+      if (other.CreateOnNotFound != false) {
+        CreateOnNotFound = other.CreateOnNotFound;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -2667,6 +2574,10 @@ namespace LeanCloud.Play.Protocol {
             PiggybackPeerId = input.ReadString();
             break;
           }
+          case 40: {
+            CreateOnNotFound = input.ReadBool();
+            break;
+          }
         }
       }
     }
@@ -2681,7 +2592,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[11]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[10]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2844,7 +2755,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[12]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[11]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2979,7 +2890,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[13]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[12]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3108,7 +3019,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[14]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[13]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3271,7 +3182,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[15]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[14]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3400,7 +3311,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[16]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[15]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3585,7 +3496,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[17]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[16]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3742,7 +3653,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[18]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[17]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3899,7 +3810,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[19]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[18]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4068,7 +3979,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[20]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[19]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4203,7 +4114,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[21]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[20]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4338,7 +4249,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[22]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[21]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4467,7 +4378,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[23]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[22]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4596,7 +4507,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[24]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[23]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4725,7 +4636,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[25]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[24]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5136,7 +5047,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[26]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[25]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5510,7 +5421,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[27]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[26]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5667,7 +5578,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[28]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[27]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5788,7 +5699,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[29]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[28]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5917,7 +5828,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[30]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[29]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6038,7 +5949,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[31]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[30]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6251,7 +6162,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[32]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[31]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6386,7 +6297,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[33]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[32]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6521,7 +6432,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[34]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[33]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6987,7 +6898,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[35]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[34]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -7448,7 +7359,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[36]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[35]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -7886,7 +7797,7 @@ namespace LeanCloud.Play.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[37]; }
+      get { return global::LeanCloud.Play.Protocol.MessagesReflection.Descriptor.MessageTypes[36]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

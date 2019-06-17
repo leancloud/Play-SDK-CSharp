@@ -31,7 +31,7 @@ namespace LeanCloud.Play.Test
             }).Unwrap().OnSuccess(_ => {
                 return c1.JoinRoom(roomName);
             }).Unwrap().OnSuccess(_ => {
-                var eventData = new Dictionary<string, object> {
+                var eventData = new PlayObject {
                     { "name", "aaa" },
                     { "count", 100 },
                 };
@@ -73,7 +73,7 @@ namespace LeanCloud.Play.Test
             }).Unwrap().OnSuccess(_ => {
                 return c1.JoinRoom(roomName);
             }).Unwrap().OnSuccess(_ => {
-                var eventData = new Dictionary<string, object> {
+                var eventData = new PlayObject {
                     { "name", "aaa" },
                     { "count", 100 },
                 };
