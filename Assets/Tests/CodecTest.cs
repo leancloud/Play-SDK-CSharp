@@ -3,6 +3,7 @@ using UnityEngine;
 using Google.Protobuf;
 using LeanCloud.Play.Protocol;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace LeanCloud.Play.Test
 {
@@ -19,6 +20,24 @@ namespace LeanCloud.Play.Test
             Assert.AreEqual(l is long, true);
             Assert.AreEqual(f is float, true);
             Assert.AreEqual(f is double, false);
+            var sl = new List<string> { 
+                "aaa", "bbb", "ccc"
+            };
+            Assert.AreEqual(sl is IList, true);
+            var isl = (IList)sl;
+            foreach (var v in isl) {
+                Debug.Log(v);
+            }
+            var sd = new Dictionary<string, string> {
+                { "aa", "bb" },
+                { "cc", "dd" }
+            };
+            var sdType = sd.GetType();
+            Assert.AreEqual(sd is IDictionary, true);
+            var isd = (IDictionary)sd;
+            foreach (var key in isd.Keys) {
+                Debug.Log($"{key} : {isd[key]}");
+            }
         }
 
         [Test]
