@@ -369,7 +369,9 @@ namespace LeanCloud.Play {
                     string.Format("You cannot call SetRoomCustomProperties() on {0} state", state.ToString()));
             }
             var changedProps = await gameConn.SetRoomCustomProperties(properties, expectedValues);
-            Room.MergeCustomProperties(changedProps);
+            if (!changedProps.IsEmpty) {
+                Room.MergeCustomProperties(changedProps);
+            }
         }
 
         public async Task SetPlayerCustomProperties(int actorId, PlayObject properties, PlayObject expectedValues = null) {
@@ -378,10 +380,12 @@ namespace LeanCloud.Play {
                     string.Format("You cannot call SetPlayerCustomProperties() on {0} state", state.ToString()));
             }
             var res = await gameConn.SetPlayerCustomProperties(actorId, properties, expectedValues);
-            var playerId = res.Item1;
-            var player = Room.GetPlayer(playerId);
-            var changedProps = res.Item2;
-            player.MergeCustomProperties(changedProps);
+            if (!res.Item2.IsEmpty) {
+                var playerId = res.Item1;
+                var player = Room.GetPlayer(playerId);
+                var changedProps = res.Item2;
+                player.MergeCustomProperties(changedProps);
+            }
         }
 
         public void PauseMessageQueue() { 
@@ -618,7 +622,6 @@ namespace LeanCloud.Play {
                         var reason = appInfo.AppMsg;
                         OnRoomKicked?.Invoke(code, reason);
                     } else {
-                        // TODO
                         OnRoomKicked?.Invoke(null, null);
                     }
                 });

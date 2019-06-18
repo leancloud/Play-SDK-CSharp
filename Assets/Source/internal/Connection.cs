@@ -102,7 +102,7 @@ namespace LeanCloud.Play {
         }
 
         protected void Send(CommandType cmd, OpType op, Body body) {
-            Logger.Debug("=> {0}/{1}: {2}", cmd, op, body.ToString());
+            Logger.Debug("{0} => {1}/{2}: {3}", userId, cmd, op, body.ToString());
             var command = new Command { 
                 Cmd = cmd,
                 Op = op,
@@ -145,7 +145,7 @@ namespace LeanCloud.Play {
             var cmd = command.Cmd;
             var op = command.Op;
             var body = Body.Parser.ParseFrom(command.Body);
-            Logger.Debug("<= {0}/{1}: {2}", cmd, op, body);
+            Logger.Debug("{0} <= {1}/{2}: {3}", userId, cmd, op, body);
             HandleCommand(cmd, op, body);
 
 

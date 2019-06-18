@@ -125,5 +125,11 @@ namespace LeanCloud.Play {
         public T GetObject<T>(string key) {
             return (T)Data[key];
         }
+
+        public bool IsEmpty { 
+            get {
+                return Data == null || Data.Count == 0;
+            }
+        }
     }
 }

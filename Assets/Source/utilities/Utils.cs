@@ -56,8 +56,8 @@ namespace LeanCloud.Play {
         internal static LobbyRoom ConvertToLobbyRoom(Protocol.RoomOptions options) {
             var lobbyRoom = new LobbyRoom {
                 RoomName = options.Cid,
-                Open = options.Open.Value,
-                Visible = options.Visible.Value,
+                Open = options.Open == null || options.Open.Value,
+                Visible = options.Visible == null || options.Visible.Value,
                 MaxPlayerCount = options.MaxMembers,
                 PlayerCount = options.MemberCount,
                 EmptyRoomTtl = options.EmptyRoomTtl,
