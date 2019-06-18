@@ -56,7 +56,7 @@ namespace LeanCloud.Play.Test
                 CustoRoomPropertyKeysForLobby = new List<string> { "level" }
             };
             var expectedUserIds = new List<string> { "world" };
-            var room = await c.CreateRoom(roomName, roomOptions, expectedUserIds);
+            var room = await c.JoinOrCreateRoom(roomName, roomOptions, expectedUserIds);
             Assert.AreEqual(room.Name, roomName);
             //Assert.AreEqual(room.Visible, false);
             var props = room.CustomProperties;

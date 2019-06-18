@@ -19,8 +19,8 @@ namespace LeanCloud.Play {
         }
 
         internal async Task JoinLobby() {
-            var msg = Message.NewRequest("lobby", "add");
-            await Send(msg);
+            var request = NewRequest();
+            await SendRequest(CommandType.Lobby, OpType.Add, request);
         }
 
         internal async Task<LobbyRoomResult> CreateRoom(string roomName, RoomOptions roomOptions, List<string> expectedUserIds) {
@@ -30,7 +30,7 @@ namespace LeanCloud.Play {
                 RoomOptions = roomOpts
             };
             var res = await SendRequest(CommandType.Conv, OpType.Start, request);
-            var roomRes = res.CreateRoom;
+            var roomRes = res.Response.CreateRoom;
             return new LobbyRoomResult {
                 RoomId = roomRes.RoomOptions.Cid,
                 PrimaryUrl = roomRes.Addr,
@@ -48,7 +48,7 @@ namespace LeanCloud.Play {
                 request.JoinRoom.RoomOptions.ExpectMembers.AddRange(expectedUserIds);
             }
             var res = await SendRequest(CommandType.Conv, OpType.Add, request);
-            var roomRes = res.JoinRoom;
+            var roomRes = res.Response.JoinRoom;
             return new LobbyRoomResult { 
                 RoomId = roomRes.RoomOptions.Cid,
                 PrimaryUrl = roomRes.Addr
@@ -64,7 +64,7 @@ namespace LeanCloud.Play {
                 }
             };
             var res = await SendRequest(CommandType.Conv, OpType.Add, request);
-            var roomRes = res.JoinRoom;
+            var roomRes = res.Response.JoinRoom;
             return new LobbyRoomResult { 
                 RoomId = roomRes.RoomOptions.Cid,
                 PrimaryUrl = roomRes.Addr
@@ -81,7 +81,7 @@ namespace LeanCloud.Play {
                 request.JoinRoom.RoomOptions.ExpectMembers.AddRange(expectedUserIds);
             }
             var res = await SendRequest(CommandType.Conv, OpType.AddRandom, request);
-            var roomRes = res.JoinRoom;
+            var roomRes = res.Response.JoinRoom;
             return new LobbyRoomResult { 
                 RoomId = roomRes.RoomOptions.Cid,
                 PrimaryUrl = roomRes.Addr
@@ -89,39 +89,36 @@ namespace LeanCloud.Play {
         }
 
         internal async Task<LobbyRoomResult> JoinOrCreateRoom(string roomName, RoomOptions roomOptions, List<string> expectedUserIds)  {
-            var msg = Message.NewRequest("conv", "add");
-            msg["cid"] = roomName;
-            msg["createOnNotFound"] = true;
-            if (roomOptions != null) {
-                var roomOptionsDict = roomOptions.ToDictionary();
-                foreach (var entry in roomOptionsDict) {
-                    msg[entry.Key] = entry.Value;
-                }
+            var request = NewRequest();
+            request.JoinRoom = new JoinRoomRequest {
+                RoomOptions = Utils.ConvertToRoomOptions(roomName, roomOptions, expectedUserIds),
+                CreateOnNotFound = true
+            };
+            var res = await SendRequest(CommandType.Conv, OpType.Add, request);
+            if (res.Op == OpType.Started) {
+                return new LobbyRoomResult {
+                    Create = true,
+                    RoomId = res.Response.CreateRoom.RoomOptions.Cid,
+                    PrimaryUrl = res.Response.CreateRoom.Addr
+                };
             }
-            if (expectedUserIds != null) {
-                List<object> expecteds = expectedUserIds.Cast<object>().ToList();
-                msg["expectMembers"] = expecteds;
-            }
-            var res = await Send(msg);
-            return new LobbyRoomResult {
-                Create = res.Op == "started",
-                RoomId = res["cid"].ToString(),
-                PrimaryUrl = res["addr"].ToString()
+            return new LobbyRoomResult { 
+                Create = false,
+                RoomId = res.Response.JoinRoom.RoomOptions.Cid,
+                PrimaryUrl = res.Response.JoinRoom.Addr
             };
         }
 
-        internal async Task<LobbyRoom> MatchRandom(PlayObject matchProperties, List<string> expectedUserIds) {
+        internal async Task<LobbyRoom> MatchRandom(string piggybackUserId, PlayObject matchProperties) {
             var request = NewRequest();
+            request.JoinRoom = new JoinRoomRequest { 
+                PiggybackPeerId = piggybackUserId
+            };
             if (matchProperties != null) {
                 request.JoinRoom.ExpectAttr = CodecUtils.EncodePlayObject(matchProperties);
             }
-            if (expectedUserIds != null) {
-                request.JoinRoom.RoomOptions.ExpectMembers.AddRange(expectedUserIds);
-            }
             var res = await SendRequest(CommandType.Conv, OpType.MatchRandom, request);
-            // TODO 返回 LobbyRoom
-
-            return null;
+            return Utils.ConvertToLobbyRoom(res.Response.JoinRoom.RoomOptions);
         }
 
         protected override int GetPingDuration() {

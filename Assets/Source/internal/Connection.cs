@@ -11,8 +11,7 @@ namespace LeanCloud.Play {
         static readonly string PING = "{}";
 
         protected WebSocket ws;
-        readonly Dictionary<int, TaskCompletionSource<Message>> requests;
-        readonly Dictionary<int, TaskCompletionSource<ResponseMessage>> responses;
+        readonly Dictionary<int, TaskCompletionSource<ResponseWrapper>> responses;
 
         internal event Action<CommandType, OpType, Body> OnMessage;
         internal event Action<int, string> OnClose;
@@ -26,8 +25,7 @@ namespace LeanCloud.Play {
         string userId;
 
         internal Connection() {
-            requests = new Dictionary<int, TaskCompletionSource<Message>>();
-            responses = new Dictionary<int, TaskCompletionSource<ResponseMessage>>();
+            responses = new Dictionary<int, TaskCompletionSource<ResponseWrapper>>();
             messageQueue = new Queue<Message>();
             pingTokenSource = new CancellationTokenSource();
             pongTokenSource = new CancellationTokenSource();
@@ -87,8 +85,8 @@ namespace LeanCloud.Play {
             return SendRequest(CommandType.Session, OpType.Open, request);
         }
 
-        protected Task<ResponseMessage> SendRequest(CommandType cmd, OpType op, RequestMessage request) {
-            var tcs = new TaskCompletionSource<ResponseMessage>();
+        protected Task<ResponseWrapper> SendRequest(CommandType cmd, OpType op, RequestMessage request) {
+            var tcs = new TaskCompletionSource<ResponseWrapper>();
             responses.Add(request.I, tcs);
             Send(cmd, op, new Body {
                 Request = request
@@ -170,7 +168,11 @@ namespace LeanCloud.Play {
                         var errorInfo = res.ErrorInfo;
                         tcs.SetException(new PlayException(errorInfo.ReasonCode, errorInfo.Detail));
                     } else {
-                        tcs.SetResult(res);
+                        tcs.SetResult(new ResponseWrapper { 
+                            Cmd = cmd,
+                            Op = op,
+                            Response = res
+                        });
                     }
                 }
             } else {

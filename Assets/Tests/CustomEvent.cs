@@ -23,8 +23,8 @@ namespace LeanCloud.Play.Test
             }).Unwrap().OnSuccess(_ => {
                 c0.OnCustomEvent += (eventId, eventData, senderId) => {
                     Assert.AreEqual(eventId, 1);
-                    Assert.AreEqual(eventData["name"] as string, "aaa");
-                    Assert.AreEqual(int.Parse(eventData["count"].ToString()), 100);
+                    Assert.AreEqual(eventData["name"], "aaa");
+                    Assert.AreEqual(eventData["count"], 100);
                     f = true;
                 };
                 return c1.Connect();
@@ -65,8 +65,8 @@ namespace LeanCloud.Play.Test
             }).Unwrap().OnSuccess(_ => {
                 c0.OnCustomEvent += (eventId, eventData, senderId) => {
                     Assert.AreEqual(eventId, 2);
-                    Assert.AreEqual(eventData["name"] as string, "aaa");
-                    Assert.AreEqual(int.Parse(eventData["count"].ToString()), 100);
+                    Assert.AreEqual(eventData["name"], "aaa");
+                    Assert.AreEqual(eventData["count"], 100);
                     f = true;
                 };
                 return c1.Connect();

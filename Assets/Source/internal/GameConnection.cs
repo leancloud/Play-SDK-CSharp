@@ -29,7 +29,7 @@ namespace LeanCloud.Play {
                 RoomOptions = roomOpts
             };
             var res = await SendRequest(CommandType.Conv, OpType.Start, request);
-            return Utils.ConvertToRoom(res.CreateRoom.RoomOptions);
+            return Utils.ConvertToRoom(res.Response.CreateRoom.RoomOptions);
         }
 
         internal async Task<Room> JoinRoom(string roomId, List<string> expectedUserIds) {
@@ -44,11 +44,12 @@ namespace LeanCloud.Play {
                 request.JoinRoom.RoomOptions.ExpectMembers.AddRange(expectedUserIds);
             }
             var res = await SendRequest(CommandType.Conv, OpType.Add, request);
-            return Utils.ConvertToRoom(res.JoinRoom.RoomOptions);
+            return Utils.ConvertToRoom(res.Response.JoinRoom.RoomOptions);
         }
 
         internal async Task LeaveRoom() {
-            await SendRequest(CommandType.Conv, OpType.Remove, null);
+            var request = NewRequest();
+            await SendRequest(CommandType.Conv, OpType.Remove, request);
         }
 
         internal async Task<PlayObject> SetRoomOpen(bool open) {
@@ -59,7 +60,7 @@ namespace LeanCloud.Play {
                 }
             };
             var res = await SendRequest(CommandType.Conv, OpType.UpdateSystemProperty, request);
-            return Utils.ConvertToPlayObject(res.UpdateSysProperty.SysAttr);
+            return Utils.ConvertToPlayObject(res.Response.UpdateSysProperty.SysAttr);
         }
 
         internal async Task<PlayObject> SetRoomVisible(bool visible) {
@@ -70,7 +71,7 @@ namespace LeanCloud.Play {
                 }
             };
             var res = await SendRequest(CommandType.Conv, OpType.UpdateSystemProperty, request);
-            return Utils.ConvertToPlayObject(res.UpdateSysProperty.SysAttr);
+            return Utils.ConvertToPlayObject(res.Response.UpdateSysProperty.SysAttr);
         }
 
         internal async Task<PlayObject> SetRoomMaxPlayerCount(int count) {
@@ -81,7 +82,7 @@ namespace LeanCloud.Play {
                 }
             };
             var res = await SendRequest(CommandType.Conv, OpType.UpdateSystemProperty, request);
-            return Utils.ConvertToPlayObject(res.UpdateSysProperty.SysAttr);
+            return Utils.ConvertToPlayObject(res.Response.UpdateSysProperty.SysAttr);
         }
 
         internal async Task<PlayObject> SetRoomExpectedUserIds(List<string> expectedUserIds) {
@@ -95,7 +96,7 @@ namespace LeanCloud.Play {
                 }
             };
             var res = await SendRequest(CommandType.Conv, OpType.UpdateSystemProperty, request);
-            return Utils.ConvertToPlayObject(res.UpdateSysProperty.SysAttr);
+            return Utils.ConvertToPlayObject(res.Response.UpdateSysProperty.SysAttr);
         }
 
         internal async Task<PlayObject> ClearRoomExpectedUserIds() {
@@ -109,7 +110,7 @@ namespace LeanCloud.Play {
                 }
             };
             var res = await SendRequest(CommandType.Conv, OpType.UpdateSystemProperty, request);
-            return Utils.ConvertToPlayObject(res.UpdateSysProperty.SysAttr);
+            return Utils.ConvertToPlayObject(res.Response.UpdateSysProperty.SysAttr);
         }
 
         internal async Task<PlayObject> AddRoomExpectedUserIds(List<string> expectedUserIds) {
@@ -123,7 +124,7 @@ namespace LeanCloud.Play {
                 }
             };
             var res = await SendRequest(CommandType.Conv, OpType.UpdateSystemProperty, request);
-            return Utils.ConvertToPlayObject(res.UpdateSysProperty.SysAttr);
+            return Utils.ConvertToPlayObject(res.Response.UpdateSysProperty.SysAttr);
         }
 
         internal async Task<PlayObject> RemoveRoomExpectedUserIds(List<string> expectedUserIds) {
@@ -137,7 +138,7 @@ namespace LeanCloud.Play {
                 }
             };
             var res = await SendRequest(CommandType.Conv, OpType.UpdateSystemProperty, request);
-            return Utils.ConvertToPlayObject(res.UpdateSysProperty.SysAttr);
+            return Utils.ConvertToPlayObject(res.Response.UpdateSysProperty.SysAttr);
         }
 
         internal async Task<int> SetMaster(int newMasterId) {
@@ -146,7 +147,7 @@ namespace LeanCloud.Play {
                 MasterActorId = newMasterId
             };
             var res = await SendRequest(CommandType.Conv, OpType.UpdateMasterClient, request);
-            return res.UpdateMasterClient.MasterActorId;
+            return res.Response.UpdateMasterClient.MasterActorId;
         }
 
         internal async Task<int> KickPlayer(int actorId, int code, string reason) {
@@ -155,11 +156,11 @@ namespace LeanCloud.Play {
                 TargetActorId = actorId,
                 AppInfo = new AppInfo { 
                     AppCode = code,
-                    AppMsg = reason
+                    AppMsg = reason ?? string.Empty
                 }
             };
             var res = await SendRequest(CommandType.Conv, OpType.Kick, request);
-            return res.KickMember.TargetActorId;
+            return res.Response.KickMember.TargetActorId;
         }
 
         internal Task SendEvent(byte eventId, PlayObject eventData, SendEventOptions options) {
@@ -189,7 +190,7 @@ namespace LeanCloud.Play {
                 request.UpdateProperty.ExpectAttr = CodecUtils.EncodePlayObject(expectedValues);
             }
             var res = await SendRequest(CommandType.Conv, OpType.Update, request);
-            var props = CodecUtils.DecodePlayObject(res.UpdateProperty.Attr);
+            var props = CodecUtils.DecodePlayObject(res.Response.UpdateProperty.Attr);
             return props;
         }
 
@@ -203,8 +204,8 @@ namespace LeanCloud.Play {
                 request.UpdateProperty.ExpectAttr = CodecUtils.EncodePlayObject(expectedValues);
             }
             var res = await SendRequest(CommandType.Conv, OpType.UpdatePlayerProp, request);
-            var actorId = res.UpdateProperty.ActorId;
-            var props = CodecUtils.DecodePlayObject(res.UpdateProperty.Attr);
+            var actorId = res.Response.UpdateProperty.ActorId;
+            var props = CodecUtils.DecodePlayObject(res.Response.UpdateProperty.Attr);
             return new Tuple<int, PlayObject>(actorId, props);
         }
 

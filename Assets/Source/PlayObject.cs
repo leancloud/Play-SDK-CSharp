@@ -33,7 +33,7 @@ namespace LeanCloud.Play {
         }
 
         public bool TryGetValue(string key, out object value) {
-            return ((IDictionary<string, object>)Data).TryGetValue(key, out value);
+            return Data.TryGetValue(key, out value);
         }
 
         public void Add(KeyValuePair<string, object> item) {

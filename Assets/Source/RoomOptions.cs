@@ -29,7 +29,7 @@ namespace LeanCloud.Play
         /// 房间是否打开
         /// </summary>
         /// <value><c>true</c> if opened; otherwise, <c>false</c>.</value>
-        public bool Open {
+        public bool? Open {
             get; set;
         }
 
@@ -37,7 +37,7 @@ namespace LeanCloud.Play
         /// 房间是否可见，只有「可见」的房间会出现在房间列表里
         /// </summary>
         /// <value><c>true</c> if visible; otherwise, <c>false</c>.</value>
-        public bool Visible {
+        public bool? Visible {
             get; set;
         }
 

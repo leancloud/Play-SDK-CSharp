@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using LeanCloud.Play.Protocol;
 using Google.Protobuf;
 
@@ -17,8 +18,12 @@ namespace LeanCloud.Play {
                 roomOptions.PlayerTtl = options.PlayerTtl;
                 roomOptions.MaxMembers = options.MaxPlayerCount;
                 roomOptions.Flag = options.Flag;
-                roomOptions.Attr = CodecUtils.EncodePlayObject(options.CustomRoomProperties);
-                roomOptions.LobbyAttrKeys.AddRange(options.CustoRoomPropertyKeysForLobby);
+                if (options.CustomRoomProperties != null) {
+                    roomOptions.Attr = CodecUtils.EncodePlayObject(options.CustomRoomProperties);
+                }
+                if (options.CustoRoomPropertyKeysForLobby != null) {
+                    roomOptions.LobbyAttrKeys.AddRange(options.CustoRoomPropertyKeysForLobby);
+                }
             }
             if (expectedUserIds != null) {
                 roomOptions.ExpectMembers.AddRange(expectedUserIds);
@@ -29,8 +34,8 @@ namespace LeanCloud.Play {
         internal static Room ConvertToRoom(Protocol.RoomOptions options) {
             var room = new Room {
                 Name = options.Cid,
-                Open = options.Open.Value,
-                Visible = options.Visible.Value,
+                Open = options.Open == null || options.Open.Value,
+                Visible = options.Visible == null || options.Visible.Value,
                 MaxPlayerCount = options.MaxMembers,
                 MasterActorId = options.MasterActorId
             };
@@ -59,7 +64,7 @@ namespace LeanCloud.Play {
                 PlayerTtl = options.PlayerTtl
             };
             if (options.ExpectMembers != null) {
-                lobbyRoom.ExpectedUserIds.AddRange(options.ExpectMembers);
+                lobbyRoom.ExpectedUserIds = options.ExpectMembers.ToList<string>();
             }
             if (options.Attr != null) {
                 lobbyRoom.CustomRoomProperties = CodecUtils.DecodePlayObject(options.Attr);
@@ -93,8 +98,9 @@ namespace LeanCloud.Play {
             if (property.MaxMembers > 0) {
                 obj["maxPlayerCount"] = property.MaxMembers;
             }
-            if (property.ExpectMembers != null) {
-                obj["expectedUserIds"] = Json.Parse(property.ExpectMembers) as List<string>;
+            if (!string.IsNullOrEmpty(property.ExpectMembers)) {
+                var playerIdObjList = Json.Parse(property.ExpectMembers) as List<object>;
+                obj["expectedUserIds"] = playerIdObjList.Cast<string>().ToList();
             }
             return obj;
         }

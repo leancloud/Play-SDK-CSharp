@@ -109,7 +109,7 @@ namespace LeanCloud.Play.Test
             Logger.LogDelegate += Utils.Log;
 
             var f = false;
-            var roomName = "jrt4_r";
+            var roomName = $"jrt4_r_{Random.Range(0, 1000000)}";
             var c0 = Utils.NewClient("jrt4_0");
             var c1 = Utils.NewClient("jrt4_1");
 
@@ -231,6 +231,8 @@ namespace LeanCloud.Play.Test
 
         [Test]
         public async void MatchRandom() {
+            Logger.LogDelegate += Utils.Log;
+
             var roomName = "jr8_r";
             var c0 = Utils.NewClient("jr8_0");
             var c1 = Utils.NewClient("jr8_1");
@@ -245,7 +247,7 @@ namespace LeanCloud.Play.Test
             await c0.CreateRoom(roomName, roomOptions);
 
             await c1.Connect();
-            var lobbyRoom = await c1.MatchRandom(new PlayObject {
+            var lobbyRoom = await c1.MatchRandom("jr8_1", new PlayObject {
                 { "lv", 5 }
             });
             Assert.AreEqual(lobbyRoom.RoomName, roomName);
@@ -253,6 +255,8 @@ namespace LeanCloud.Play.Test
 
             c0.Close();
             c1.Close();
+
+            Logger.LogDelegate -= Utils.Log;
         }
 
         [Test]

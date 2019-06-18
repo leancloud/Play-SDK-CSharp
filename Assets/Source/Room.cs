@@ -60,6 +60,9 @@ namespace LeanCloud.Play {
         /// <value>The master.</value>
         public Player Master {
             get {
+                if (MasterActorId == 0) {
+                    return null;
+                }
                 return GetPlayer(MasterActorId);
             }
         }
@@ -195,8 +198,8 @@ namespace LeanCloud.Play {
             if (changedProps.TryGetInt("maxPlayerCount", out var maxPlayerCount)) {
                 MaxPlayerCount = maxPlayerCount;
             }
-            if (changedProps["expectedUserIds"] != null) {
-                ExpectedUserIds = changedProps["expectedUserIds"] as List<string>;
+            if (changedProps.TryGetValue("expectedUserIds", out object expectedUserIds)) {
+                ExpectedUserIds = expectedUserIds as List<string>;
             }
         }
     }

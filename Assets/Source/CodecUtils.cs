@@ -137,6 +137,9 @@ namespace LeanCloud.Play {
         }
 
         public static ByteString EncodePlayObject(PlayObject playObject) {
+            if (playObject == null) {
+                return null;
+            }
             var collection = new GenericCollection();
             foreach (KeyValuePair<string, object> entry in playObject) {
                 collection.MapEntryValue.Add(new GenericCollection.Types.MapEntry {

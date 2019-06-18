@@ -97,11 +97,11 @@ namespace LeanCloud.Play.Test
             }).Unwrap().OnSuccess(_ => {
                 c0.OnPlayerCustomPropertiesChanged += (player, changedProps) => {
                     var props = player.CustomProperties;
-                    Assert.AreEqual(props["nickname"] as string, "LeanCloud");
-                    Assert.AreEqual(int.Parse(props["gold"].ToString()), 100);
-                    var attr = props["attr"] as Dictionary<string, object>;
-                    Assert.AreEqual(int.Parse(attr["hp"].ToString()), 10);
-                    Assert.AreEqual(int.Parse(attr["mp"].ToString()), 20);
+                    Assert.AreEqual(props["nickname"], "LeanCloud");
+                    Assert.AreEqual(props["gold"], 100);
+                    var attr = props["attr"] as PlayObject;
+                    Assert.AreEqual(attr["hp"], 10);
+                    Assert.AreEqual(attr["mp"], 20);
                     Debug.Log("c0 check done");
                     f0 = true;
                 };
@@ -111,11 +111,11 @@ namespace LeanCloud.Play.Test
             }).Unwrap().OnSuccess(_ => {
                 c1.OnPlayerCustomPropertiesChanged += (player, changedProps) => {
                     var p = player.CustomProperties;
-                    Assert.AreEqual(p["nickname"] as string, "LeanCloud");
-                    Assert.AreEqual(int.Parse(p["gold"].ToString()), 100);
-                    var attr = p["attr"] as Dictionary<string, object>;
-                    Assert.AreEqual(int.Parse(attr["hp"].ToString()), 10);
-                    Assert.AreEqual(int.Parse(attr["mp"].ToString()), 20);
+                    Assert.AreEqual(p["nickname"], "LeanCloud");
+                    Assert.AreEqual(p["gold"], 100);
+                    var attr = p["attr"] as PlayObject;
+                    Assert.AreEqual(attr["hp"], 10);
+                    Assert.AreEqual(attr["mp"], 20);
                     Debug.Log("c1 check done");
                     f1 = true;
                 };

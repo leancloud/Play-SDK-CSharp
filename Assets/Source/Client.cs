@@ -12,8 +12,6 @@ namespace LeanCloud.Play {
         public event Action<Player> OnPlayerRoomJoined;
         public event Action<Player> OnPlayerRoomLeft;
         public event Action<Player> OnMasterSwitched;
-        public event Action<bool> OnRoomOpenChanged;
-        public event Action<bool> OnRoomVisibleChanged;
         public event Action<PlayObject> OnRoomCustomPropertiesChanged;
         public event Action<PlayObject> OnRoomSystemPropertiesChanged;
         public event Action<Player, PlayObject> OnPlayerCustomPropertiesChanged;
@@ -234,12 +232,12 @@ namespace LeanCloud.Play {
             return room;
         }
 
-        public async Task<LobbyRoom> MatchRandom(PlayObject matchProperties = null, List<string> expectedUserIds = null) {
+        public async Task<LobbyRoom> MatchRandom(string piggybackUserId, PlayObject matchProperties = null) {
             if (state != PlayState.LOBBY) {
                 throw new PlayException(PlayExceptionCode.StateError,
                     string.Format("You cannot call MatchRandom() on {0} state", state.ToString()));
             }
-            var lobbyRoom = await lobbyConn.MatchRandom(matchProperties, expectedUserIds);
+            var lobbyRoom = await lobbyConn.MatchRandom(piggybackUserId, matchProperties);
             return lobbyRoom;
         }
 
@@ -486,6 +484,9 @@ namespace LeanCloud.Play {
                             case OpType.UpdatedNotify:
                                 HandleRoomCustomPropertiesChanged(body.RoomNotification.UpdateProperty);
                                 break;
+                            case OpType.PlayerProps:
+                                HandlePlayerCustomPropertiesChanged(body.RoomNotification.UpdateProperty);
+                                break;
                             case OpType.MembersOffline:
                                 //HandlePlayerOffline(msg);
                                 break;
@@ -549,20 +550,21 @@ namespace LeanCloud.Play {
 
         void HandleRoomCustomPropertiesChanged(UpdatePropertyNotification updatePropertyNotification) {
             var changedProps = CodecUtils.DecodePlayObject(updatePropertyNotification.Attr);
-            if (updatePropertyNotification.ActorId == 0) {
-                // 房间属性变化
-                Room.MergeCustomProperties(changedProps);
-                OnRoomCustomPropertiesChanged?.Invoke(changedProps);
-            } else {
-                // 玩家属性变化
-                var player = Room.GetPlayer(updatePropertyNotification.ActorId);
-                if (player == null) {
-                    Logger.Error("No player id: {0} when player properties changed", updatePropertyNotification);
-                    return;
-                }
-                player.MergeCustomProperties(changedProps);
-                OnPlayerCustomPropertiesChanged?.Invoke(player, changedProps);
+            // 房间属性变化
+            Room.MergeCustomProperties(changedProps);
+            OnRoomCustomPropertiesChanged?.Invoke(changedProps);
+        }
+
+        void HandlePlayerCustomPropertiesChanged(UpdatePropertyNotification updatePropertyNotification) {
+            var changedProps = CodecUtils.DecodePlayObject(updatePropertyNotification.Attr);
+            // 玩家属性变化
+            var player = Room.GetPlayer(updatePropertyNotification.ActorId);
+            if (player == null) {
+                Logger.Error("No player id: {0} when player properties changed", updatePropertyNotification);
+                return;
             }
+            player.MergeCustomProperties(changedProps);
+            OnPlayerCustomPropertiesChanged?.Invoke(player, changedProps);
         }
 
         void HandleRoomSystemPropertiesChanged(UpdateSysPropertyNotification updateSysPropertyNotification) {
