@@ -24,6 +24,9 @@ namespace LeanCloud.Play {
                 if (options.CustoRoomPropertyKeysForLobby != null) {
                     roomOptions.LobbyAttrKeys.AddRange(options.CustoRoomPropertyKeysForLobby);
                 }
+                if (options.PluginName != null) {
+                    roomOptions.PluginName = options.PluginName;
+                }
             }
             if (expectedUserIds != null) {
                 roomOptions.ExpectMembers.AddRange(expectedUserIds);

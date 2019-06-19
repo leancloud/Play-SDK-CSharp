@@ -89,6 +89,10 @@ namespace LeanCloud.Play
             get; set;
         }
 
+        public string PluginName {
+            get; set;
+        }
+
         public RoomOptions() {
             Open = true;
             Visible = true;
@@ -98,43 +102,7 @@ namespace LeanCloud.Play
             CustomRoomProperties = null;
             CustoRoomPropertyKeysForLobby = null;
             Flag = 0;
-        }
-
-        internal Dictionary<string, object> ToDictionary() {
-            if (EmptyRoomTtl < 0) {
-                throw new ArgumentException("EmptyRoomTtl MUST NOT be less than 0");
-            }
-            if (PlayerTtl < 0) {
-                throw new ArgumentException("PlayerTtl MUST NOT be less than 0");
-            }
-            if (MaxPlayerCount < 0 || MaxPlayerCount > MAX_PLAYER_COUNT) {
-                throw new ArgumentException("MaxPlayerCount MUST be [1, 10]");
-            }
-
-            Dictionary<string, object> msg = new Dictionary<string, object> {
-                { "open", Open },
-                { "visible", Visible }
-            };
-            if (EmptyRoomTtl > 0) {
-                msg.Add("emptyRoomTtl", EmptyRoomTtl);
-            }
-            if (PlayerTtl > 0) {
-                msg.Add("playerTtl", PlayerTtl);
-            }
-            if (MaxPlayerCount < MAX_PLAYER_COUNT) {
-                msg.Add("maxMembers", MaxPlayerCount);
-            }
-            if (CustomRoomProperties != null) {
-                msg.Add("attr", CustomRoomProperties);
-            }
-            if (CustoRoomPropertyKeysForLobby != null) {
-                List<object> keys = CustoRoomPropertyKeysForLobby.Cast<object>().ToList();
-                msg.Add("lobbyAttrKeys", keys);
-            }
-            if (Flag > 0) {
-                msg.Add("flag", Flag);
-            }
-            return msg;
+            PluginName = null;
         }
     }
 }
