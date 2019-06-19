@@ -19,7 +19,7 @@ namespace LeanCloud.Play {
                 roomOptions.MaxMembers = options.MaxPlayerCount;
                 roomOptions.Flag = options.Flag;
                 if (options.CustomRoomProperties != null) {
-                    roomOptions.Attr = CodecUtils.EncodePlayObject(options.CustomRoomProperties);
+                    roomOptions.Attr = ByteString.CopyFrom(CodecUtils.EncodePlayObject(options.CustomRoomProperties));
                 }
                 if (options.CustoRoomPropertyKeysForLobby != null) {
                     roomOptions.LobbyAttrKeys.AddRange(options.CustoRoomPropertyKeysForLobby);

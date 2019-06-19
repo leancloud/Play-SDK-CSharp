@@ -4,11 +4,94 @@ using Google.Protobuf;
 using LeanCloud.Play.Protocol;
 using System.Collections.Generic;
 using System.Collections;
+using System.IO;
+using System.Text;
+using System;
 
 namespace LeanCloud.Play.Test
 {
     public class CodecTest
     {
+        class Hero {
+            public string Name {
+                get; set;
+            }
+
+            public float Score {
+                get; set;
+            }
+
+            public int Hp {
+                get; set;
+            }
+
+            public int Mp {
+                get; set;
+            }
+
+            public List<Weapon> Weapons {
+                get; set;
+            }
+
+            public static byte[] Encode(object obj) {
+                Hero hero = obj as Hero;
+                var playObject = new PlayObject {
+                    { "name", hero.Name },
+                    { "score", hero.Score },
+                    { "hp", hero.Hp },
+                    { "mp", hero.Mp },
+                    { "weapons", new PlayArray(hero.Weapons) }
+                };
+                return CodecUtils.EncodePlayObject(playObject);
+            }
+
+            public static object Decode(byte[] bytes) {
+                var playObject = CodecUtils.DecodePlayObject(bytes);
+                Hero hero = new Hero {
+                    Name = playObject.GetString("name"),
+                    Score = playObject.GetFloat("score"),
+                    Hp = playObject.GetInt("hp"),
+                    Mp = playObject.GetInt("mp")
+                };
+                var weaponArr = playObject.GetPlayArray("weapons");
+                if (weaponArr != null) {
+                    hero.Weapons = new List<Weapon>();
+                    foreach (var weapon in weaponArr) {
+                        hero.Weapons.Add(weapon as Weapon);
+                    }
+                }
+                return hero;
+            }
+        }
+
+        class Weapon { 
+            public string Name {
+                get; set;
+            }
+
+            public int Attack {
+                get; set;
+            }
+
+            public static byte[] Encode(object obj) {
+                Weapon weapon = obj as Weapon;
+                var playObject = new PlayObject {
+                    { "name", weapon.Name },
+                    { "attack", weapon.Attack }
+                };
+                return CodecUtils.EncodePlayObject(playObject);
+            }
+
+            public static object Decode(byte[] bytes) {
+                var playObject = CodecUtils.DecodePlayObject(bytes);
+                Weapon weapon = new Weapon {
+                    Name = playObject.GetString("name"),
+                    Attack = playObject.GetInt("attack")
+                };
+                return weapon;
+            }
+        }
+
         [Test]
         public void CheckType() {
             object s = (short)10;
@@ -161,6 +244,40 @@ namespace LeanCloud.Play.Test
             Debug.Log(reAttr["level"]);
             Assert.AreEqual(reAttr["title"], "room title");
             Assert.AreEqual(reAttr["level"], 2);
+        }
+
+        [Test]
+        public void CustomType() {
+            CodecUtils.RegisterType(typeof(Hero), 10, Hero.Encode, Hero.Decode);
+            CodecUtils.RegisterType(typeof(Weapon), 11, Weapon.Encode, Weapon.Decode);
+            var hero = new Hero {
+                Name = "Li Lei",
+                Score = 99.9f,
+                Hp = 10,
+                Mp = 8,
+                Weapons = new List<Weapon> { 
+                    new Weapon { 
+                        Name = "pen",
+                        Attack = 100
+                    },
+                    new Weapon {
+                        Name = "erase",
+                        Attack = 200
+                    }
+                }
+            };
+            var data = CodecUtils.Encode(hero);
+            var newHero = CodecUtils.Decode(data) as Hero;
+            Assert.AreEqual(newHero.Name, "Li Lei");
+            Assert.AreEqual(Math.Abs(newHero.Score - 99.9f) < float.Epsilon, true);
+            Assert.AreEqual(newHero.Hp, 10);
+            Assert.AreEqual(newHero.Mp, 8);
+            var pen = newHero.Weapons[0];
+            Assert.AreEqual(pen.Name, "pen");
+            Assert.AreEqual(pen.Attack, 100);
+            var erase = newHero.Weapons[1];
+            Assert.AreEqual(erase.Name, "erase");
+            Assert.AreEqual(erase.Attack, 200);
         }
 
         internal static Protocol.RoomOptions ConvertToRoomOptions(string roomName, RoomOptions options, List<string> expectedUserIds) {

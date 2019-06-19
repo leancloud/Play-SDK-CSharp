@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace LeanCloud.Play {
@@ -116,6 +117,10 @@ namespace LeanCloud.Play {
 
         public PlayArray GetPlayArray(int index) {
             return Data[index] as PlayArray;
+        }
+
+        public List<T> ToList<T>() {
+            return Data.Cast<T>().ToList();
         }
     }
 }

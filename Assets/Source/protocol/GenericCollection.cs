@@ -25,26 +25,27 @@ namespace LeanCloud.Play.Protocol {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "ChhnZW5lcmljX2NvbGxlY3Rpb24ucHJvdG8SF2NuLmxlYW5jbG91ZC5wbGF5",
-            "LnByb3RvIpMDChZHZW5lcmljQ29sbGVjdGlvblZhbHVlEkIKBHR5cGUYASAB",
+            "LnByb3RvIqkDChZHZW5lcmljQ29sbGVjdGlvblZhbHVlEkIKBHR5cGUYASAB",
             "KA4yNC5jbi5sZWFuY2xvdWQucGxheS5wcm90by5HZW5lcmljQ29sbGVjdGlv",
             "blZhbHVlLlR5cGUSEgoIaW50VmFsdWUYAiABKAVIABIWCgxsb25nSW50VmFs",
             "dWUYAyABKANIABITCglib29sVmFsdWUYBCABKAhIABIVCgtzdHJpbmdWYWx1",
             "ZRgFIAEoCUgAEhQKCmJ5dGVzVmFsdWUYBiABKAxIABIUCgpmbG9hdFZhbHVl",
-            "GAcgASgCSAASFQoLZG91YmxlVmFsdWUYCCABKAFIACKQAQoEVHlwZRIICgRO",
-            "VUxMEAASCQoFQllURVMQARIICgRCWVRFEAISCQoFU0hPUlQQAxIHCgNJTlQQ",
-            "BBIICgRMT05HEAUSCAoEQk9PTBAGEgkKBUZMT0FUEAcSCgoGRE9VQkxFEAgS",
-            "CgoGT0JKRUNUEAkSCgoGU1RSSU5HEAoSBwoDTUFQEAsSCQoFQVJSQVkQDEIH",
-            "CgV2YWx1ZSL6AQoRR2VuZXJpY0NvbGxlY3Rpb24SQgoJbGlzdFZhbHVlGAEg",
-            "AygLMi8uY24ubGVhbmNsb3VkLnBsYXkucHJvdG8uR2VuZXJpY0NvbGxlY3Rp",
-            "b25WYWx1ZRJKCg1tYXBFbnRyeVZhbHVlGAIgAygLMjMuY24ubGVhbmNsb3Vk",
-            "LnBsYXkucHJvdG8uR2VuZXJpY0NvbGxlY3Rpb24uTWFwRW50cnkaVQoITWFw",
-            "RW50cnkSCwoDa2V5GAEgASgJEjwKA3ZhbBgCIAEoCzIvLmNuLmxlYW5jbG91",
-            "ZC5wbGF5LnByb3RvLkdlbmVyaWNDb2xsZWN0aW9uVmFsdWVCHFABqgIXTGVh",
-            "bkNsb3VkLlBsYXkuUHJvdG9jb2xiBnByb3RvMw=="));
+            "GAcgASgCSAASFQoLZG91YmxlVmFsdWUYCCABKAFIABIUCgxvYmplY3RUeXBl",
+            "SWQYCSABKAUikAEKBFR5cGUSCAoETlVMTBAAEgkKBUJZVEVTEAESCAoEQllU",
+            "RRACEgkKBVNIT1JUEAMSBwoDSU5UEAQSCAoETE9ORxAFEggKBEJPT0wQBhIJ",
+            "CgVGTE9BVBAHEgoKBkRPVUJMRRAIEgoKBk9CSkVDVBAJEgoKBlNUUklORxAK",
+            "EgcKA01BUBALEgkKBUFSUkFZEAxCBwoFdmFsdWUi+gEKEUdlbmVyaWNDb2xs",
+            "ZWN0aW9uEkIKCWxpc3RWYWx1ZRgBIAMoCzIvLmNuLmxlYW5jbG91ZC5wbGF5",
+            "LnByb3RvLkdlbmVyaWNDb2xsZWN0aW9uVmFsdWUSSgoNbWFwRW50cnlWYWx1",
+            "ZRgCIAMoCzIzLmNuLmxlYW5jbG91ZC5wbGF5LnByb3RvLkdlbmVyaWNDb2xs",
+            "ZWN0aW9uLk1hcEVudHJ5GlUKCE1hcEVudHJ5EgsKA2tleRgBIAEoCRI8CgN2",
+            "YWwYAiABKAsyLy5jbi5sZWFuY2xvdWQucGxheS5wcm90by5HZW5lcmljQ29s",
+            "bGVjdGlvblZhbHVlQhxQAaoCF0xlYW5DbG91ZC5QbGF5LlByb3RvY29sYgZw",
+            "cm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::LeanCloud.Play.Protocol.GenericCollectionValue), global::LeanCloud.Play.Protocol.GenericCollectionValue.Parser, new[]{ "Type", "IntValue", "LongIntValue", "BoolValue", "StringValue", "BytesValue", "FloatValue", "DoubleValue" }, new[]{ "Value" }, new[]{ typeof(global::LeanCloud.Play.Protocol.GenericCollectionValue.Types.Type) }, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::LeanCloud.Play.Protocol.GenericCollectionValue), global::LeanCloud.Play.Protocol.GenericCollectionValue.Parser, new[]{ "Type", "IntValue", "LongIntValue", "BoolValue", "StringValue", "BytesValue", "FloatValue", "DoubleValue", "ObjectTypeId" }, new[]{ "Value" }, new[]{ typeof(global::LeanCloud.Play.Protocol.GenericCollectionValue.Types.Type) }, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::LeanCloud.Play.Protocol.GenericCollection), global::LeanCloud.Play.Protocol.GenericCollection.Parser, new[]{ "ListValue", "MapEntryValue" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::LeanCloud.Play.Protocol.GenericCollection.Types.MapEntry), global::LeanCloud.Play.Protocol.GenericCollection.Types.MapEntry.Parser, new[]{ "Key", "Val" }, null, null, null)})
           }));
     }
@@ -78,6 +79,7 @@ namespace LeanCloud.Play.Protocol {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public GenericCollectionValue(GenericCollectionValue other) : this() {
       type_ = other.type_;
+      objectTypeId_ = other.objectTypeId_;
       switch (other.ValueCase) {
         case ValueOneofCase.IntValue:
           IntValue = other.IntValue;
@@ -198,6 +200,17 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
+    /// <summary>Field number for the "objectTypeId" field.</summary>
+    public const int ObjectTypeIdFieldNumber = 9;
+    private int objectTypeId_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int ObjectTypeId {
+      get { return objectTypeId_; }
+      set {
+        objectTypeId_ = value;
+      }
+    }
+
     private object value_;
     /// <summary>Enum of possible cases for the "value" oneof.</summary>
     public enum ValueOneofCase {
@@ -243,6 +256,7 @@ namespace LeanCloud.Play.Protocol {
       if (BytesValue != other.BytesValue) return false;
       if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(FloatValue, other.FloatValue)) return false;
       if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(DoubleValue, other.DoubleValue)) return false;
+      if (ObjectTypeId != other.ObjectTypeId) return false;
       if (ValueCase != other.ValueCase) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -258,6 +272,7 @@ namespace LeanCloud.Play.Protocol {
       if (valueCase_ == ValueOneofCase.BytesValue) hash ^= BytesValue.GetHashCode();
       if (valueCase_ == ValueOneofCase.FloatValue) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(FloatValue);
       if (valueCase_ == ValueOneofCase.DoubleValue) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(DoubleValue);
+      if (ObjectTypeId != 0) hash ^= ObjectTypeId.GetHashCode();
       hash ^= (int) valueCase_;
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -304,6 +319,10 @@ namespace LeanCloud.Play.Protocol {
         output.WriteRawTag(65);
         output.WriteDouble(DoubleValue);
       }
+      if (ObjectTypeId != 0) {
+        output.WriteRawTag(72);
+        output.WriteInt32(ObjectTypeId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -336,6 +355,9 @@ namespace LeanCloud.Play.Protocol {
       if (valueCase_ == ValueOneofCase.DoubleValue) {
         size += 1 + 8;
       }
+      if (ObjectTypeId != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(ObjectTypeId);
+      }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -349,6 +371,9 @@ namespace LeanCloud.Play.Protocol {
       }
       if (other.Type != 0) {
         Type = other.Type;
+      }
+      if (other.ObjectTypeId != 0) {
+        ObjectTypeId = other.ObjectTypeId;
       }
       switch (other.ValueCase) {
         case ValueOneofCase.IntValue:
@@ -415,6 +440,10 @@ namespace LeanCloud.Play.Protocol {
           }
           case 65: {
             DoubleValue = input.ReadDouble();
+            break;
+          }
+          case 72: {
+            ObjectTypeId = input.ReadInt32();
             break;
           }
         }

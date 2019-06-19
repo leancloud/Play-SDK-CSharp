@@ -1,9 +1,35 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using LeanCloud.Play.Protocol;
 using Google.Protobuf;
 
 namespace LeanCloud.Play {
+    public delegate byte[] EncodeFunc(object obj);
+    public delegate object DecodeFunc(byte[] bytes);
+
     public static class CodecUtils {
+        static readonly Dictionary<Type, CustomType> typeDict = new Dictionary<Type, CustomType>();
+        static readonly Dictionary<int, CustomType> typeIdDict = new Dictionary<int, CustomType>();
+
+        public static bool RegisterType(Type type, int typeId, EncodeFunc encodeFunc, DecodeFunc decodeFunc) {
+            if (type == null) {
+                throw new ArgumentNullException(nameof(type));
+            }
+            if (encodeFunc == null) {
+                throw new ArgumentNullException(nameof(encodeFunc));
+            }
+            if (decodeFunc == null) {
+                throw new ArgumentNullException(nameof(decodeFunc));
+            }
+            if (typeDict.ContainsKey(type) || typeIdDict.ContainsKey(typeId)) {
+                return false;
+            }
+            var customType = new CustomType(type, typeId, encodeFunc, decodeFunc);
+            typeDict.Add(type, customType);
+            typeIdDict.Add(typeId, customType);
+            return true;
+        }
+
         public static GenericCollectionValue Encode(object val) {
             GenericCollectionValue genericVal = null;
             if (val is null) {
@@ -59,7 +85,7 @@ namespace LeanCloud.Play {
                 var bytes = EncodePlayObject(playObject);
                 genericVal = new GenericCollectionValue {
                     Type = GenericCollectionValue.Types.Type.Map,
-                    BytesValue = bytes
+                    BytesValue = ByteString.CopyFrom(bytes)
                 };
             } else if (val is PlayArray playArray) {
                 var collection = new GenericCollection();
@@ -71,8 +97,16 @@ namespace LeanCloud.Play {
                     BytesValue = collection.ToByteString()
                 };
             } else {
-                // TODO 自定义类型
-            
+                var type = val.GetType();
+                if (typeDict.TryGetValue(type, out var customType)) {
+                    genericVal = new GenericCollectionValue {
+                        Type = GenericCollectionValue.Types.Type.Object,
+                        ObjectTypeId = customType.TypeId,
+                        BytesValue = ByteString.CopyFrom(customType.EncodeFunc(val))
+                    };
+                } else {
+                    throw new Exception($"{type} is not supported");
+                }
             }
 
             return genericVal;
@@ -124,19 +158,23 @@ namespace LeanCloud.Play {
                     }
                     break;
                 case GenericCollectionValue.Types.Type.Object: {
-                        // TODO 自定义类型
-
+                        // 自定义类型
+                        var typeId = genericValue.ObjectTypeId;
+                        if (typeIdDict.TryGetValue(typeId, out var customType)) {
+                            val = customType.DecodeFunc(genericValue.BytesValue.ToByteArray());
+                        } else {
+                            throw new Exception($"type id: {typeId} is not supported");
+                        }
                     }
                     break;
                 default:
-                    // TODO 异常
-
-                    break;
+                    // 异常
+                    throw new Exception($"{genericValue.Type} is not supported");
             }
             return val;
         }
 
-        public static ByteString EncodePlayObject(PlayObject playObject) {
+        public static byte[] EncodePlayObject(PlayObject playObject) {
             if (playObject == null) {
                 return null;
             }
@@ -147,16 +185,23 @@ namespace LeanCloud.Play {
                     Val = Encode(entry.Value)
                 });
             }
-            return collection.ToByteString();
+            return collection.ToByteArray();
         }
 
-        public static PlayObject DecodePlayObject(ByteString bytes) {
+        public static PlayObject DecodePlayObject(byte[] bytes) {
             var collection = GenericCollection.Parser.ParseFrom(bytes);
             var playObject = new PlayObject();
             foreach (var entry in collection.MapEntryValue) {
                 playObject[entry.Key] = Decode(entry.Val);
             }
             return playObject; 
+        }
+
+        public static PlayObject DecodePlayObject(ByteString byteString) { 
+            if (byteString == null) {
+                return null;
+            }
+            return DecodePlayObject(byteString.ToByteArray());
         }
     }
 }
