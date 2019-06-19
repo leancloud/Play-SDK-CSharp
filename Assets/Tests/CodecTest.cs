@@ -4,8 +4,6 @@ using Google.Protobuf;
 using LeanCloud.Play.Protocol;
 using System.Collections.Generic;
 using System.Collections;
-using System.IO;
-using System.Text;
 using System;
 
 namespace LeanCloud.Play.Test
@@ -51,15 +49,9 @@ namespace LeanCloud.Play.Test
                     Name = playObject.GetString("name"),
                     Score = playObject.GetFloat("score"),
                     Hp = playObject.GetInt("hp"),
-                    Mp = playObject.GetInt("mp")
+                    Mp = playObject.GetInt("mp"),
+                    Weapons = playObject.GetPlayArray("weapons").ToList<Weapon>()
                 };
-                var weaponArr = playObject.GetPlayArray("weapons");
-                if (weaponArr != null) {
-                    hero.Weapons = new List<Weapon>();
-                    foreach (var weapon in weaponArr) {
-                        hero.Weapons.Add(weapon as Weapon);
-                    }
-                }
                 return hero;
             }
         }
