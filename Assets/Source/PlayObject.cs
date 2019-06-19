@@ -1,135 +1,245 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace LeanCloud.Play {
     /// <summary>
     /// 字典类结构，实现 IDictionary
     /// </summary>
-    public class PlayObject : IDictionary<string, object> {
-        internal Dictionary<string, object> Data {
+    public class PlayObject : IDictionary<object, object> {
+        internal Dictionary<object, object> Data {
             get; private set;
         }
 
-        public ICollection<string> Keys => ((IDictionary<string, object>)Data).Keys;
+        public ICollection<object> Keys => ((IDictionary<object, object>)Data).Keys;
 
-        public ICollection<object> Values => ((IDictionary<string, object>)Data).Values;
+        public ICollection<object> Values => ((IDictionary<object, object>)Data).Values;
 
-        public int Count => ((IDictionary<string, object>)Data).Count;
+        public int Count => ((IDictionary<object, object>)Data).Count;
 
-        public bool IsReadOnly => ((IDictionary<string, object>)Data).IsReadOnly;
+        public bool IsReadOnly => ((IDictionary<object, object>)Data).IsReadOnly;
 
-        public object this[string key] { get => ((IDictionary<string, object>)Data)[key]; set => ((IDictionary<string, object>)Data)[key] = value; }
+        public object this[object key] { get => ((IDictionary<object, object>)Data)[key]; set => ((IDictionary<object, object>)Data)[key] = value; }
 
-        public void Add(string key, object value) {
-            ((IDictionary<string, object>)Data).Add(key, value);
+        public void Add(object key, object value) {
+            ((IDictionary<object, object>)Data).Add(key, value);
         }
 
-        public bool ContainsKey(string key) {
-            return ((IDictionary<string, object>)Data).ContainsKey(key);
+        public bool ContainsKey(object key) {
+            return ((IDictionary<object, object>)Data).ContainsKey(key);
         }
 
-        public bool Remove(string key) {
-            return ((IDictionary<string, object>)Data).Remove(key);
+        public bool Remove(object key) {
+            return ((IDictionary<object, object>)Data).Remove(key);
         }
 
-        public bool TryGetValue(string key, out object value) {
-            return Data.TryGetValue(key, out value);
+        public bool TryGetValue(object key, out object value) {
+            return ((IDictionary<object, object>)Data).TryGetValue(key, out value);
         }
 
-        public void Add(KeyValuePair<string, object> item) {
-            ((IDictionary<string, object>)Data).Add(item);
+        public void Add(KeyValuePair<object, object> item) {
+            ((IDictionary<object, object>)Data).Add(item);
         }
 
         public void Clear() {
-            ((IDictionary<string, object>)Data).Clear();
+            ((IDictionary<object, object>)Data).Clear();
         }
 
-        public bool Contains(KeyValuePair<string, object> item) {
-            return ((IDictionary<string, object>)Data).Contains(item);
+        public bool Contains(KeyValuePair<object, object> item) {
+            return ((IDictionary<object, object>)Data).Contains(item);
         }
 
-        public void CopyTo(KeyValuePair<string, object>[] array, int arrayIndex) {
-            ((IDictionary<string, object>)Data).CopyTo(array, arrayIndex);
+        public void CopyTo(KeyValuePair<object, object>[] array, int arrayIndex) {
+            ((IDictionary<object, object>)Data).CopyTo(array, arrayIndex);
         }
 
-        public bool Remove(KeyValuePair<string, object> item) {
-            return ((IDictionary<string, object>)Data).Remove(item);
+        public bool Remove(KeyValuePair<object, object> item) {
+            return ((IDictionary<object, object>)Data).Remove(item);
         }
 
-        public IEnumerator<KeyValuePair<string, object>> GetEnumerator() {
-            return ((IDictionary<string, object>)Data).GetEnumerator();
+        public IEnumerator<KeyValuePair<object, object>> GetEnumerator() {
+            return ((IDictionary<object, object>)Data).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator() {
-            return ((IDictionary<string, object>)Data).GetEnumerator();
+            return ((IDictionary<object, object>)Data).GetEnumerator();
         }
 
-        public PlayObject() {
-            Data = new Dictionary<string, object>();
+        // 扩展接口
+        public PlayObject(int capacity) {
+            Data = new Dictionary<object, object>(capacity);
         }
 
-        public static PlayObject ToPlayObject(Dictionary<string, object> data) {
-            if (data == null) {
-                return null;
+        public PlayObject() : this(0) {
+
+        }
+
+        public PlayObject(IDictionary dictionary) : this() {
+            if (dictionary != null) {
+                foreach (DictionaryEntry entry in dictionary) {
+                    Data.Add(entry.Key, entry.Value);
+                }
             }
-            var playObject = new PlayObject {
-                Data = data
-            };
-            return playObject;
         }
 
+        public bool IsEmpty {
+            get {
+                return Data == null || Data.Count == 0;
+            }
+        }
 
-        // Getter
-        public bool TryGetBool(string key, out bool val) {
-            if (Data.TryGetValue(key, out object obj) && bool.TryParse(obj.ToString(), out val)) {
+        public bool TryGetBool(object key, out bool val) {
+            if (Data.TryGetValue(key, out var valObj) &&
+                bool.TryParse(valObj.ToString(), out val)) {
                 return true;
             }
             val = false;
             return false;
         }
 
-        public bool TryGetInt(string key, out int val) {
-            if (Data.TryGetValue(key, out object obj) && int.TryParse(obj.ToString(), out val)) {
+        public bool TryGetByte(object key, out byte val) {
+            if (Data.TryGetValue(key, out var valObj) &&
+                byte.TryParse(valObj.ToString(), out val)) {
                 return true;
             }
             val = 0;
             return false;
         }
 
-        public bool TryGetFloat(string key, out float val) {
-            if (Data.TryGetValue(key, out object obj) && float.TryParse(obj.ToString(), out val)) {
+        public bool TryGetShort(object key, out short val) {
+            if (Data.TryGetValue(key, out var valObj) &&
+                short.TryParse(valObj.ToString(), out val)) {
+                return true;
+            }
+            val = 0;
+            return false;
+        }
+
+        public bool TryGetInt(object key, out int val) {
+            if (Data.TryGetValue(key, out var valObj) &&
+                int.TryParse(valObj.ToString(), out val)) {
+                return true;
+            }
+            val = 0;
+            return false;
+        }
+
+        public bool TryGetLong(object key, out long val) {
+            if (Data.TryGetValue(key, out var valObj) &&
+                long.TryParse(valObj.ToString(), out val)) {
+                return true;
+            }
+            val = 0;
+            return false;
+        }
+
+        public bool TryGetFloat(object key, out float val) {
+            if (Data.TryGetValue(key, out var valObj) &&
+                float.TryParse(valObj.ToString(), out val)) {
                 return true;
             }
             val = 0f;
             return false;
         }
 
-        public bool TryGetString(string key, out string val) {
-            if (Data.TryGetValue(key, out object obj)) {
-                val = (string)obj;
+        public bool TryGetDouble(object key, out double val) {
+            if (Data.TryGetValue(key, out var valObj) &&
+                double.TryParse(valObj.ToString(), out val)) {
+                return true;
+            }
+            val = 0;
+            return false;
+        }
+
+        public bool TryGetString(object key, out string val) {
+            if (Data.TryGetValue(key, out var valObj)) {
+                val = valObj.ToString();
                 return true;
             }
             val = null;
             return false;
         }
 
-        public bool TryGetPlayObject(string key, out PlayObject val) {
-            if (Data.TryGetValue(key, out object obj)) {
-                val = (PlayObject)obj;
+        public bool TryGetBytes(object key, out byte[] val) {
+            if (Data.TryGetValue(key, out var valObj)) {
+                val = valObj as byte[];
                 return true;
             }
             val = null;
             return false;
         }
 
-        public T GetObject<T>(string key) {
-            return (T)Data[key];
+        public bool TryGetPlayObject(object key, out PlayObject val) {
+            if (Data.TryGetValue(key, out var valObj)) {
+                val = valObj as PlayObject;
+                return true;
+            }
+            val = null;
+            return false;
         }
 
-        public bool IsEmpty { 
-            get {
-                return Data == null || Data.Count == 0;
+        public bool TryGetPlayArray(object key, out PlayArray val) {
+            if (Data.TryGetValue(key, out var valObj)) {
+                val = valObj as PlayArray;
+                return true;
             }
+            val = null;
+            return false;
+        }
+
+        public bool GetBool(object key) {
+            TryGetBool(key, out bool val);
+            return val;
+        }
+
+        public byte GetByte(object key) {
+            TryGetByte(key, out byte val);
+            return val;
+        }
+
+        public short GetShort(object key) {
+            TryGetShort(key, out short val);
+            return val;
+        }
+
+        public int GetInt(object key) {
+            TryGetInt(key, out int val);
+            return val;
+        }
+
+        public long GetLong(object key) {
+            TryGetLong(key, out long val);
+            return val;
+        }
+
+        public float GetFloat(object key) {
+            TryGetFloat(key, out float val);
+            return val;
+        }
+
+        public double GetDouble(object key) {
+            TryGetDouble(key, out double val);
+            return val;
+        }
+
+        public string GetString(object key) {
+            TryGetString(key, out string val);
+            return val;
+        }
+
+        public byte[] GetBytes(object key) {
+            TryGetBytes(key, out byte[] val);
+            return val;
+        }
+
+        public PlayObject GetPlayObject(object key) {
+            TryGetPlayObject(key, out PlayObject val);
+            return val;
+        }
+
+        public PlayArray GetPlayArray(object key) {
+            TryGetPlayArray(key, out PlayArray val);
+            return val;
         }
     }
 }

@@ -141,9 +141,9 @@ namespace LeanCloud.Play {
                 return null;
             }
             var collection = new GenericCollection();
-            foreach (KeyValuePair<string, object> entry in playObject) {
+            foreach (var entry in playObject) {
                 collection.MapEntryValue.Add(new GenericCollection.Types.MapEntry {
-                    Key = entry.Key,
+                    Key = entry.Key as string,
                     Val = Encode(entry.Value)
                 });
             }

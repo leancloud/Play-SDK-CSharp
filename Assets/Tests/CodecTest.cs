@@ -71,6 +71,14 @@ namespace LeanCloud.Play.Test
             Assert.AreEqual(newSubPlayArr[0], 666);
             Assert.AreEqual(newSubPlayArr[1], true);
             Assert.AreEqual(newSubPlayArr[2], "engineer");
+            // Dictionary to PlayObject
+            var dict = new Dictionary<string, int> {
+                { "hello", 123 },
+                { "world", 456 }
+            };
+            var dictObj = new PlayObject(dict);
+            Assert.AreEqual(dictObj["hello"], 123);
+            Assert.AreEqual(dictObj["world"], 456);
         }
 
         [Test]
@@ -93,6 +101,15 @@ namespace LeanCloud.Play.Test
             Assert.AreEqual(subPlayObj["i"], 23);
             Assert.AreEqual(subPlayObj["b"], true);
             Assert.AreEqual(subPlayObj["str"], "hello");
+            // List to PlayArray
+            var iList = new List<int> { 10, 24 };
+            var iArr = new PlayArray(iList);
+            Assert.AreEqual(iArr[0], 10);
+            Assert.AreEqual(iArr[1], 24);
+            var sList = new List<string> { "hello", "world" };
+            var sArr = new PlayArray(sList);
+            Assert.AreEqual(sArr[0], "hello");
+            Assert.AreEqual(sArr[1], "world");
         }
 
         [Test]

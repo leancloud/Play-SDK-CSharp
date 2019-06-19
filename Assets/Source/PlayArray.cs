@@ -21,22 +21,6 @@ namespace LeanCloud.Play {
 
         public object this[int index] { get => Data[index]; set => Data[index] = value; }
 
-        public PlayArray(int capacity) {
-            Data = new List<object>(capacity);
-        }
-
-        public PlayArray() : this(0) {
-
-        }
-
-        public PlayArray(IList data) : this() {
-            if (data != null) {
-                foreach (var d in data) {
-                    Data.Add(d);
-                }
-            }
-        }
-
         public int Add(object value) {
             return Data.Add(value);
         }
@@ -71,6 +55,67 @@ namespace LeanCloud.Play {
 
         public IEnumerator GetEnumerator() {
             return Data.GetEnumerator();
+        }
+
+        // 扩展方法
+        public PlayArray(int capacity) {
+            Data = new List<object>(capacity);
+        }
+
+        public PlayArray() : this(0) {
+
+        }
+
+        public PlayArray(IList data) : this() {
+            if (data != null) {
+                foreach (var d in data) {
+                    Data.Add(d);
+                }
+            }
+        }
+
+        public bool GetBool(int index) {
+            return bool.Parse(Data[index].ToString());
+        }
+
+        public byte GetByte(int index) {
+            return byte.Parse(Data[index].ToString());
+        }
+
+        public short GetShort(int index) {
+            return short.Parse(Data[index].ToString());
+        }
+
+        public int GetInt(int index) {
+            return int.Parse(Data[index].ToString());
+        }
+
+        public long GetLong(int index) {
+            return long.Parse(Data[index].ToString());
+        }
+
+        public float GetFloat(int index) {
+            return float.Parse(Data[index].ToString());
+        }
+
+        public double GetDouble(int index) {
+            return double.Parse(Data[index].ToString());
+        }
+
+        public string GetString(int index) {
+            return Data[index].ToString();
+        }
+
+        public byte[] GetBytes(int index) {
+            return Data[index] as byte[];
+        }
+
+        public PlayObject GetPlayObject(int index) {
+            return Data[index] as PlayObject;
+        }
+
+        public PlayArray GetPlayArray(int index) {
+            return Data[index] as PlayArray;
         }
     }
 }
