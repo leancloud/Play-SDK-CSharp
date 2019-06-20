@@ -68,7 +68,7 @@ namespace LeanCloud.Play.Test
                     { "gold", 100 }
                 }
             };
-            var room = await c.CreateRoom(roomName);
+            var room = await c.CreateRoom(roomName, options);
 
             var newProps = new PlayObject {
                     { "gold", 200 },
@@ -78,6 +78,7 @@ namespace LeanCloud.Play.Test
                 };
 
             await c.SetRoomCustomProperties(newProps, expectedValues);
+            Assert.AreEqual(c.Room.CustomProperties["gold"], 100);
 
             c.Close();
             Logger.LogDelegate -= Utils.Log;
@@ -161,7 +162,9 @@ namespace LeanCloud.Play.Test
                 { "id", 2 }
             };
             await c.Player.SetCustomProperties(newProps, expectedValues);
+            Assert.AreEqual(c.Player.CustomProperties["nickname"], "lean");
             c.Close();
+
             Logger.LogDelegate -= Utils.Log;
         }
 
