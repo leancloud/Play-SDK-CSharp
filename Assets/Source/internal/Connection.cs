@@ -16,7 +16,7 @@ namespace LeanCloud.Play {
         internal event Action<CommandType, OpType, Body> OnMessage;
         internal event Action<int, string> OnClose;
 
-        readonly Queue<Message> messageQueue;
+        readonly Queue<CommandWrapper> commandQueue;
         bool isMessageQueueRunning;
 
         CancellationTokenSource pingTokenSource;
@@ -26,7 +26,7 @@ namespace LeanCloud.Play {
 
         internal Connection() {
             responses = new Dictionary<int, TaskCompletionSource<ResponseWrapper>>();
-            messageQueue = new Queue<Message>();
+            commandQueue = new Queue<CommandWrapper>();
             pingTokenSource = new CancellationTokenSource();
             pongTokenSource = new CancellationTokenSource();
         }
@@ -148,21 +148,16 @@ namespace LeanCloud.Play {
             Logger.Debug("{0} <= {1}/{2}: {3}", userId, cmd, op, body);
             if (isMessageQueueRunning) {
                 HandleCommand(cmd, op, body);
-            } else { 
-            
+            } else {
+                Logger.Debug("delay: {0} <= {1}/{2}: {3}", userId, cmd, op, body);
+                lock (commandQueue) {
+                    commandQueue.Enqueue(new CommandWrapper {
+                        Cmd = cmd,
+                        Op = op,
+                        Body = body
+                    });
+                }
             }
-
-
-
-            //var message = Message.FromJson(eventArgs.Data);
-            //if (isMessageQueueRunning) {
-            //    HandleMessage(message);
-            //} else {
-            //    Logger.Debug($"delay: {message.ToJson()}");
-            //    lock (messageQueue) {
-            //        messageQueue.Enqueue(message);
-            //    }
-            //}
         }
 
         void HandleCommand(CommandType cmd, OpType op, Body body) {
@@ -185,31 +180,6 @@ namespace LeanCloud.Play {
             }
         }
 
-        void HandleResponse(CommandType command, OpType op, ResponseMessage response) {
-            Logger.Debug("<= {0}/{1}: {2}", command, op, response);
-
-        }
-
-        //void HandleMessage(Message message) {
-        //    Logger.Debug($"handle: {message.ToJson()}");
-        //    if (message.HasI) {
-        //        TaskCompletionSource<Message> tcs = null;
-        //        lock (requests) {
-        //            if (!requests.TryGetValue(message.I, out tcs)) {
-        //                Logger.Error("no requests for {0}", message.I);
-        //            }
-        //        }
-        //        if (message.IsError) {
-        //            tcs.SetException(new PlayException(message.ReasonCode, message.Detail));
-        //        } else {
-        //            tcs.SetResult(message);
-        //        }
-        //    } else {
-        //        // 推送消息
-        //        OnMessage?.Invoke(message);
-        //    }
-        //}
-
         void OnWebSocketClose(object sender, CloseEventArgs eventArgs) {
             StopKeepAlive();
             OnClose?.Invoke(eventArgs.Code, eventArgs.Reason);
@@ -225,14 +195,14 @@ namespace LeanCloud.Play {
         }
 
         internal void ResumeMessageQueue() {
-            //if (messageQueue.Count > 0) {
-            //    lock (messageQueue) { 
-            //        while (messageQueue.Count > 0) {
-            //            var msg = messageQueue.Dequeue();
-            //            HandleMessage(msg);
-            //        }
-            //    }
-            //}
+            if (commandQueue.Count > 0) {
+                lock (commandQueue) { 
+                    while (commandQueue.Count > 0) {
+                        var command = commandQueue.Dequeue();
+                        HandleCommand(command.Cmd, command.Op, command.Body);
+                    }
+                }
+            }
             isMessageQueueRunning = true;
         }
 

@@ -10,19 +10,19 @@ namespace LeanCloud.Play {
             get;
         }
 
-        internal EncodeFunc EncodeFunc {
+        internal SerializeMethod SerializeMethod {
             get;
         }
 
-        internal DecodeFunc DecodeFunc {
+        internal DeserializeMethod DeserializeMethod {
             get;
         }
 
-        internal CustomType(Type type, int typeId, EncodeFunc encodeFunc, DecodeFunc decodeFunc) {
+        internal CustomType(Type type, int typeId, SerializeMethod encodeFunc, DeserializeMethod decodeFunc) {
             Type = type;
             TypeId = typeId;
-            EncodeFunc = encodeFunc;
-            DecodeFunc = decodeFunc;
+            SerializeMethod = encodeFunc;
+            DeserializeMethod = decodeFunc;
         }
     }
 }

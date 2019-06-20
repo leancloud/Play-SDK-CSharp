@@ -7,11 +7,11 @@ namespace LeanCloud.Play {
     /// <summary>
     /// 序列化方法委托
     /// </summary>
-    public delegate byte[] EncodeFunc(object obj);
+    public delegate byte[] SerializeMethod(object obj);
     /// <summary>
     /// 反序列化方法委托
     /// </summary>
-    public delegate object DecodeFunc(byte[] bytes);
+    public delegate object DeserializeMethod(byte[] bytes);
 
     public static class CodecUtils {
         static readonly Dictionary<Type, CustomType> typeDict = new Dictionary<Type, CustomType>();
@@ -23,22 +23,22 @@ namespace LeanCloud.Play {
         /// <returns><c>true</c>, if type was registered, <c>false</c> otherwise.</returns>
         /// <param name="type">类型</param>
         /// <param name="typeId">类型 Id</param>
-        /// <param name="encodeFunc">序列化方法</param>
-        /// <param name="decodeFunc">反序列化方法</param>
-        public static bool RegisterType(Type type, int typeId, EncodeFunc encodeFunc, DecodeFunc decodeFunc) {
+        /// <param name="serializeMethod">序列化方法</param>
+        /// <param name="deserializeMethod">反序列化方法</param>
+        public static bool RegisterType(Type type, int typeId, SerializeMethod serializeMethod, DeserializeMethod deserializeMethod) {
             if (type == null) {
                 throw new ArgumentNullException(nameof(type));
             }
-            if (encodeFunc == null) {
-                throw new ArgumentNullException(nameof(encodeFunc));
+            if (serializeMethod == null) {
+                throw new ArgumentNullException(nameof(serializeMethod));
             }
-            if (decodeFunc == null) {
-                throw new ArgumentNullException(nameof(decodeFunc));
+            if (deserializeMethod == null) {
+                throw new ArgumentNullException(nameof(deserializeMethod));
             }
             if (typeDict.ContainsKey(type) || typeIdDict.ContainsKey(typeId)) {
                 return false;
             }
-            var customType = new CustomType(type, typeId, encodeFunc, decodeFunc);
+            var customType = new CustomType(type, typeId, serializeMethod, deserializeMethod);
             typeDict.Add(type, customType);
             typeIdDict.Add(typeId, customType);
             return true;
@@ -49,7 +49,7 @@ namespace LeanCloud.Play {
         /// </summary>
         /// <returns>The encode.</returns>
         /// <param name="val">要序列化的对象</param>
-        public static GenericCollectionValue Encode(object val) {
+        public static GenericCollectionValue Serialize(object val) {
             GenericCollectionValue genericVal = null;
             if (val is null) {
                 genericVal = new GenericCollectionValue {
@@ -101,7 +101,7 @@ namespace LeanCloud.Play {
                     StringValue = (string)val
                 };
             } else if (val is PlayObject playObject) {
-                var bytes = EncodePlayObject(playObject);
+                var bytes = SerializePlayObject(playObject);
                 genericVal = new GenericCollectionValue {
                     Type = GenericCollectionValue.Types.Type.Map,
                     BytesValue = ByteString.CopyFrom(bytes)
@@ -109,7 +109,7 @@ namespace LeanCloud.Play {
             } else if (val is PlayArray playArray) {
                 var collection = new GenericCollection();
                 foreach (object obj in playArray) {
-                    collection.ListValue.Add(Encode(obj));
+                    collection.ListValue.Add(Serialize(obj));
                 }
                 genericVal = new GenericCollectionValue {
                     Type = GenericCollectionValue.Types.Type.Array,
@@ -121,7 +121,7 @@ namespace LeanCloud.Play {
                     genericVal = new GenericCollectionValue {
                         Type = GenericCollectionValue.Types.Type.Object,
                         ObjectTypeId = customType.TypeId,
-                        BytesValue = ByteString.CopyFrom(customType.EncodeFunc(val))
+                        BytesValue = ByteString.CopyFrom(customType.SerializeMethod(val))
                     };
                 } else {
                     throw new Exception($"{type} is not supported");
@@ -136,7 +136,7 @@ namespace LeanCloud.Play {
         /// </summary>
         /// <returns>The decode.</returns>
         /// <param name="genericValue">带类型的序列化对象</param>
-        public static object Decode(GenericCollectionValue genericValue) {
+        public static object Deserialize(GenericCollectionValue genericValue) {
             object val = null;
             switch (genericValue.Type) {
                 case GenericCollectionValue.Types.Type.Null:
@@ -170,13 +170,13 @@ namespace LeanCloud.Play {
                     val = genericValue.StringValue;
                     break;
                 case GenericCollectionValue.Types.Type.Map:
-                    val = DecodePlayObject(genericValue.BytesValue);
+                    val = DeserializePlayObject(genericValue.BytesValue);
                     break;
                 case GenericCollectionValue.Types.Type.Array: {
                         PlayArray playArray = new PlayArray();
                         var collection = GenericCollection.Parser.ParseFrom(genericValue.BytesValue);
                         foreach (var element in collection.ListValue) {
-                            playArray.Add(Decode(element));
+                            playArray.Add(Deserialize(element));
                         }
                         val = playArray;
                     }
@@ -185,7 +185,7 @@ namespace LeanCloud.Play {
                         // 自定义类型
                         var typeId = genericValue.ObjectTypeId;
                         if (typeIdDict.TryGetValue(typeId, out var customType)) {
-                            val = customType.DecodeFunc(genericValue.BytesValue.ToByteArray());
+                            val = customType.DeserializeMethod(genericValue.BytesValue.ToByteArray());
                         } else {
                             throw new Exception($"type id: {typeId} is not supported");
                         }
@@ -203,7 +203,7 @@ namespace LeanCloud.Play {
         /// </summary>
         /// <returns>The play object.</returns>
         /// <param name="playObject">PlayObject 对象</param>
-        public static byte[] EncodePlayObject(PlayObject playObject) {
+        public static byte[] SerializePlayObject(PlayObject playObject) {
             if (playObject == null) {
                 return null;
             }
@@ -211,7 +211,7 @@ namespace LeanCloud.Play {
             foreach (var entry in playObject) {
                 collection.MapEntryValue.Add(new GenericCollection.Types.MapEntry {
                     Key = entry.Key as string,
-                    Val = Encode(entry.Value)
+                    Val = Serialize(entry.Value)
                 });
             }
             return collection.ToByteArray();
@@ -222,20 +222,20 @@ namespace LeanCloud.Play {
         /// </summary>
         /// <returns>The play object.</returns>
         /// <param name="bytes">要反序列化的字节码</param>
-        public static PlayObject DecodePlayObject(byte[] bytes) {
+        public static PlayObject DeserializePlayObject(byte[] bytes) {
             var collection = GenericCollection.Parser.ParseFrom(bytes);
             var playObject = new PlayObject();
             foreach (var entry in collection.MapEntryValue) {
-                playObject[entry.Key] = Decode(entry.Val);
+                playObject[entry.Key] = Deserialize(entry.Val);
             }
             return playObject; 
         }
 
-        public static PlayObject DecodePlayObject(ByteString byteString) { 
+        public static PlayObject DeserializePlayObject(ByteString byteString) { 
             if (byteString == null) {
                 return null;
             }
-            return DecodePlayObject(byteString.ToByteArray());
+            return DeserializePlayObject(byteString.ToByteArray());
         }
     }
 }

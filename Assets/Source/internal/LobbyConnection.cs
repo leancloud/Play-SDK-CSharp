@@ -76,7 +76,7 @@ namespace LeanCloud.Play {
             var request = NewRequest();
             request.JoinRoom = new JoinRoomRequest();
             if (matchProperties != null) {
-                request.JoinRoom.ExpectAttr = ByteString.CopyFrom(CodecUtils.EncodePlayObject(matchProperties));
+                request.JoinRoom.ExpectAttr = ByteString.CopyFrom(CodecUtils.SerializePlayObject(matchProperties));
             }
             if (expectedUserIds != null) {
                 request.JoinRoom.RoomOptions.ExpectMembers.AddRange(expectedUserIds);
@@ -116,7 +116,7 @@ namespace LeanCloud.Play {
                 PiggybackPeerId = piggybackUserId
             };
             if (matchProperties != null) {
-                request.JoinRoom.ExpectAttr = ByteString.CopyFrom(CodecUtils.EncodePlayObject(matchProperties));
+                request.JoinRoom.ExpectAttr = ByteString.CopyFrom(CodecUtils.SerializePlayObject(matchProperties));
             }
             var res = await SendRequest(CommandType.Conv, OpType.MatchRandom, request);
             return Utils.ConvertToLobbyRoom(res.Response.JoinRoom.RoomOptions);

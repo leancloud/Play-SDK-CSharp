@@ -170,7 +170,7 @@ namespace LeanCloud.Play {
                 EventId = eventId
             };
             if (eventData != null) {
-                direct.Msg = ByteString.CopyFrom(CodecUtils.EncodePlayObject(eventData));
+                direct.Msg = ByteString.CopyFrom(CodecUtils.SerializePlayObject(eventData));
             }
             direct.ReceiverGroup = (int) options.ReceiverGroup;
             if (options.TargetActorIds != null) {
@@ -185,13 +185,13 @@ namespace LeanCloud.Play {
         internal async Task<PlayObject> SetRoomCustomProperties(PlayObject properties, PlayObject expectedValues) {
             var request = NewRequest();
             request.UpdateProperty = new UpdatePropertyRequest {
-                Attr = ByteString.CopyFrom(CodecUtils.EncodePlayObject(properties))
+                Attr = ByteString.CopyFrom(CodecUtils.SerializePlayObject(properties))
             };
             if (expectedValues != null) {
-                request.UpdateProperty.ExpectAttr = ByteString.CopyFrom(CodecUtils.EncodePlayObject(expectedValues));
+                request.UpdateProperty.ExpectAttr = ByteString.CopyFrom(CodecUtils.SerializePlayObject(expectedValues));
             }
             var res = await SendRequest(CommandType.Conv, OpType.Update, request);
-            var props = CodecUtils.DecodePlayObject(res.Response.UpdateProperty.Attr);
+            var props = CodecUtils.DeserializePlayObject(res.Response.UpdateProperty.Attr);
             return props;
         }
 
@@ -199,14 +199,14 @@ namespace LeanCloud.Play {
             var request = NewRequest();
             request.UpdateProperty = new UpdatePropertyRequest {
                 TargetActorId = playerId,
-                Attr = ByteString.CopyFrom(CodecUtils.EncodePlayObject(properties))
+                Attr = ByteString.CopyFrom(CodecUtils.SerializePlayObject(properties))
             };
             if (expectedValues != null) {
-                request.UpdateProperty.ExpectAttr = ByteString.CopyFrom(CodecUtils.EncodePlayObject(expectedValues));
+                request.UpdateProperty.ExpectAttr = ByteString.CopyFrom(CodecUtils.SerializePlayObject(expectedValues));
             }
             var res = await SendRequest(CommandType.Conv, OpType.UpdatePlayerProp, request);
             var actorId = res.Response.UpdateProperty.ActorId;
-            var props = CodecUtils.DecodePlayObject(res.Response.UpdateProperty.Attr);
+            var props = CodecUtils.DeserializePlayObject(res.Response.UpdateProperty.Attr);
             return new Tuple<int, PlayObject>(actorId, props);
         }
 

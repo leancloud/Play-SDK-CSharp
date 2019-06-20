@@ -19,7 +19,7 @@ namespace LeanCloud.Play {
                 roomOptions.MaxMembers = options.MaxPlayerCount;
                 roomOptions.Flag = options.Flag;
                 if (options.CustomRoomProperties != null) {
-                    roomOptions.Attr = ByteString.CopyFrom(CodecUtils.EncodePlayObject(options.CustomRoomProperties));
+                    roomOptions.Attr = ByteString.CopyFrom(CodecUtils.SerializePlayObject(options.CustomRoomProperties));
                 }
                 if (options.CustoRoomPropertyKeysForLobby != null) {
                     roomOptions.LobbyAttrKeys.AddRange(options.CustoRoomPropertyKeysForLobby);
@@ -52,7 +52,7 @@ namespace LeanCloud.Play {
                 room.playerDict.Add(player.ActorId, player);
             }
             // attr
-            room.CustomProperties = CodecUtils.DecodePlayObject(options.Attr);
+            room.CustomProperties = CodecUtils.DeserializePlayObject(options.Attr);
             return room;
         }
 
@@ -70,7 +70,7 @@ namespace LeanCloud.Play {
                 lobbyRoom.ExpectedUserIds = options.ExpectMembers.ToList<string>();
             }
             if (options.Attr != null) {
-                lobbyRoom.CustomRoomProperties = CodecUtils.DecodePlayObject(options.Attr);
+                lobbyRoom.CustomRoomProperties = CodecUtils.DeserializePlayObject(options.Attr);
             }
             return lobbyRoom;
         }
@@ -82,7 +82,7 @@ namespace LeanCloud.Play {
                 IsActive = !member.Inactive
             };
             if (member.Attr != null) {
-                player.CustomProperties = CodecUtils.DecodePlayObject(member.Attr);
+                player.CustomProperties = CodecUtils.DeserializePlayObject(member.Attr);
             }
             return player;
         }

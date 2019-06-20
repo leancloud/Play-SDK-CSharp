@@ -31,7 +31,7 @@ namespace LeanCloud.Play.Test
                 get; set;
             }
 
-            public static byte[] Encode(object obj) {
+            public static byte[] Serialize(object obj) {
                 Hero hero = obj as Hero;
                 var playObject = new PlayObject {
                     { "name", hero.Name },
@@ -40,11 +40,11 @@ namespace LeanCloud.Play.Test
                     { "mp", hero.Mp },
                     { "weapons", new PlayArray(hero.Weapons) }
                 };
-                return CodecUtils.EncodePlayObject(playObject);
+                return CodecUtils.SerializePlayObject(playObject);
             }
 
-            public static object Decode(byte[] bytes) {
-                var playObject = CodecUtils.DecodePlayObject(bytes);
+            public static object Deserialize(byte[] bytes) {
+                var playObject = CodecUtils.DeserializePlayObject(bytes);
                 Hero hero = new Hero {
                     Name = playObject.GetString("name"),
                     Score = playObject.GetFloat("score"),
@@ -65,17 +65,17 @@ namespace LeanCloud.Play.Test
                 get; set;
             }
 
-            public static byte[] Encode(object obj) {
+            public static byte[] Serialize(object obj) {
                 Weapon weapon = obj as Weapon;
                 var playObject = new PlayObject {
                     { "name", weapon.Name },
                     { "attack", weapon.Attack }
                 };
-                return CodecUtils.EncodePlayObject(playObject);
+                return CodecUtils.SerializePlayObject(playObject);
             }
 
-            public static object Decode(byte[] bytes) {
-                var playObject = CodecUtils.DecodePlayObject(bytes);
+            public static object Deserialize(byte[] bytes) {
+                var playObject = CodecUtils.DeserializePlayObject(bytes);
                 Weapon weapon = new Weapon {
                     Name = playObject.GetString("name"),
                     Attack = playObject.GetInt("attack")
@@ -132,9 +132,9 @@ namespace LeanCloud.Play.Test
                 666, true, "engineer"
             };
             playObj.Add("arr", subPlayArr);
-            var genericValue = CodecUtils.Encode(playObj);
+            var genericValue = CodecUtils.Serialize(playObj);
             Debug.Log(genericValue);
-            var newPlayObj = CodecUtils.Decode(genericValue) as PlayObject;
+            var newPlayObj = CodecUtils.Deserialize(genericValue) as PlayObject;
             Assert.AreEqual(playObj["i"], 123);
             Assert.AreEqual(playObj["b"], true);
             Assert.AreEqual(playObj["str"], "hello, world");
@@ -166,9 +166,9 @@ namespace LeanCloud.Play.Test
                     ["str"] = "hello"
                 }
             };
-            var genericValue = CodecUtils.Encode(playArr);
+            var genericValue = CodecUtils.Serialize(playArr);
             Debug.Log(genericValue);
-            var newPlayArr = CodecUtils.Decode(genericValue) as PlayArray;
+            var newPlayArr = CodecUtils.Deserialize(genericValue) as PlayArray;
             Assert.AreEqual(playArr[0], 123);
             Assert.AreEqual(playArr[1], true);
             Assert.AreEqual(playArr[2], "hello, world");
@@ -231,7 +231,7 @@ namespace LeanCloud.Play.Test
             Assert.AreEqual(reRoomOptions.MaxMembers, 2);
             Assert.AreEqual(reRoomOptions.PlayerTtl, 60);
             var attrBytes = reRoomOptions.Attr;
-            var reAttr = CodecUtils.Decode(GenericCollectionValue.Parser.ParseFrom(attrBytes)) as PlayObject;
+            var reAttr = CodecUtils.Deserialize(GenericCollectionValue.Parser.ParseFrom(attrBytes)) as PlayObject;
             Debug.Log(reAttr["title"]);
             Debug.Log(reAttr["level"]);
             Assert.AreEqual(reAttr["title"], "room title");
@@ -240,8 +240,8 @@ namespace LeanCloud.Play.Test
 
         [Test]
         public void CustomType() {
-            CodecUtils.RegisterType(typeof(Hero), 10, Hero.Encode, Hero.Decode);
-            CodecUtils.RegisterType(typeof(Weapon), 11, Weapon.Encode, Weapon.Decode);
+            CodecUtils.RegisterType(typeof(Hero), 10, Hero.Serialize, Hero.Deserialize);
+            CodecUtils.RegisterType(typeof(Weapon), 11, Weapon.Serialize, Weapon.Deserialize);
             var hero = new Hero {
                 Name = "Li Lei",
                 Score = 99.9f,
@@ -258,8 +258,8 @@ namespace LeanCloud.Play.Test
                     }
                 }
             };
-            var data = CodecUtils.Encode(hero);
-            var newHero = CodecUtils.Decode(data) as Hero;
+            var data = CodecUtils.Serialize(hero);
+            var newHero = CodecUtils.Deserialize(data) as Hero;
             Assert.AreEqual(newHero.Name, "Li Lei");
             Assert.AreEqual(Math.Abs(newHero.Score - 99.9f) < float.Epsilon, true);
             Assert.AreEqual(newHero.Hp, 10);
@@ -284,7 +284,7 @@ namespace LeanCloud.Play.Test
                 roomOptions.PlayerTtl = options.PlayerTtl;
                 roomOptions.MaxMembers = options.MaxPlayerCount;
                 roomOptions.Flag = options.Flag;
-                roomOptions.Attr = CodecUtils.Encode(options.CustomRoomProperties).ToByteString();
+                roomOptions.Attr = CodecUtils.Serialize(options.CustomRoomProperties).ToByteString();
                 roomOptions.LobbyAttrKeys.AddRange(options.CustoRoomPropertyKeysForLobby);
             }
             if (expectedUserIds != null) {

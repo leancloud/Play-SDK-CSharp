@@ -757,14 +757,14 @@ namespace LeanCloud.Play {
         }
 
         void HandleRoomCustomPropertiesChanged(UpdatePropertyNotification updatePropertyNotification) {
-            var changedProps = CodecUtils.DecodePlayObject(updatePropertyNotification.Attr);
+            var changedProps = CodecUtils.DeserializePlayObject(updatePropertyNotification.Attr);
             // 房间属性变化
             Room.MergeCustomProperties(changedProps);
             OnRoomCustomPropertiesChanged?.Invoke(changedProps);
         }
 
         void HandlePlayerCustomPropertiesChanged(UpdatePropertyNotification updatePropertyNotification) {
-            var changedProps = CodecUtils.DecodePlayObject(updatePropertyNotification.Attr);
+            var changedProps = CodecUtils.DeserializePlayObject(updatePropertyNotification.Attr);
             // 玩家属性变化
             var player = Room.GetPlayer(updatePropertyNotification.ActorId);
             if (player == null) {
@@ -805,7 +805,7 @@ namespace LeanCloud.Play {
 
         void HandleSendEvent(DirectCommand directCommand) {
             var eventId = (byte) directCommand.EventId;
-            var eventData = CodecUtils.DecodePlayObject(directCommand.Msg);
+            var eventData = CodecUtils.DeserializePlayObject(directCommand.Msg);
             var senderId = directCommand.FromActorId;
             OnCustomEvent?.Invoke(eventId, eventData, senderId);
         }
