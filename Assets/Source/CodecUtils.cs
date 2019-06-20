@@ -4,13 +4,27 @@ using LeanCloud.Play.Protocol;
 using Google.Protobuf;
 
 namespace LeanCloud.Play {
+    /// <summary>
+    /// 序列化方法委托
+    /// </summary>
     public delegate byte[] EncodeFunc(object obj);
+    /// <summary>
+    /// 反序列化方法委托
+    /// </summary>
     public delegate object DecodeFunc(byte[] bytes);
 
     public static class CodecUtils {
         static readonly Dictionary<Type, CustomType> typeDict = new Dictionary<Type, CustomType>();
         static readonly Dictionary<int, CustomType> typeIdDict = new Dictionary<int, CustomType>();
 
+        /// <summary>
+        /// 注册自定义类型的序列化
+        /// </summary>
+        /// <returns><c>true</c>, if type was registered, <c>false</c> otherwise.</returns>
+        /// <param name="type">类型</param>
+        /// <param name="typeId">类型 Id</param>
+        /// <param name="encodeFunc">序列化方法</param>
+        /// <param name="decodeFunc">反序列化方法</param>
         public static bool RegisterType(Type type, int typeId, EncodeFunc encodeFunc, DecodeFunc decodeFunc) {
             if (type == null) {
                 throw new ArgumentNullException(nameof(type));
@@ -30,6 +44,11 @@ namespace LeanCloud.Play {
             return true;
         }
 
+        /// <summary>
+        /// 序列化
+        /// </summary>
+        /// <returns>The encode.</returns>
+        /// <param name="val">要序列化的对象</param>
         public static GenericCollectionValue Encode(object val) {
             GenericCollectionValue genericVal = null;
             if (val is null) {
@@ -112,6 +131,11 @@ namespace LeanCloud.Play {
             return genericVal;
         }
 
+        /// <summary>
+        /// 反序列化
+        /// </summary>
+        /// <returns>The decode.</returns>
+        /// <param name="genericValue">带类型的序列化对象</param>
         public static object Decode(GenericCollectionValue genericValue) {
             object val = null;
             switch (genericValue.Type) {
@@ -174,6 +198,11 @@ namespace LeanCloud.Play {
             return val;
         }
 
+        /// <summary>
+        /// 序列化 PlayObject 对象
+        /// </summary>
+        /// <returns>The play object.</returns>
+        /// <param name="playObject">PlayObject 对象</param>
         public static byte[] EncodePlayObject(PlayObject playObject) {
             if (playObject == null) {
                 return null;
@@ -188,6 +217,11 @@ namespace LeanCloud.Play {
             return collection.ToByteArray();
         }
 
+        /// <summary>
+        /// 反序列化 PlayObject 对象
+        /// </summary>
+        /// <returns>The play object.</returns>
+        /// <param name="bytes">要反序列化的字节码</param>
         public static PlayObject DecodePlayObject(byte[] bytes) {
             var collection = GenericCollection.Parser.ParseFrom(bytes);
             var playObject = new PlayObject();

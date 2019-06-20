@@ -27,7 +27,7 @@ namespace LeanCloud.Play.Test {
                     Assert.AreEqual(room.Open, false);
                     flag = true;
                 };
-                room.SetOpened(false);
+                room.SetOpen(false);
             });
             while (!flag) {
                 yield return null;

@@ -119,30 +119,64 @@ namespace LeanCloud.Play {
             }
         }
 
-        public Task<bool> SetOpened(bool opened) {
+        /// <summary>
+        /// 设置开启 / 关闭
+        /// </summary>
+        /// <returns>The open.</returns>
+        /// <param name="opened">是否开启</param>
+        public Task<bool> SetOpen(bool opened) {
             return Client.SetRoomOpen(opened);
         }
 
+        /// <summary>
+        /// 设置可见性
+        /// </summary>
+        /// <returns>The visible.</returns>
+        /// <param name="visible">是否可见</param>
         public Task<bool> SetVisible(bool visible) {
             return Client.SetRoomVisible(visible);
         }
 
+        /// <summary>
+        /// 设置最大玩家数量
+        /// </summary>
+        /// <returns>The max player count.</returns>
+        /// <param name="count">数量</param>
         public Task<int> SetMaxPlayerCount(int count) {
             return Client.SetRoomMaxPlayerCount(count);
         }
 
+        /// <summary>
+        /// 设置期望玩家
+        /// </summary>
+        /// <returns>The expected user identifiers.</returns>
+        /// <param name="expectedUserIds">玩家 Id 列表</param>
         public Task<List<string>> SetExpectedUserIds(List<string> expectedUserIds) {
             return Client.SetRoomExpectedUserIds(expectedUserIds);
         }
 
+        /// <summary>
+        /// 清空期望玩家
+        /// </summary>
+        /// <returns>The expected user identifiers.</returns>
         public Task ClearExpectedUserIds() {
             return Client.ClearRoomExpectedUserIds();
         }
 
+        /// <summary>
+        /// 增加期望玩家
+        /// </summary>
+        /// <returns>The expected user identifiers.</returns>
+        /// <param name="expectedUserIds">玩家 Id 列表</param>
         public Task<List<string>> AddExpectedUserIds(List<string> expectedUserIds) {
             return Client.AddRoomExpectedUserIds(expectedUserIds);
         }
 
+        /// <summary>
+        /// 删除期望玩家
+        /// </summary>
+        /// <returns>The expected user identifiers.</returns>
+        /// <param name="expectedUserIds">玩家 Id 列表</param>
         public Task<List<string>> RemoveExpectedUserIds(List<string> expectedUserIds) {
             return Client.RemoveRoomExpectedUserIds(expectedUserIds);
         }

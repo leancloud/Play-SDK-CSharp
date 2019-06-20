@@ -89,10 +89,17 @@ namespace LeanCloud.Play
             get; set;
         }
 
+        /// <summary>
+        /// 房间插件名称
+        /// </summary>
+        /// <value>The name of the plugin.</value>
         public string PluginName {
             get; set;
         }
 
+        /// <summary>
+        /// RoomOptions 构造方法
+        /// </summary>
         public RoomOptions() {
             Open = true;
             Visible = true;

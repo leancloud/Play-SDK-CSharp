@@ -146,7 +146,12 @@ namespace LeanCloud.Play {
             var op = command.Op;
             var body = Body.Parser.ParseFrom(command.Body);
             Logger.Debug("{0} <= {1}/{2}: {3}", userId, cmd, op, body);
-            HandleCommand(cmd, op, body);
+            if (isMessageQueueRunning) {
+                HandleCommand(cmd, op, body);
+            } else { 
+            
+            }
+
 
 
             //var message = Message.FromJson(eventArgs.Data);
