@@ -11,8 +11,5 @@ namespace LeanCloud.Play {
         internal string PrimaryUrl {
             get; set;
         }
-        internal string SecondaryUrl {
-            get; set;
-        }
     }
 }

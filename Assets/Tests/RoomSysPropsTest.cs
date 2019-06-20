@@ -14,7 +14,7 @@ namespace LeanCloud.Play.Test {
             Logger.LogDelegate += Utils.Log;
 
             var flag = false;
-            var c = Utils.NewQCloudClient("rsp0");
+            var c = Utils.NewClient("rsp0");
             Room room = null;
             c.Connect().OnSuccess(_ => {
                 return c.CreateRoom();
@@ -27,7 +27,7 @@ namespace LeanCloud.Play.Test {
                     Assert.AreEqual(room.Open, false);
                     flag = true;
                 };
-                room.SetOpened(false);
+                room.SetOpen(false);
             });
             while (!flag) {
                 yield return null;
@@ -41,7 +41,7 @@ namespace LeanCloud.Play.Test {
             Logger.LogDelegate += Utils.Log;
 
             var flag = false;
-            var c = Utils.NewQCloudClient("rsp1");
+            var c = Utils.NewClient("rsp1");
             Room room = null;
             c.Connect().OnSuccess(_ => {
                 return c.CreateRoom();
@@ -68,7 +68,7 @@ namespace LeanCloud.Play.Test {
             Logger.LogDelegate += Utils.Log;
 
             var flag = false;
-            var c = Utils.NewQCloudClient("rsp2");
+            var c = Utils.NewClient("rsp2");
             Room room = null;
             c.Connect().OnSuccess(_ => {
                 return c.CreateRoom();
@@ -96,7 +96,7 @@ namespace LeanCloud.Play.Test {
 
             var f1 = false;
             var f2 = false;
-            var c = Utils.NewQCloudClient("rsp3");
+            var c = Utils.NewClient("rsp3");
             Room room = null;
             c.Connect().OnSuccess(_ => {
                 return c.CreateRoom();
@@ -132,7 +132,7 @@ namespace LeanCloud.Play.Test {
             var f1 = false;
             var f2 = false;
             var f3 = false;
-            var c = Utils.NewQCloudClient("rsp4");
+            var c = Utils.NewClient("rsp4");
             Room room = null;
             c.Connect().OnSuccess(_ => {
                 return c.CreateRoom();

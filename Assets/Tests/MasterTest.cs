@@ -106,7 +106,7 @@ namespace LeanCloud.Play.Test
                     Assert.AreEqual(leftPlayer.ActorId, c0.Player.ActorId);
                 };
                 c1.OnMasterSwitched += newMaster => {
-                    Assert.AreEqual(c1.Room.MasterActorId, -1);
+                    Assert.AreEqual(c1.Room.MasterActorId, 0);
                     Assert.AreEqual(newMaster, null);
                     f1 = true;
                 };

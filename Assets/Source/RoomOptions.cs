@@ -29,7 +29,7 @@ namespace LeanCloud.Play
         /// 房间是否打开
         /// </summary>
         /// <value><c>true</c> if opened; otherwise, <c>false</c>.</value>
-        public bool Opened {
+        public bool? Open {
             get; set;
         }
 
@@ -37,7 +37,7 @@ namespace LeanCloud.Play
         /// 房间是否可见，只有「可见」的房间会出现在房间列表里
         /// </summary>
         /// <value><c>true</c> if visible; otherwise, <c>false</c>.</value>
-        public bool Visible {
+        public bool? Visible {
             get; set;
         }
 
@@ -69,7 +69,7 @@ namespace LeanCloud.Play
         /// 自定义房间属性
         /// </summary>
         /// <value>The custom room properties.</value>
-        public Dictionary<string, object> CustomRoomProperties {
+        public PlayObject CustomRoomProperties {
             get; set;
         }
 
@@ -89,8 +89,19 @@ namespace LeanCloud.Play
             get; set;
         }
 
+        /// <summary>
+        /// 房间插件名称
+        /// </summary>
+        /// <value>The name of the plugin.</value>
+        public string PluginName {
+            get; set;
+        }
+
+        /// <summary>
+        /// RoomOptions 构造方法
+        /// </summary>
         public RoomOptions() {
-            Opened = true;
+            Open = true;
             Visible = true;
             EmptyRoomTtl = 0;
             PlayerTtl = 0;
@@ -98,43 +109,7 @@ namespace LeanCloud.Play
             CustomRoomProperties = null;
             CustoRoomPropertyKeysForLobby = null;
             Flag = 0;
-        }
-
-        internal Dictionary<string, object> ToDictionary() {
-            if (EmptyRoomTtl < 0) {
-                throw new ArgumentException("EmptyRoomTtl MUST NOT be less than 0");
-            }
-            if (PlayerTtl < 0) {
-                throw new ArgumentException("PlayerTtl MUST NOT be less than 0");
-            }
-            if (MaxPlayerCount < 0 || MaxPlayerCount > MAX_PLAYER_COUNT) {
-                throw new ArgumentException("MaxPlayerCount MUST be [1, 10]");
-            }
-
-            Dictionary<string, object> msg = new Dictionary<string, object> {
-                { "open", Opened },
-                { "visible", Visible }
-            };
-            if (EmptyRoomTtl > 0) {
-                msg.Add("emptyRoomTtl", EmptyRoomTtl);
-            }
-            if (PlayerTtl > 0) {
-                msg.Add("playerTtl", PlayerTtl);
-            }
-            if (MaxPlayerCount < MAX_PLAYER_COUNT) {
-                msg.Add("maxMembers", MaxPlayerCount);
-            }
-            if (CustomRoomProperties != null) {
-                msg.Add("attr", CustomRoomProperties);
-            }
-            if (CustoRoomPropertyKeysForLobby != null) {
-                List<object> keys = CustoRoomPropertyKeysForLobby.Cast<object>().ToList();
-                msg.Add("lobbyAttrKeys", keys);
-            }
-            if (Flag > 0) {
-                msg.Add("flag", Flag);
-            }
-            return msg;
+            PluginName = null;
         }
     }
 }

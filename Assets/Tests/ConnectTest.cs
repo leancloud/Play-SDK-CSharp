@@ -12,10 +12,14 @@ namespace LeanCloud.Play.Test
     {
         [Test]
         public async void Connect() {
+            Logger.LogDelegate += Utils.Log;
+
             var c = Utils.NewClient("ct0");
             await c.Connect();
             Debug.Log($"{c.UserId} connected.");
             c.Close();
+
+            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]
@@ -73,13 +77,17 @@ namespace LeanCloud.Play.Test
 
         [Test]
         public async void ConnectFailed() {
+            Logger.LogDelegate += Utils.Log;
+
             var c = Utils.NewClient("ct4 ");
             try {
                 await c.Connect();
+                Assert.AreEqual(true, false);
             } catch (PlayException e) {
                 Assert.AreEqual(e.Code, 4104);
                 Debug.Log(e.Message);
             }
+            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest, Timeout(40000)]

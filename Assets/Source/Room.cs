@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,14 +14,14 @@ namespace LeanCloud.Play {
             get; set;
         }
 
-        Dictionary<int, Player> playerDict;
+        internal Dictionary<int, Player> playerDict;
 
         /// <summary>
         /// 房间名称
         /// </summary>
         /// <value>The name.</value>
 		public string Name {
-            get; private set;
+            get; internal set;
         }
         /// <summary>
         /// 房间是否开启
@@ -43,7 +44,7 @@ namespace LeanCloud.Play {
         /// </summary>
         /// <value>The max player count.</value>
 		public int MaxPlayerCount {
-            get; private set;
+            get; internal set;
 		}
 
         /// <summary>
@@ -60,6 +61,9 @@ namespace LeanCloud.Play {
         /// <value>The master.</value>
         public Player Master {
             get {
+                if (MasterActorId == 0) {
+                    return null;
+                }
                 return GetPlayer(MasterActorId);
             }
         }
@@ -69,14 +73,14 @@ namespace LeanCloud.Play {
         /// </summary>
         /// <value>The expected user identifiers.</value>
         public List<string> ExpectedUserIds {
-            get; private set;
+            get; internal set;
 		}
 
         /// <summary>
         /// 获取自定义属性
         /// </summary>
         /// <value>The custom properties.</value>
-        public Dictionary<string, object> CustomProperties {
+        public PlayObject CustomProperties {
             get; internal set;
         }
 
@@ -97,7 +101,7 @@ namespace LeanCloud.Play {
         /// </summary>
         /// <param name="properties">自定义属性</param>
         /// <param name="expectedValues">期望属性，用于 CAS 检测</param>
-        public Task SetCustomProperties(Dictionary<string, object> properties, Dictionary<string, object> expectedValues = null) {
+        public Task SetCustomProperties(PlayObject properties, PlayObject expectedValues = null) {
             return Client.SetRoomCustomProperties(properties, expectedValues);
         }
 
@@ -115,69 +119,66 @@ namespace LeanCloud.Play {
             }
         }
 
-        public Task<bool> SetOpened(bool opened) {
+        /// <summary>
+        /// 设置开启 / 关闭
+        /// </summary>
+        /// <returns>The open.</returns>
+        /// <param name="opened">是否开启</param>
+        public Task<bool> SetOpen(bool opened) {
             return Client.SetRoomOpen(opened);
         }
 
+        /// <summary>
+        /// 设置可见性
+        /// </summary>
+        /// <returns>The visible.</returns>
+        /// <param name="visible">是否可见</param>
         public Task<bool> SetVisible(bool visible) {
             return Client.SetRoomVisible(visible);
         }
 
+        /// <summary>
+        /// 设置最大玩家数量
+        /// </summary>
+        /// <returns>The max player count.</returns>
+        /// <param name="count">数量</param>
         public Task<int> SetMaxPlayerCount(int count) {
             return Client.SetRoomMaxPlayerCount(count);
         }
 
+        /// <summary>
+        /// 设置期望玩家
+        /// </summary>
+        /// <returns>The expected user identifiers.</returns>
+        /// <param name="expectedUserIds">玩家 Id 列表</param>
         public Task<List<string>> SetExpectedUserIds(List<string> expectedUserIds) {
             return Client.SetRoomExpectedUserIds(expectedUserIds);
         }
 
+        /// <summary>
+        /// 清空期望玩家
+        /// </summary>
+        /// <returns>The expected user identifiers.</returns>
         public Task ClearExpectedUserIds() {
             return Client.ClearRoomExpectedUserIds();
         }
 
+        /// <summary>
+        /// 增加期望玩家
+        /// </summary>
+        /// <returns>The expected user identifiers.</returns>
+        /// <param name="expectedUserIds">玩家 Id 列表</param>
         public Task<List<string>> AddExpectedUserIds(List<string> expectedUserIds) {
             return Client.AddRoomExpectedUserIds(expectedUserIds);
         }
 
+        /// <summary>
+        /// 删除期望玩家
+        /// </summary>
+        /// <returns>The expected user identifiers.</returns>
+        /// <param name="expectedUserIds">玩家 Id 列表</param>
         public Task<List<string>> RemoveExpectedUserIds(List<string> expectedUserIds) {
             return Client.RemoveRoomExpectedUserIds(expectedUserIds);
-        }
-
-        internal static Room NewFromDictionary(Client client, Dictionary<string, object> roomDict) {
-            Room room = NewFromDictionary(roomDict);
-            room.Client = client;
-            return room;
-        }
-
-        internal static Room NewFromDictionary(Dictionary<string, object> roomDict) {
-            if (roomDict == null) {
-                throw new ArgumentException("Room data is null");
-            }
-
-            Room room = new Room() {
-                Name = roomDict["cid"] as string,
-                Open = bool.Parse(roomDict["open"].ToString()),
-                Visible = bool.Parse(roomDict["visible"].ToString()),
-                MaxPlayerCount = int.Parse(roomDict["maxMembers"].ToString()),
-                MasterActorId = int.Parse(roomDict["masterActorId"].ToString())
-            };
-            if (roomDict.TryGetValue("expectMembers", out object expectedsObj)) {
-                var expecteds = expectedsObj as List<object>;
-                room.ExpectedUserIds = expecteds.Cast<string>().ToList();
-            }
-            room.playerDict = new Dictionary<int, Player>();
-            List<object> players = roomDict["members"] as List<object>;
-            foreach (Dictionary<string, object> playerDict in players) {
-                Player player = Player.NewFromDictionary(playerDict);
-                room.playerDict.Add(player.ActorId, player);
-            }
-            if (roomDict.TryGetValue("attr", out object propsObj)) {
-                var props = propsObj as Dictionary<string, object>;
-                room.CustomProperties = props;
-            } else {
-                room.CustomProperties = new Dictionary<string, object>();
-            }
-            return room;
         }
 
         internal void AddPlayer(Player player) {
@@ -208,25 +209,33 @@ namespace LeanCloud.Play {
             }
         }
 
-        internal Dictionary<string, object> MergeSystemProps(Dictionary<string, object> changedProps) {
-            var props = new Dictionary<string, object>();
-            if (changedProps.TryGetValue("open", out object openObj)) {
-                Open = bool.Parse(openObj.ToString());
-                props["open"] = Open;
+        internal void MergeCustomProperties(PlayObject changedProps) { 
+            if (changedProps == null) {
+                return;
             }
-            if (changedProps.TryGetValue("visible", out object visibleObj)) {
-                Visible = bool.Parse(visibleObj.ToString());
-                props["visible"] = Visible;
+            lock (CustomProperties) { 
+                foreach (var entry in changedProps) {
+                    CustomProperties[entry.Key] = entry.Value;
+                }
             }
-            if (changedProps.TryGetValue("maxMembers", out object maxPlayerCountObj)) {
-                MaxPlayerCount = int.Parse(maxPlayerCountObj.ToString());
-                props["maxPlayerCount"] = MaxPlayerCount;
+        }
+
+        internal void MergeSystemProperties(PlayObject changedProps) { 
+            if (changedProps == null) {
+                return;
             }
-            if (changedProps.TryGetValue("expectMembers", out object expectedUserIdsObj)) {
-                ExpectedUserIds = (expectedUserIdsObj as List<object>).Cast<string>().ToList();
-                props["expectedUserIds"] = ExpectedUserIds;
+            if (changedProps.TryGetBool("open", out var open)) {
+                Open = open;
             }
-            return props;
+            if (changedProps.TryGetBool("visible", out var visible)) {
+                Visible = visible;
+            }
+            if (changedProps.TryGetInt("maxPlayerCount", out var maxPlayerCount)) {
+                MaxPlayerCount = maxPlayerCount;
+            }
+            if (changedProps.TryGetValue("expectedUserIds", out object expectedUserIds)) {
+                ExpectedUserIds = expectedUserIds as List<string>;
+            }
         }
     }
 }

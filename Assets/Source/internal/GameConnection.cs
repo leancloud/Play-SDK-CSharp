@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
+using LeanCloud.Play.Protocol;
+using Google.Protobuf;
 
 namespace LeanCloud.Play {
     internal class GameConnection : Connection {
@@ -22,176 +24,190 @@ namespace LeanCloud.Play {
         }
 
         internal async Task<Room> CreateRoom(string roomId, RoomOptions roomOptions, List<string> expectedUserIds) {
-            var msg = Message.NewRequest("conv", "start");
-            if (roomId != null) {
-                msg["cid"] = roomId;
-            }
-            if (roomOptions != null) {
-                var roomOptionsDict = roomOptions.ToDictionary();
-                foreach (var entry in roomOptionsDict) {
-                    msg[entry.Key] = entry.Value;
-                }
-            }
-            if (expectedUserIds != null) {
-                var expecteds = expectedUserIds.Cast<object>().ToList();
-                msg["expectMembers"] = expecteds;
-            }
-            var res = await Send(msg);
-            return Room.NewFromDictionary(res.Data);
+            var request = NewRequest();
+            var roomOpts = Utils.ConvertToRoomOptions(roomId, roomOptions, expectedUserIds);
+            request.CreateRoom = new CreateRoomRequest { 
+                RoomOptions = roomOpts
+            };
+            var res = await SendRequest(CommandType.Conv, OpType.Start, request);
+            return Utils.ConvertToRoom(res.Response.CreateRoom.RoomOptions);
         }
 
         internal async Task<Room> JoinRoom(string roomId, List<string> expectedUserIds) {
-            var msg = Message.NewRequest("conv", "add");
-            msg["cid"] = roomId;
+            var request = NewRequest();
+            request.JoinRoom = new JoinRoomRequest {
+                Rejoin = false,
+                RoomOptions = new Protocol.RoomOptions {
+                    Cid = roomId
+                },
+            };
             if (expectedUserIds != null) {
-                List<object> expecteds = expectedUserIds.Cast<object>().ToList();
-                msg["expectMembers"] = expecteds;
+                request.JoinRoom.RoomOptions.ExpectMembers.AddRange(expectedUserIds);
             }
-            var res = await Send(msg);
-            return Room.NewFromDictionary(res.Data);
+            var res = await SendRequest(CommandType.Conv, OpType.Add, request);
+            return Utils.ConvertToRoom(res.Response.JoinRoom.RoomOptions);
         }
 
         internal async Task LeaveRoom() {
-            var msg = Message.NewRequest("conv", "remove");
-            await Send(msg);
+            var request = NewRequest();
+            await SendRequest(CommandType.Conv, OpType.Remove, request);
         }
 
-        internal async Task<Dictionary<string, object>> SetRoomOpen(bool open) {
-            var msg = Message.NewRequest("conv", "update-system-property");
-            msg["sysAttr"] = new Dictionary<string, object> {
-                { "open", open }
+        internal async Task<PlayObject> SetRoomOpen(bool open) {
+            var request = NewRequest();
+            request.UpdateSysProperty = new UpdateSysPropertyRequest { 
+                SysAttr = new RoomSystemProperty { 
+                    Open = open
+                }
             };
-            var res = await Send(msg);
-            return res["sysAttr"] as Dictionary<string, object>;
+            var res = await SendRequest(CommandType.Conv, OpType.UpdateSystemProperty, request);
+            return Utils.ConvertToPlayObject(res.Response.UpdateSysProperty.SysAttr);
         }
 
-        internal async Task<Dictionary<string, object>> SetRoomVisible(bool visible) {
-            var msg = Message.NewRequest("conv", "update-system-property");
-            msg["sysAttr"] = new Dictionary<string, object> {
-                { "visible", visible }
+        internal async Task<PlayObject> SetRoomVisible(bool visible) {
+            var request = NewRequest();
+            request.UpdateSysProperty = new UpdateSysPropertyRequest { 
+                SysAttr = new RoomSystemProperty { 
+                    Visible = visible
+                }
             };
-            var res = await Send(msg);
-            return res["sysAttr"] as Dictionary<string, object>;
+            var res = await SendRequest(CommandType.Conv, OpType.UpdateSystemProperty, request);
+            return Utils.ConvertToPlayObject(res.Response.UpdateSysProperty.SysAttr);
         }
 
-        internal async Task<Dictionary<string, object>> SetRoomMaxPlayerCount(int count) {
-            var msg = Message.NewRequest("conv", "update-system-property");
-            msg["sysAttr"] = new Dictionary<string, object> {
-                { "maxMembers", count }
+        internal async Task<PlayObject> SetRoomMaxPlayerCount(int count) {
+            var request = NewRequest();
+            request.UpdateSysProperty = new UpdateSysPropertyRequest { 
+                SysAttr = new RoomSystemProperty { 
+                    MaxMembers = count
+                }
             };
-            var res = await Send(msg);
-            return res["sysAttr"] as Dictionary<string, object>;
+            var res = await SendRequest(CommandType.Conv, OpType.UpdateSystemProperty, request);
+            return Utils.ConvertToPlayObject(res.Response.UpdateSysProperty.SysAttr);
         }
 
-        internal async Task<Dictionary<string, object>> SetRoomExpectedUserIds(List<string> expectedUserIds) {
-            var msg = Message.NewRequest("conv", "update-system-property");
-            msg["sysAttr"] = new Dictionary<string, object> {
-                { "expectMembers", new Dictionary<string, object> {
-                    { "$set", expectedUserIds.ToList<object>() }
-                } }
+        internal async Task<PlayObject> SetRoomExpectedUserIds(List<string> expectedUserIds) {
+            var request = NewRequest();
+            var args = new Dictionary<string, object> {
+                { "$set", expectedUserIds.ToList<object>() }
             };
-            var res = await Send(msg);
-            return res["sysAttr"] as Dictionary<string, object>;
+            request.UpdateSysProperty = new UpdateSysPropertyRequest {
+                SysAttr = new RoomSystemProperty { 
+                    ExpectMembers = Json.Encode(args)
+                }
+            };
+            var res = await SendRequest(CommandType.Conv, OpType.UpdateSystemProperty, request);
+            return Utils.ConvertToPlayObject(res.Response.UpdateSysProperty.SysAttr);
         }
 
-        internal async Task<Dictionary<string, object>> ClearRoomExpectedUserIds() {
-            var msg = Message.NewRequest("conv", "update-system-property");
-            msg["sysAttr"] = new Dictionary<string, object> {
-                { "expectMembers", new Dictionary<string, object> {
-                    { "$drop", true }
-                } }
+        internal async Task<PlayObject> ClearRoomExpectedUserIds() {
+            var request = NewRequest();
+            var args = new Dictionary<string, object> {
+                { "$drop", true }
             };
-            var res = await Send(msg);
-            return res["sysAttr"] as Dictionary<string, object>;
+            request.UpdateSysProperty = new UpdateSysPropertyRequest {
+                SysAttr = new RoomSystemProperty { 
+                    ExpectMembers = Json.Encode(args)
+                }
+            };
+            var res = await SendRequest(CommandType.Conv, OpType.UpdateSystemProperty, request);
+            return Utils.ConvertToPlayObject(res.Response.UpdateSysProperty.SysAttr);
         }
 
-        internal async Task<Dictionary<string, object>> AddRoomExpectedUserIds(List<string> expectedUserIds) {
-            var msg = Message.NewRequest("conv", "update-system-property");
-            msg["sysAttr"] = new Dictionary<string, object> {
-                { "expectMembers", new Dictionary<string, object> {
-                    { "$add", expectedUserIds.ToList<object>() }
-                } }
+        internal async Task<PlayObject> AddRoomExpectedUserIds(List<string> expectedUserIds) {
+            var request = NewRequest();
+            var args = new Dictionary<string, object> {
+                { "$add", expectedUserIds.ToList<object>() }
             };
-            var res = await Send(msg);
-            return res["sysAttr"] as Dictionary<string, object>;
+            request.UpdateSysProperty = new UpdateSysPropertyRequest {
+                SysAttr = new RoomSystemProperty {
+                    ExpectMembers = Json.Encode(args)
+                }
+            };
+            var res = await SendRequest(CommandType.Conv, OpType.UpdateSystemProperty, request);
+            return Utils.ConvertToPlayObject(res.Response.UpdateSysProperty.SysAttr);
         }
 
-        internal async Task<Dictionary<string, object>> RemoveRoomExpectedUserIds(List<string> expectedUserIds) {
-            var msg = Message.NewRequest("conv", "update-system-property");
-            msg["sysAttr"] = new Dictionary<string, object> {
-                { "expectMembers", new Dictionary<string, object> {
-                    { "$remove", expectedUserIds.ToList<object>() }
-                } }
+        internal async Task<PlayObject> RemoveRoomExpectedUserIds(List<string> expectedUserIds) {
+            var request = NewRequest();
+            var args = new Dictionary<string, object> {
+                { "$remove", expectedUserIds.ToList<object>() }
             };
-            var res = await Send(msg);
-            return res["sysAttr"] as Dictionary<string, object>;
+            request.UpdateSysProperty = new UpdateSysPropertyRequest {
+                SysAttr = new RoomSystemProperty { 
+                    ExpectMembers = Json.Encode(args)
+                }
+            };
+            var res = await SendRequest(CommandType.Conv, OpType.UpdateSystemProperty, request);
+            return Utils.ConvertToPlayObject(res.Response.UpdateSysProperty.SysAttr);
         }
 
         internal async Task<int> SetMaster(int newMasterId) {
-            var msg = Message.NewRequest("conv", "update-master-client");
-            msg["masterActorId"] = newMasterId;
-            var res = await Send(msg);
-            if (res.TryGetValue("masterActorId", out object masterIdObj) &&
-                int.TryParse(masterIdObj.ToString(), out int masterId)) {
-                return masterId;
-            }
-            return -1;
+            var request = NewRequest();
+            request.UpdateMasterClient = new UpdateMasterClientRequest { 
+                MasterActorId = newMasterId
+            };
+            var res = await SendRequest(CommandType.Conv, OpType.UpdateMasterClient, request);
+            return res.Response.UpdateMasterClient.MasterActorId;
         }
 
         internal async Task<int> KickPlayer(int actorId, int code, string reason) {
-            var msg = Message.NewRequest("conv", "kick");
-            msg["targetActorId"] = actorId;
-            msg["appCode"] = code;
-            msg["appMsg"] = reason;
-            var res = await Send(msg);
-            if (res.TryGetValue("targetActorId", out object actorIdObj) &&
-                int.TryParse(actorIdObj.ToString(), out int kickedActorId)) {
-                return kickedActorId;
-            }
-            return actorId;
+            var request = NewRequest();
+            request.KickMember = new KickMemberRequest { 
+                TargetActorId = actorId,
+                AppInfo = new AppInfo { 
+                    AppCode = code,
+                    AppMsg = reason ?? string.Empty
+                }
+            };
+            var res = await SendRequest(CommandType.Conv, OpType.Kick, request);
+            return res.Response.KickMember.TargetActorId;
         }
 
-        internal async Task SendEvent(byte eventId, Dictionary<string, object> eventData, SendEventOptions options) {
-            var msg = Message.NewRequest("direct", null);
-            msg["eventId"] = eventId;
-            msg["msg"] = eventData;
-            msg["receiverGroup"] = (int) options.ReceiverGroup;
+        internal Task SendEvent(byte eventId, PlayObject eventData, SendEventOptions options) {
+            var request = NewRequest();
+            var direct = new DirectCommand { 
+                EventId = eventId
+            };
+            if (eventData != null) {
+                direct.Msg = ByteString.CopyFrom(CodecUtils.SerializePlayObject(eventData));
+            }
+            direct.ReceiverGroup = (int) options.ReceiverGroup;
             if (options.TargetActorIds != null) {
-                msg["toActorIds"] = options.TargetActorIds.Cast<object>().ToList();
+                direct.ToActorIds.AddRange(options.TargetActorIds);
             }
-            await Send(msg);
+            Send(CommandType.Direct, OpType.None, new Body { 
+                Direct = direct
+            });
+            return Task.FromResult(true);
         }
 
-        internal async Task<Dictionary<string, object>> SetRoomCustomProperties(Dictionary<string, object> properties, Dictionary<string, object> expectedValues) {
-            var msg = Message.NewRequest("conv", "update");
-            msg["attr"] = properties;
+        internal async Task<PlayObject> SetRoomCustomProperties(PlayObject properties, PlayObject expectedValues) {
+            var request = NewRequest();
+            request.UpdateProperty = new UpdatePropertyRequest {
+                Attr = ByteString.CopyFrom(CodecUtils.SerializePlayObject(properties))
+            };
             if (expectedValues != null) {
-                msg["expectAttr"] = expectedValues;
+                request.UpdateProperty.ExpectAttr = ByteString.CopyFrom(CodecUtils.SerializePlayObject(expectedValues));
             }
-            var res = await Send(msg);
-            if (res.TryGetValue("attr", out object attrObj)) {
-                return attrObj as Dictionary<string, object>;
-            }
-            return null;
+            var res = await SendRequest(CommandType.Conv, OpType.Update, request);
+            var props = CodecUtils.DeserializePlayObject(res.Response.UpdateProperty.Attr);
+            return props;
         }
 
-        internal async Task<Dictionary<string, object>> SetPlayerCustomProperties(int playerId, Dictionary<string, object> properties, Dictionary<string, object> expectedValues) {
-            var msg = Message.NewRequest("conv", "update-player-prop");
-            msg["targetActorId"] = playerId;
-            msg["attr"] = properties;
+        internal async Task<Tuple<int, PlayObject>> SetPlayerCustomProperties(int playerId, PlayObject properties, PlayObject expectedValues) {
+            var request = NewRequest();
+            request.UpdateProperty = new UpdatePropertyRequest {
+                TargetActorId = playerId,
+                Attr = ByteString.CopyFrom(CodecUtils.SerializePlayObject(properties))
+            };
             if (expectedValues != null) {
-                msg["expectAttr"] = expectedValues;
+                request.UpdateProperty.ExpectAttr = ByteString.CopyFrom(CodecUtils.SerializePlayObject(expectedValues));
             }
-            var res = await Send(msg);
-            if (res.TryGetValue("actorId", out object actorIdObj) &&
-                int.TryParse(actorIdObj.ToString(), out int actorId) &&
-                res.TryGetValue("attr", out object attrObj)) {
-                return new Dictionary<string, object> {
-                        { "actorId", actorId },
-                        { "changedProps", attrObj },
-                };
-            }
-            return null;
+            var res = await SendRequest(CommandType.Conv, OpType.UpdatePlayerProp, request);
+            var actorId = res.Response.UpdateProperty.ActorId;
+            var props = CodecUtils.DeserializePlayObject(res.Response.UpdateProperty.Attr);
+            return new Tuple<int, PlayObject>(actorId, props);
         }
 
         protected override int GetPingDuration() {

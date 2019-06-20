@@ -61,7 +61,7 @@ namespace LeanCloud.Play
         /// 房间是否开放
         /// </summary>
         /// <value><c>true</c> if opened; otherwise, <c>false</c>.</value>
-        public bool Opened {
+        public bool Open {
             get; internal set;
         }
 
@@ -77,45 +77,8 @@ namespace LeanCloud.Play
         /// 房间属性
         /// </summary>
         /// <value>The custom room properties.</value>
-        public Dictionary<string, object> CustomRoomProperties {
+        public PlayObject CustomRoomProperties {
             get; internal set;
-        }
-
-        internal static LobbyRoom NewFromDictionary(Dictionary<string, object> roomDict) {
-            LobbyRoom lobbyRoom = new LobbyRoom {
-                RoomName = roomDict["cid"] as string
-            };
-            if (roomDict.TryGetValue("maxMembers", out object maxPlayerCountObj) && 
-                int.TryParse(maxPlayerCountObj.ToString(), out int maxPlayerCount)) {
-                lobbyRoom.MaxPlayerCount = maxPlayerCount;
-            }
-            if (roomDict.TryGetValue("expectMembers", out object expectedsObj)) {
-                lobbyRoom.ExpectedUserIds = (expectedsObj as List<object>).Cast<string>().ToList();
-            }
-            if (roomDict.TryGetValue("emptyRoomTtl", out object roomTtlObj) &&
-                int.TryParse(roomTtlObj.ToString(), out int emptyRoomTtl)) {
-                lobbyRoom.EmptyRoomTtl = emptyRoomTtl;
-            }
-            if (roomDict.TryGetValue("playerTtl", out object playerTtlObj) &&
-                int.TryParse(playerTtlObj.ToString(), out int playerTtl)) {
-                lobbyRoom.PlayerTtl = playerTtl;
-            }
-            if (roomDict.TryGetValue("playerCount", out object playerCountObj) &&
-                int.TryParse(playerCountObj.ToString(), out int playerCount)) {
-                lobbyRoom.PlayerCount = playerCount;
-            }
-            if (roomDict.TryGetValue("attr", out object propsObj)) {
-                lobbyRoom.CustomRoomProperties = propsObj as Dictionary<string, object>;
-            }
-            if (roomDict.TryGetValue("open", out object openObj) &&
-                bool.TryParse(openObj.ToString(), out bool opened)) {
-                lobbyRoom.Opened = opened;
-            }
-            if (roomDict.TryGetValue("visible", out object visibleObj) &&
-                bool.TryParse(visibleObj.ToString(), out bool visible)) {
-                lobbyRoom.Visible = visible;
-            }
-            return lobbyRoom;
         }
 
         internal LobbyRoom() { }

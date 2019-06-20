@@ -11,6 +11,8 @@ namespace LeanCloud.Play.Test
     {
         [Test]
         public async void JoinRoomByName() {
+            Logger.LogDelegate += Utils.Log;
+
             var roomName = "jrt0_r";
             var c0 = Utils.NewClient("jrt0_0");
             var c1 = Utils.NewClient("jrt0_1");
@@ -21,6 +23,8 @@ namespace LeanCloud.Play.Test
             Assert.AreEqual(room.Name, roomName);
             c0.Close();
             c1.Close();
+
+            Logger.LogDelegate -= Utils.Log;
         }
 
         [Test]
@@ -105,7 +109,7 @@ namespace LeanCloud.Play.Test
             Logger.LogDelegate += Utils.Log;
 
             var f = false;
-            var roomName = "jrt4_r";
+            var roomName = $"jrt4_r_{Random.Range(0, 1000000)}";
             var c0 = Utils.NewClient("jrt4_0");
             var c1 = Utils.NewClient("jrt4_1");
 
@@ -197,7 +201,7 @@ namespace LeanCloud.Play.Test
 
             await c0.Connect();
             var roomOptions = new RoomOptions {
-                CustomRoomProperties = new Dictionary<string, object> {
+                CustomRoomProperties = new PlayObject {
                     { "lv", 2 }
                 },
                 CustoRoomPropertyKeysForLobby = new List<string> { "lv" }
@@ -207,13 +211,13 @@ namespace LeanCloud.Play.Test
             // 创建房间有延迟
             await Task.Delay(5000);
             await c1.Connect();
-            await c1.JoinRandomRoom(new Dictionary<string, object> {
+            await c1.JoinRandomRoom(new PlayObject {
                 { "lv", 2 }
             });
 
             await c2.Connect();
             try {
-                await c2.JoinRandomRoom(new Dictionary<string, object> {
+                await c2.JoinRandomRoom(new PlayObject {
                     { "lv", 3 }
                 });
             } catch (PlayException e) {
@@ -227,13 +231,15 @@ namespace LeanCloud.Play.Test
 
         [Test]
         public async void MatchRandom() {
+            Logger.LogDelegate += Utils.Log;
+
             var roomName = "jr8_r";
             var c0 = Utils.NewClient("jr8_0");
             var c1 = Utils.NewClient("jr8_1");
 
             await c0.Connect();
             var roomOptions = new RoomOptions {
-                CustomRoomProperties = new Dictionary<string, object> {
+                CustomRoomProperties = new PlayObject {
                     { "lv", 5 }
                 },
                 CustoRoomPropertyKeysForLobby = new List<string> { "lv" }
@@ -241,7 +247,7 @@ namespace LeanCloud.Play.Test
             await c0.CreateRoom(roomName, roomOptions);
 
             await c1.Connect();
-            var lobbyRoom = await c1.MatchRandom(new Dictionary<string, object> {
+            var lobbyRoom = await c1.MatchRandom("jr8_1", new PlayObject {
                 { "lv", 5 }
             });
             Assert.AreEqual(lobbyRoom.RoomName, roomName);
@@ -249,6 +255,8 @@ namespace LeanCloud.Play.Test
 
             c0.Close();
             c1.Close();
+
+            Logger.LogDelegate -= Utils.Log;
         }
 
         [Test]

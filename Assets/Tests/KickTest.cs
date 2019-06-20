@@ -20,14 +20,15 @@ namespace LeanCloud.Play.Test
             c0.Connect().OnSuccess(_ => {
                 return c0.CreateRoom(roomName);
             }).Unwrap().OnSuccess(_ => {
-                c0.OnPlayerRoomJoined += newPlayer => {
-                    c0.KickPlayer(newPlayer.ActorId);
+                c0.OnPlayerRoomJoined += async newPlayer => {
+                    await c0.KickPlayer(newPlayer.ActorId);
                 };
                 return c1.Connect();
             }).Unwrap().OnSuccess(_ => {
                 c1.OnRoomKicked += (code, msg) => {
                     Debug.Log($"{c1.UserId} is kicked");
-                    Assert.AreEqual(code, 0);
+                    Assert.AreEqual(code, null);
+                    Assert.AreEqual(msg, null);
                     flag = true;
                 };
                 return c1.JoinRoom(roomName);
@@ -54,8 +55,8 @@ namespace LeanCloud.Play.Test
             c0.Connect().OnSuccess(_ => {
                 return c0.CreateRoom(roomName);
             }).Unwrap().OnSuccess(_ => {
-                c0.OnPlayerRoomJoined += newPlayer => {
-                    c0.KickPlayer(newPlayer.ActorId, 404, "You cheat!");
+                c0.OnPlayerRoomJoined += async newPlayer => {
+                    await c0.KickPlayer(newPlayer.ActorId, 404, "You cheat!");
                 };
                 return c1.Connect();
             }).Unwrap().OnSuccess(_ => {
