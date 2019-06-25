@@ -22,7 +22,7 @@ namespace LeanCloud.Play {
 
         internal Task<string> Fetch() {
             if (playServer != null) {
-                return Task.FromResult(string.Format("{0}/router", playServer));
+                return Task.FromResult(string.Format("{0}/1/multiplayer/router/route", playServer));
             }
             var now = DateTimeUtils.Now;
             if (now < serverValidTimestamp) {
@@ -58,7 +58,7 @@ namespace LeanCloud.Play {
                                 var ttl = int.Parse(response["ttl"].ToString());
                                 serverValidTimestamp = DateTimeUtils.Now + ttl * 1000;
                             }
-                            url = string.Format("https://{0}/1/multiplayer/router/router", routerServer);
+                            url = string.Format("https://{0}/1/multiplayer/router/route", routerServer);
                         }
                         tcs.SetResult(url);
                     }
