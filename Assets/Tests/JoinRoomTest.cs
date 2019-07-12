@@ -192,70 +192,119 @@ namespace LeanCloud.Play.Test
             }
         }
 
-        [Test]
-        public async void JoinRandomWithMatchProperties() {
+        [UnityTest]
+        public IEnumerator JoinRandomWithMatchProperties() {
+            Logger.LogDelegate += Utils.Log;
+
+            var f = false;
             var roomName = "jrt7_r";
             var c0 = Utils.NewClient("jrt7_0");
             var c1 = Utils.NewClient("jrt7_1");
             var c2 = Utils.NewClient("jrt7_2");
+            var c3 = Utils.NewClient("jrt7_3");
+            var c4 = Utils.NewClient("jrt7_2");
 
-            await c0.Connect();
-            var roomOptions = new RoomOptions {
-                CustomRoomProperties = new PlayObject {
+            var props = new PlayObject {
                     { "lv", 2 }
-                },
-                CustoRoomPropertyKeysForLobby = new List<string> { "lv" }
-            };
-            await c0.CreateRoom(roomName, roomOptions);
-
-            // 创建房间有延迟
-            await Task.Delay(5000);
-            await c1.Connect();
-            await c1.JoinRandomRoom(new PlayObject {
-                { "lv", 2 }
-            });
-
-            await c2.Connect();
-            try {
-                await c2.JoinRandomRoom(new PlayObject {
+                };
+            c0.Connect().OnSuccess(_ => {
+                var roomOptions = new RoomOptions {
+                    MaxPlayerCount = 3,
+                    CustomRoomProperties = props,
+                    CustoRoomPropertyKeysForLobby = new List<string> { "lv" }
+                };
+                return c0.CreateRoom(roomName, roomOptions);
+            }).Unwrap().OnSuccess(_ => {
+                return c1.Connect();
+            }).Unwrap().OnSuccess(_ => {
+                return c1.JoinRandomRoom(props, new List<string> { "jrt7_2" });
+            }).Unwrap().OnSuccess(_ => {
+                return c2.Connect();
+            }).Unwrap().OnSuccess(_ => {
+                return c2.JoinRandomRoom(new PlayObject {
                     { "lv", 3 }
                 });
-            } catch (PlayException e) {
+            }).Unwrap().ContinueWith(t => {
+                PlayException e = (PlayException)t.Exception.InnerException;
                 Assert.AreEqual(e.Code, 4301);
-                Debug.Log(e.Detail);
+                c2.Close();
+                return c3.Connect();
+            }).Unwrap().OnSuccess(t => {
+                return c3.JoinRandomRoom(props);
+            }).Unwrap().ContinueWith(t => {
+                PlayException e = (PlayException)t.Exception.InnerException;
+                Assert.AreEqual(e.Code, 4301);
+                c3.Close();
+                return c4.Connect();
+            }).Unwrap().OnSuccess(_ => {
+                return c4.JoinRandomRoom(props);
+            }).Unwrap().OnSuccess(_ => {
                 c0.Close();
                 c1.Close();
-                c2.Close();
+                c4.Close();
+                f = true;
+            });
+
+            while (!f) {
+                yield return null;
             }
+            Logger.LogDelegate -= Utils.Log;
         }
 
-        [Test]
-        public async void MatchRandom() {
+        [UnityTest]
+        public IEnumerator MatchRandom() {
             Logger.LogDelegate += Utils.Log;
+
+            var f = false;
 
             var roomName = "jr8_r";
             var c0 = Utils.NewClient("jr8_0");
             var c1 = Utils.NewClient("jr8_1");
+            var c2 = Utils.NewClient("jr8_2");
+            var c3 = Utils.NewClient("jr8_xxx");
 
-            await c0.Connect();
-            var roomOptions = new RoomOptions {
-                CustomRoomProperties = new PlayObject {
+            var props = new PlayObject {
                     { "lv", 5 }
-                },
-                CustoRoomPropertyKeysForLobby = new List<string> { "lv" }
-            };
-            await c0.CreateRoom(roomName, roomOptions);
-
-            await c1.Connect();
-            var lobbyRoom = await c1.MatchRandom("jr8_1", new PlayObject {
-                { "lv", 5 }
+                };
+            c0.Connect().OnSuccess(_ => {
+                var roomOptions = new RoomOptions {
+                    MaxPlayerCount = 3,
+                    CustomRoomProperties = props,
+                    CustoRoomPropertyKeysForLobby = new List<string> { "lv" }
+                };
+                return c0.CreateRoom(roomName, roomOptions);
+            }).Unwrap().OnSuccess(_ => {
+                return c1.Connect();
+            }).Unwrap().OnSuccess(_ => {
+                Debug.Log("c1 connected");
+                return c1.MatchRandom("jr8_1", new PlayObject {
+                    { "lv", 5 }
+                }, new List<string> { "jr8_xxx" });
+            }).Unwrap().OnSuccess(t => {
+                var lobbyRoom = t.Result;
+                Assert.AreEqual(lobbyRoom.RoomName, roomName);
+                return c1.JoinRoom(lobbyRoom.RoomName);
+            }).Unwrap().OnSuccess(_ => {
+                return c2.Connect();
+            }).Unwrap().OnSuccess(_ => {
+                return c2.JoinRandomRoom(props);
+            }).Unwrap().ContinueWith(t => {
+                PlayException e = (PlayException)t.Exception.InnerException;
+                Assert.AreEqual(e.Code, 4301);
+                c2.Close();
+                return c3.Connect();
+            }).Unwrap().OnSuccess(_ => {
+                return c3.JoinRandomRoom(props);
+            }).Unwrap().OnSuccess(_ => {
+                c0.Close();
+                c1.Close();
+                c3.Close();
+                f = true;
             });
-            Assert.AreEqual(lobbyRoom.RoomName, roomName);
-            await c1.JoinRoom(lobbyRoom.RoomName);
 
-            c0.Close();
-            c1.Close();
-
+            while (!f) {
+                yield return null;
+            }
             Logger.LogDelegate -= Utils.Log;
         }
 

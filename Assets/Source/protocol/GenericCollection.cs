@@ -25,23 +25,23 @@ namespace LeanCloud.Play.Protocol {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "ChhnZW5lcmljX2NvbGxlY3Rpb24ucHJvdG8SF2NuLmxlYW5jbG91ZC5wbGF5",
-            "LnByb3RvIqkDChZHZW5lcmljQ29sbGVjdGlvblZhbHVlEkIKBHR5cGUYASAB",
+            "LnByb3RvIrMDChZHZW5lcmljQ29sbGVjdGlvblZhbHVlEkIKBHR5cGUYASAB",
             "KA4yNC5jbi5sZWFuY2xvdWQucGxheS5wcm90by5HZW5lcmljQ29sbGVjdGlv",
-            "blZhbHVlLlR5cGUSEgoIaW50VmFsdWUYAiABKAVIABIWCgxsb25nSW50VmFs",
-            "dWUYAyABKANIABITCglib29sVmFsdWUYBCABKAhIABIVCgtzdHJpbmdWYWx1",
-            "ZRgFIAEoCUgAEhQKCmJ5dGVzVmFsdWUYBiABKAxIABIUCgpmbG9hdFZhbHVl",
-            "GAcgASgCSAASFQoLZG91YmxlVmFsdWUYCCABKAFIABIUCgxvYmplY3RUeXBl",
-            "SWQYCSABKAUikAEKBFR5cGUSCAoETlVMTBAAEgkKBUJZVEVTEAESCAoEQllU",
-            "RRACEgkKBVNIT1JUEAMSBwoDSU5UEAQSCAoETE9ORxAFEggKBEJPT0wQBhIJ",
-            "CgVGTE9BVBAHEgoKBkRPVUJMRRAIEgoKBk9CSkVDVBAJEgoKBlNUUklORxAK",
-            "EgcKA01BUBALEgkKBUFSUkFZEAxCBwoFdmFsdWUi+gEKEUdlbmVyaWNDb2xs",
-            "ZWN0aW9uEkIKCWxpc3RWYWx1ZRgBIAMoCzIvLmNuLmxlYW5jbG91ZC5wbGF5",
-            "LnByb3RvLkdlbmVyaWNDb2xsZWN0aW9uVmFsdWUSSgoNbWFwRW50cnlWYWx1",
-            "ZRgCIAMoCzIzLmNuLmxlYW5jbG91ZC5wbGF5LnByb3RvLkdlbmVyaWNDb2xs",
-            "ZWN0aW9uLk1hcEVudHJ5GlUKCE1hcEVudHJ5EgsKA2tleRgBIAEoCRI8CgN2",
-            "YWwYAiABKAsyLy5jbi5sZWFuY2xvdWQucGxheS5wcm90by5HZW5lcmljQ29s",
-            "bGVjdGlvblZhbHVlQhxQAaoCF0xlYW5DbG91ZC5QbGF5LlByb3RvY29sYgZw",
-            "cm90bzM="));
+            "blZhbHVlLlR5cGUSEwoJaW50X3ZhbHVlGAIgASgFSAASGAoObG9uZ19pbnRf",
+            "dmFsdWUYAyABKANIABIUCgpib29sX3ZhbHVlGAQgASgISAASFgoMc3RyaW5n",
+            "X3ZhbHVlGAUgASgJSAASFQoLYnl0ZXNfdmFsdWUYBiABKAxIABIVCgtmbG9h",
+            "dF92YWx1ZRgHIAEoAkgAEhYKDGRvdWJsZV92YWx1ZRgIIAEoAUgAEhYKDm9i",
+            "amVjdF90eXBlX2lkGAkgASgFIpABCgRUeXBlEggKBE5VTEwQABIJCgVCWVRF",
+            "UxABEggKBEJZVEUQAhIJCgVTSE9SVBADEgcKA0lOVBAEEggKBExPTkcQBRII",
+            "CgRCT09MEAYSCQoFRkxPQVQQBxIKCgZET1VCTEUQCBIKCgZPQkpFQ1QQCRIK",
+            "CgZTVFJJTkcQChIHCgNNQVAQCxIJCgVBUlJBWRAMQgcKBXZhbHVlIv0BChFH",
+            "ZW5lcmljQ29sbGVjdGlvbhJDCgpsaXN0X3ZhbHVlGAEgAygLMi8uY24ubGVh",
+            "bmNsb3VkLnBsYXkucHJvdG8uR2VuZXJpY0NvbGxlY3Rpb25WYWx1ZRJMCg9t",
+            "YXBfZW50cnlfdmFsdWUYAiADKAsyMy5jbi5sZWFuY2xvdWQucGxheS5wcm90",
+            "by5HZW5lcmljQ29sbGVjdGlvbi5NYXBFbnRyeRpVCghNYXBFbnRyeRILCgNr",
+            "ZXkYASABKAkSPAoDdmFsGAIgASgLMi8uY24ubGVhbmNsb3VkLnBsYXkucHJv",
+            "dG8uR2VuZXJpY0NvbGxlY3Rpb25WYWx1ZUIcUAGqAhdMZWFuQ2xvdWQuUGxh",
+            "eS5Qcm90b2NvbGIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
@@ -123,7 +123,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "intValue" field.</summary>
+    /// <summary>Field number for the "int_value" field.</summary>
     public const int IntValueFieldNumber = 2;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int IntValue {
@@ -134,7 +134,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "longIntValue" field.</summary>
+    /// <summary>Field number for the "long_int_value" field.</summary>
     public const int LongIntValueFieldNumber = 3;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public long LongIntValue {
@@ -145,7 +145,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "boolValue" field.</summary>
+    /// <summary>Field number for the "bool_value" field.</summary>
     public const int BoolValueFieldNumber = 4;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public bool BoolValue {
@@ -156,7 +156,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "stringValue" field.</summary>
+    /// <summary>Field number for the "string_value" field.</summary>
     public const int StringValueFieldNumber = 5;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public string StringValue {
@@ -167,7 +167,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "bytesValue" field.</summary>
+    /// <summary>Field number for the "bytes_value" field.</summary>
     public const int BytesValueFieldNumber = 6;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public pb::ByteString BytesValue {
@@ -178,7 +178,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "floatValue" field.</summary>
+    /// <summary>Field number for the "float_value" field.</summary>
     public const int FloatValueFieldNumber = 7;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public float FloatValue {
@@ -189,7 +189,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "doubleValue" field.</summary>
+    /// <summary>Field number for the "double_value" field.</summary>
     public const int DoubleValueFieldNumber = 8;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public double DoubleValue {
@@ -200,7 +200,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "objectTypeId" field.</summary>
+    /// <summary>Field number for the "object_type_id" field.</summary>
     public const int ObjectTypeIdFieldNumber = 9;
     private int objectTypeId_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -510,7 +510,7 @@ namespace LeanCloud.Play.Protocol {
       return new GenericCollection(this);
     }
 
-    /// <summary>Field number for the "listValue" field.</summary>
+    /// <summary>Field number for the "list_value" field.</summary>
     public const int ListValueFieldNumber = 1;
     private static readonly pb::FieldCodec<global::LeanCloud.Play.Protocol.GenericCollectionValue> _repeated_listValue_codec
         = pb::FieldCodec.ForMessage(10, global::LeanCloud.Play.Protocol.GenericCollectionValue.Parser);
@@ -520,7 +520,7 @@ namespace LeanCloud.Play.Protocol {
       get { return listValue_; }
     }
 
-    /// <summary>Field number for the "mapEntryValue" field.</summary>
+    /// <summary>Field number for the "map_entry_value" field.</summary>
     public const int MapEntryValueFieldNumber = 2;
     private static readonly pb::FieldCodec<global::LeanCloud.Play.Protocol.GenericCollection.Types.MapEntry> _repeated_mapEntryValue_codec
         = pb::FieldCodec.ForMessage(18, global::LeanCloud.Play.Protocol.GenericCollection.Types.MapEntry.Parser);

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
 using LeanCloud.Play.Protocol;
+using WebSocketSharp;
 
 namespace LeanCloud.Play {
     public class Client {
@@ -137,6 +138,8 @@ namespace LeanCloud.Play {
         /// <param name="gameVersion">游戏版本号</param>
         /// <param name="playServer">游戏服务器地址</param>
         public Client(string appId, string appKey, string userId, bool ssl = true, string gameVersion = "0.0.1", string playServer = null) {
+            WebSocket.FragmentLength = 5 * 1024;
+
             AppId = appId;
             AppKey = appKey;
             UserId = userId;
@@ -152,8 +155,6 @@ namespace LeanCloud.Play {
 
             playRouter = new PlayRouter(appId, playServer);
             lobbyRouter = new LobbyRouter(appId, false, null);
-            lobbyConn = new LobbyConnection();
-            gameConn = new GameConnection();
         }
 
         /// <summary>
@@ -213,7 +214,7 @@ namespace LeanCloud.Play {
                 var lobbyRoom = await lobbyConn.CreateRoom(roomName, roomOptions, expectedUserIds);
                 var roomId = lobbyRoom.RoomId;
                 var server = lobbyRoom.PrimaryUrl;
-                gameConn = await GameConnection.Connect(AppId, server, UserId, GameVersion);
+                gameConn = await GameConnection.Connect(context, AppId, server, UserId, GameVersion);
                 var room = await gameConn.CreateRoom(roomId, roomOptions, expectedUserIds);
                 LobbyToGame(gameConn, room);
                 return room;
@@ -239,7 +240,7 @@ namespace LeanCloud.Play {
                 var lobbyRoom = await lobbyConn.JoinRoom(roomName, expectedUserIds);
                 var roomId = lobbyRoom.RoomId;
                 var server = lobbyRoom.PrimaryUrl;
-                gameConn = await GameConnection.Connect(AppId, server, UserId, GameVersion);
+                gameConn = await GameConnection.Connect(context, AppId, server, UserId, GameVersion);
                 Room = await gameConn.JoinRoom(roomId, expectedUserIds);
                 LobbyToGame(gameConn, Room);
                 return Room;
@@ -264,7 +265,7 @@ namespace LeanCloud.Play {
                 var lobbyRoom = await lobbyConn.RejoinRoom(roomName);
                 var roomId = lobbyRoom.RoomId;
                 var server = lobbyRoom.PrimaryUrl;
-                gameConn = await GameConnection.Connect(AppId, server, UserId, GameVersion);
+                gameConn = await GameConnection.Connect(context, AppId, server, UserId, GameVersion);
                 Room = await gameConn.JoinRoom(roomId, null);
                 LobbyToGame(gameConn, Room);
                 return Room;
@@ -292,7 +293,7 @@ namespace LeanCloud.Play {
                 var create = lobbyRoom.Create;
                 var roomId = lobbyRoom.RoomId;
                 var server = lobbyRoom.PrimaryUrl;
-                gameConn = await GameConnection.Connect(AppId, server, UserId, GameVersion);
+                gameConn = await GameConnection.Connect(context, AppId, server, UserId, GameVersion);
                 if (create) {
                     Room = await gameConn.CreateRoom(roomId, roomOptions, expectedUserIds);
                 } else {
@@ -322,7 +323,7 @@ namespace LeanCloud.Play {
                 var lobbyRoom = await lobbyConn.JoinRandomRoom(matchProperties, expectedUserIds);
                 var roomId = lobbyRoom.RoomId;
                 var server = lobbyRoom.PrimaryUrl;
-                gameConn = await GameConnection.Connect(AppId, server, UserId, GameVersion);
+                gameConn = await GameConnection.Connect(context, AppId, server, UserId, GameVersion);
                 Room = await gameConn.JoinRoom(roomId, expectedUserIds);
                 LobbyToGame(gameConn, Room);
                 return Room;
@@ -357,12 +358,12 @@ namespace LeanCloud.Play {
         /// <returns>The random.</returns>
         /// <param name="piggybackUserId">占位用户 Id</param>
         /// <param name="matchProperties">匹配属性</param>
-        public async Task<LobbyRoom> MatchRandom(string piggybackUserId, PlayObject matchProperties = null) {
+        public async Task<LobbyRoom> MatchRandom(string piggybackUserId, PlayObject matchProperties = null, List<string> expectedUserIds = null) {
             if (state != PlayState.LOBBY) {
                 throw new PlayException(PlayExceptionCode.StateError,
                     string.Format("You cannot call MatchRandom() on {0} state", state.ToString()));
             }
-            var lobbyRoom = await lobbyConn.MatchRandom(piggybackUserId, matchProperties);
+            var lobbyRoom = await lobbyConn.MatchRandom(piggybackUserId, matchProperties, expectedUserIds);
             return lobbyRoom;
         }
 
@@ -587,22 +588,14 @@ namespace LeanCloud.Play {
         /// 暂停消息队列
         /// </summary>
         public void PauseMessageQueue() { 
-            if (state == PlayState.LOBBY) {
-                lobbyConn.PauseMessageQueue();
-            } else if (state == PlayState.GAME) {
-                gameConn.PauseMessageQueue();
-            }
+            context.IsMessageQueueRunning = false;
         }
 
         /// <summary>
         /// 恢复消息队列
         /// </summary>
         public void ResumeMessageQueue() {
-            if (state == PlayState.LOBBY) {
-                lobbyConn.ResumeMessageQueue();
-            } else if (state == PlayState.GAME) {
-                gameConn.ResumeMessageQueue();
-            }
+            context.IsMessageQueueRunning = true;
         }
 
         /// <summary>
@@ -618,28 +611,26 @@ namespace LeanCloud.Play {
         }
 
         void OnLobbyConnMessage(CommandType cmd, OpType op, Body body) {
-            context.Post(() => { 
-                switch (cmd) {
-                    case CommandType.Lobby:
-                        switch (op) {
-                            case OpType.RoomList:
-                                HandleRoomListMsg(body);
-                                break;
-                            default:
-                                HandleUnknownMsg(cmd, op, body);
-                                break;
-                        }
-                        break;
-                    case CommandType.Statistic:
-                        break;
-                    case CommandType.Error:
-                        HandleErrorMsg(body);
-                        break;
-                    default:
-                        HandleUnknownMsg(cmd, op, body);
-                        break;
-                }
-            });
+            switch (cmd) {
+                case CommandType.Lobby:
+                    switch (op) {
+                        case OpType.RoomList:
+                            HandleRoomListMsg(body);
+                            break;
+                        default:
+                            HandleUnknownMsg(cmd, op, body);
+                            break;
+                    }
+                    break;
+                case CommandType.Statistic:
+                    break;
+                case CommandType.Error:
+                    HandleErrorMsg(body);
+                    break;
+                default:
+                    HandleUnknownMsg(cmd, op, body);
+                    break;
+            }
         }
 
         void HandleRoomListMsg(Body body) {
@@ -673,55 +664,53 @@ namespace LeanCloud.Play {
         }
 
         void OnGameConnMessage(CommandType cmd, OpType op, Body body) {
-            context.Post(() => {
-                switch (cmd) {
-                    case CommandType.Conv:
-                        switch (op) {
-                            case OpType.MembersJoined:
-                                HandlePlayerJoinedRoom(body.RoomNotification.JoinRoom);
-                                break;
-                            case OpType.MembersLeft:
-                                HandlePlayerLeftRoom(body.RoomNotification.LeftRoom);
-                                break;
-                            case OpType.MasterClientChanged:
-                                HandleMasterChanged(body.RoomNotification.UpdateMasterClient);
-                                break;
-                            case OpType.SystemPropertyUpdatedNotify:
-                                HandleRoomSystemPropertiesChanged(body.RoomNotification.UpdateSysProperty);
-                                break;
-                            case OpType.UpdatedNotify:
-                                HandleRoomCustomPropertiesChanged(body.RoomNotification.UpdateProperty);
-                                break;
-                            case OpType.PlayerProps:
-                                HandlePlayerCustomPropertiesChanged(body.RoomNotification.UpdateProperty);
-                                break;
-                            case OpType.MembersOffline:
-                                //HandlePlayerOffline(msg);
-                                break;
-                            case OpType.MembersOnline:
-                                //HandlePlayerOnline(msg);
-                                break;
-                            case OpType.KickedNotice:
-                                HandleRoomKicked(body.RoomNotification);
-                                break;
-                            default:
-                                HandleUnknownMsg(cmd, op, body);
-                                break;
-                        }
-                        break;
-                    case CommandType.Events:
-                        break;
-                    case CommandType.Direct:
-                        HandleSendEvent(body.Direct);
-                        break;
-                    case CommandType.Error:
-                        HandleErrorMsg(body);
-                        break;
-                    default:
-                        HandleUnknownMsg(cmd, op, body);
-                        break;
-                }
-            });
+            switch (cmd) {
+                case CommandType.Conv:
+                    switch (op) {
+                        case OpType.MembersJoined:
+                            HandlePlayerJoinedRoom(body.RoomNotification.JoinRoom);
+                            break;
+                        case OpType.MembersLeft:
+                            HandlePlayerLeftRoom(body.RoomNotification.LeftRoom);
+                            break;
+                        case OpType.MasterClientChanged:
+                            HandleMasterChanged(body.RoomNotification.UpdateMasterClient);
+                            break;
+                        case OpType.SystemPropertyUpdatedNotify:
+                            HandleRoomSystemPropertiesChanged(body.RoomNotification.UpdateSysProperty);
+                            break;
+                        case OpType.UpdatedNotify:
+                            HandleRoomCustomPropertiesChanged(body.RoomNotification.UpdateProperty);
+                            break;
+                        case OpType.PlayerProps:
+                            HandlePlayerCustomPropertiesChanged(body.RoomNotification.UpdateProperty);
+                            break;
+                        case OpType.MembersOffline:
+                            HandlePlayerOffline(body.RoomNotification);
+                            break;
+                        case OpType.MembersOnline:
+                            HandlePlayerOnline(body.RoomNotification);
+                            break;
+                        case OpType.KickedNotice:
+                            HandleRoomKicked(body.RoomNotification);
+                            break;
+                        default:
+                            HandleUnknownMsg(cmd, op, body);
+                            break;
+                    }
+                    break;
+                case CommandType.Events:
+                    break;
+                case CommandType.Direct:
+                    HandleSendEvent(body.Direct);
+                    break;
+                case CommandType.Error:
+                    HandleErrorMsg(body);
+                    break;
+                default:
+                    HandleUnknownMsg(cmd, op, body);
+                    break;
+            }
         }   
 
         void OnGameConnClose(int code, string reason) {
@@ -793,7 +782,7 @@ namespace LeanCloud.Play {
         }
 
         void HandlePlayerOnline(RoomNotification roomNotification) {
-            var playerId = roomNotification.InitByActor;
+            var playerId = roomNotification.JoinRoom.Member.ActorId;
             var player = Room.GetPlayer(playerId);
             if (player == null) {
                 Logger.Error("No player id: {0} when player is offline");
@@ -840,7 +829,7 @@ namespace LeanCloud.Play {
             }).Unwrap().OnSuccess(t => {
                 var lobbyUrl = t.Result;
                 Logger.Debug("wss server: {0} at {1}", lobbyUrl, Thread.CurrentThread.ManagedThreadId);
-                return LobbyConnection.Connect(AppId, lobbyUrl, UserId, GameVersion);
+                return LobbyConnection.Connect(context, AppId, lobbyUrl, UserId, GameVersion);
             }).Unwrap();
         }
 

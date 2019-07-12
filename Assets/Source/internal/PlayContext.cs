@@ -11,14 +11,22 @@ namespace LeanCloud.Play {
 
         bool running;
 
+        internal bool IsMessageQueueRunning {
+            private get; set;
+        }
+
         void Awake() {
             runningActions = new Queue<Action>();
             waitingActions = new Queue<Action>();
             running = true;
+            IsMessageQueueRunning = true;
         }
 
         void Update() {
             if (!running) {
+                return;
+            }
+            if (!IsMessageQueueRunning) {
                 return;
             }
             if (waitingActions.Count > 0) { 
@@ -30,14 +38,17 @@ namespace LeanCloud.Play {
                 while (runningActions.Count > 0) {
                     var action = runningActions.Dequeue();
                     action.Invoke();
-                    if (!running) { 
+                    // 在执行过程中可能会暂停消息处理，如加入房间成功后，加载场景
+                    if (!running || !IsMessageQueueRunning) { 
                         lock (waitingActions) {
                             var temp = waitingActions;
                             waitingActions = runningActions;
-                            foreach (var act in temp) {
-                                waitingActions.Enqueue(act);
+                            while (temp.Count > 0) {
+                                var waitingAct = temp.Dequeue();
+                                waitingActions.Enqueue(waitingAct);
                             }
                         }
+                        break;
                     }
                 }
             }

@@ -11,13 +11,12 @@ namespace LeanCloud.Play {
             get; private set;
         }
 
-        internal GameConnection() {
+        internal GameConnection(PlayContext context): base(context) {
         
         }
 
-        internal static async Task<GameConnection> Connect(string appId, string server, string userId, string gameVersion) {
-            var tcs = new TaskCompletionSource<GameConnection>();
-            var connection = new GameConnection();
+        internal static async Task<GameConnection> Connect(PlayContext context, string appId, string server, string userId, string gameVersion) {
+            var connection = new GameConnection(context);
             await connection.Connect(server, userId);
             await connection.OpenSession(appId, userId, gameVersion);
             return connection;
@@ -165,7 +164,6 @@ namespace LeanCloud.Play {
         }
 
         internal Task SendEvent(byte eventId, PlayObject eventData, SendEventOptions options) {
-            var request = NewRequest();
             var direct = new DirectCommand { 
                 EventId = eventId
             };

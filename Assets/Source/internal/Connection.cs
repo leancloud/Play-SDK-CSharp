@@ -16,17 +16,16 @@ namespace LeanCloud.Play {
         internal event Action<CommandType, OpType, Body> OnMessage;
         internal event Action<int, string> OnClose;
 
-        readonly Queue<CommandWrapper> commandQueue;
-        bool isMessageQueueRunning;
-
         CancellationTokenSource pingTokenSource;
         CancellationTokenSource pongTokenSource;
 
         string userId;
 
-        internal Connection() {
+        PlayContext context;
+
+        internal Connection(PlayContext context) {
+            this.context = context;
             responses = new Dictionary<int, TaskCompletionSource<ResponseWrapper>>();
-            commandQueue = new Queue<CommandWrapper>();
             pingTokenSource = new CancellationTokenSource();
             pongTokenSource = new CancellationTokenSource();
         }
@@ -67,7 +66,6 @@ namespace LeanCloud.Play {
         }
 
         void Connected() {
-            isMessageQueueRunning = true;
             ws.OnMessage += OnWebSocketMessage;
             ws.OnClose += OnWebSocketClose;
             ws.OnError += OnWebSocketError;
@@ -146,18 +144,9 @@ namespace LeanCloud.Play {
             var op = command.Op;
             var body = Body.Parser.ParseFrom(command.Body);
             Logger.Debug("{0} <= {1}/{2}: {3}", userId, cmd, op, body);
-            if (isMessageQueueRunning) {
+            context.Post(() => {
                 HandleCommand(cmd, op, body);
-            } else {
-                Logger.Debug("delay: {0} <= {1}/{2}: {3}", userId, cmd, op, body);
-                lock (commandQueue) {
-                    commandQueue.Enqueue(new CommandWrapper {
-                        Cmd = cmd,
-                        Op = op,
-                        Body = body
-                    });
-                }
-            }
+            });
         }
 
         void HandleCommand(CommandType cmd, OpType op, Body body) {
@@ -190,23 +179,7 @@ namespace LeanCloud.Play {
             ws.CloseAsync();
         }
 
-        internal void PauseMessageQueue() {
-            isMessageQueueRunning = false;
-        }
-
-        internal void ResumeMessageQueue() {
-            if (commandQueue.Count > 0) {
-                lock (commandQueue) { 
-                    while (commandQueue.Count > 0) {
-                        var command = commandQueue.Dequeue();
-                        HandleCommand(command.Cmd, command.Op, command.Body);
-                    }
-                }
-            }
-            isMessageQueueRunning = true;
-        }
-
-       void Ping() {
+        void Ping() {
             lock (pingTokenSource) {
                 if (pingTokenSource != null) {
                     pingTokenSource.Cancel();

@@ -26,160 +26,163 @@ namespace LeanCloud.Play.Protocol {
           string.Concat(
             "Cg5tZXNzYWdlcy5wcm90bxIlZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90",
             "by5tZXNzYWdlcxoeZ29vZ2xlL3Byb3RvYnVmL3dyYXBwZXJzLnByb3RvIhcK",
-            "CEludFZhbHVlEgsKA3ZhbBgBIAEoBSKWAQoSUm9vbVN5c3RlbVByb3BlcnR5",
+            "CEludFZhbHVlEgsKA3ZhbBgBIAEoBSKYAQoSUm9vbVN5c3RlbVByb3BlcnR5",
             "EigKBG9wZW4YASABKAsyGi5nb29nbGUucHJvdG9idWYuQm9vbFZhbHVlEisK",
-            "B3Zpc2libGUYAiABKAsyGi5nb29nbGUucHJvdG9idWYuQm9vbFZhbHVlEhUK",
-            "DWV4cGVjdE1lbWJlcnMYAyABKAkSEgoKbWF4TWVtYmVycxgEIAEoBSJKCgpS",
-            "b29tTWVtYmVyEgsKA3BpZBgBIAEoCRIPCgdhY3RvcklkGAIgASgFEgwKBGF0",
-            "dHIYAyABKAwSEAoIaW5hY3RpdmUYBCABKAgiKgoHQXBwSW5mbxIPCgdhcHBD",
-            "b2RlGAEgASgFEg4KBmFwcE1zZxgCIAEoCSJwCglFcnJvckluZm8SEgoKcmVh",
-            "c29uQ29kZRgBIAEoBRIOCgZkZXRhaWwYAiABKAkSPwoHYXBwSW5mbxgDIAEo",
-            "CzIuLmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMuQXBw",
-            "SW5mbyL8AgoLUm9vbU9wdGlvbnMSCwoDY2lkGAEgASgJEisKB3Zpc2libGUY",
-            "AiABKAsyGi5nb29nbGUucHJvdG9idWYuQm9vbFZhbHVlEigKBG9wZW4YAyAB",
-            "KAsyGi5nb29nbGUucHJvdG9idWYuQm9vbFZhbHVlEhQKDGVtcHR5Um9vbVR0",
-            "bBgEIAEoBRIRCglwbGF5ZXJUdGwYBSABKAUSEgoKbWF4TWVtYmVycxgGIAEo",
-            "BRIMCgRmbGFnGAcgASgDEhIKCnBsdWdpbk5hbWUYCCABKAkSDAoEYXR0chgJ",
-            "IAEoDBIVCg1leHBlY3RNZW1iZXJzGAogAygJEhUKDWxvYmJ5QXR0cktleXMY",
-            "CyADKAkSQgoHbWVtYmVycxgMIAMoCzIxLmdhbWVfcHJvdG9idWZfbWVzc2Fn",
-            "ZXMucHJvdG8ubWVzc2FnZXMuUm9vbU1lbWJlchITCgttZW1iZXJDb3VudBgN",
-            "IAEoBRIVCg1tYXN0ZXJBY3RvcklkGA4gASgFIqwBChJTZXNzaW9uT3BlblJl",
-            "cXVlc3QSDQoFYXBwSWQYASABKAkSDgoGcGVlcklkGAIgASgJEhMKC2dhbWVW",
-            "ZXJzaW9uGAMgASgJEhIKCnNka1ZlcnNpb24YBCABKAkSFwoPcHJvdG9jb2xW",
-            "ZXJzaW9uGAUgASgJEgkKAXQYBiABKAMSCQoBbhgHIAEoCRIJCgFzGAggASgJ",
-            "EhQKDGNvbmZpZ0JpdG1hcBgJIAEoAyJcChFDcmVhdGVSb29tUmVxdWVzdBJH",
-            "Cgtyb29tT3B0aW9ucxgBIAEoCzIyLmdhbWVfcHJvdG9idWZfbWVzc2FnZXMu",
-            "cHJvdG8ubWVzc2FnZXMuUm9vbU9wdGlvbnMiawoSQ3JlYXRlUm9vbVJlc3Bv",
-            "bnNlEkcKC3Jvb21PcHRpb25zGAEgASgLMjIuZ2FtZV9wcm90b2J1Zl9tZXNz",
-            "YWdlcy5wcm90by5tZXNzYWdlcy5Sb29tT3B0aW9ucxIMCgRhZGRyGAIgASgJ",
-            "IrEBCg9Kb2luUm9vbVJlcXVlc3QSDgoGcmVqb2luGAEgASgIEkcKC3Jvb21P",
-            "cHRpb25zGAIgASgLMjIuZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5t",
-            "ZXNzYWdlcy5Sb29tT3B0aW9ucxISCgpleHBlY3RBdHRyGAMgASgMEhcKD3Bp",
-            "Z2d5YmFja1BlZXJJZBgEIAEoCRIYChBjcmVhdGVPbk5vdEZvdW5kGAUgASgI",
-            "ImkKEEpvaW5Sb29tUmVzcG9uc2USRwoLcm9vbU9wdGlvbnMYASABKAsyMi5n",
-            "YW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1lc3NhZ2VzLlJvb21PcHRp",
-            "b25zEgwKBGFkZHIYAiABKAkiWQoUSm9pblJvb21Ob3RpZmljYXRpb24SQQoG",
-            "bWVtYmVyGAEgASgLMjEuZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5t",
-            "ZXNzYWdlcy5Sb29tTWVtYmVyIicKFExlZnRSb29tTm90aWZpY2F0aW9uEg8K",
-            "B2FjdG9ySWQYASABKAUiawoRS2lja01lbWJlclJlcXVlc3QSFQoNdGFyZ2V0",
-            "QWN0b3JJZBgBIAEoBRI/CgdhcHBJbmZvGAIgASgLMi4uZ2FtZV9wcm90b2J1",
-            "Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdlcy5BcHBJbmZvIisKEktpY2tNZW1i",
-            "ZXJSZXNwb25zZRIVCg10YXJnZXRBY3RvcklkGAEgASgFIlAKFVVwZGF0ZVBy",
-            "b3BlcnR5UmVxdWVzdBIVCg10YXJnZXRBY3RvcklkGAEgASgFEhIKCmV4cGVj",
-            "dEF0dHIYAiABKAwSDAoEYXR0chgDIAEoDCI3ChZVcGRhdGVQcm9wZXJ0eVJl",
-            "c3BvbnNlEgwKBGF0dHIYASABKAwSDwoHYWN0b3JJZBgCIAEoBSI7ChpVcGRh",
-            "dGVQcm9wZXJ0eU5vdGlmaWNhdGlvbhIMCgRhdHRyGAEgASgMEg8KB2FjdG9y",
-            "SWQYAiABKAUiuAEKGFVwZGF0ZVN5c1Byb3BlcnR5UmVxdWVzdBJQCg1leHBl",
-            "Y3RTeXNBdHRyGAEgASgLMjkuZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90",
-            "by5tZXNzYWdlcy5Sb29tU3lzdGVtUHJvcGVydHkSSgoHc3lzQXR0chgCIAEo",
-            "CzI5LmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMuUm9v",
-            "bVN5c3RlbVByb3BlcnR5ImcKGVVwZGF0ZVN5c1Byb3BlcnR5UmVzcG9uc2US",
-            "SgoHc3lzQXR0chgBIAEoCzI5LmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJv",
-            "dG8ubWVzc2FnZXMuUm9vbVN5c3RlbVByb3BlcnR5ImsKHVVwZGF0ZVN5c1By",
-            "b3BlcnR5Tm90aWZpY2F0aW9uEkoKB3N5c0F0dHIYASABKAsyOS5nYW1lX3By",
-            "b3RvYnVmX21lc3NhZ2VzLnByb3RvLm1lc3NhZ2VzLlJvb21TeXN0ZW1Qcm9w",
-            "ZXJ0eSIyChlVcGRhdGVNYXN0ZXJDbGllbnRSZXF1ZXN0EhUKDW1hc3RlckFj",
-            "dG9ySWQYASABKAUiMwoaVXBkYXRlTWFzdGVyQ2xpZW50UmVzcG9uc2USFQoN",
-            "bWFzdGVyQWN0b3JJZBgBIAEoBSI3Ch5VcGRhdGVNYXN0ZXJDbGllbnROb3Rp",
-            "ZmljYXRpb24SFQoNbWFzdGVyQWN0b3JJZBgBIAEoBSLRBAoQUm9vbU5vdGlm",
-            "aWNhdGlvbhITCgtpbml0QnlBY3RvchgBIAEoBRI/CgdhcHBJbmZvGAMgASgL",
-            "Mi4uZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdlcy5BcHBJ",
-            "bmZvEhAKCGJ5TWFzdGVyGAQgASgIEk8KCGpvaW5Sb29tGBQgASgLMjsuZ2Ft",
-            "ZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdlcy5Kb2luUm9vbU5v",
-            "dGlmaWNhdGlvbkgAElsKDnVwZGF0ZVByb3BlcnR5GBUgASgLMkEuZ2FtZV9w",
-            "cm90b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdlcy5VcGRhdGVQcm9wZXJ0",
-            "eU5vdGlmaWNhdGlvbkgAEmEKEXVwZGF0ZVN5c1Byb3BlcnR5GBYgASgLMkQu",
-            "Z2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdlcy5VcGRhdGVT",
-            "eXNQcm9wZXJ0eU5vdGlmaWNhdGlvbkgAEmMKEnVwZGF0ZU1hc3RlckNsaWVu",
-            "dBgXIAEoCzJFLmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2Fn",
-            "ZXMuVXBkYXRlTWFzdGVyQ2xpZW50Tm90aWZpY2F0aW9uSAASTwoIbGVmdFJv",
-            "b20YGCABKAsyOy5nYW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1lc3Nh",
-            "Z2VzLkxlZnRSb29tTm90aWZpY2F0aW9uSABCDgoMbm90aWZpY2F0aW9uIsgB",
-            "Cg1EaXJlY3RDb21tYW5kEg4KBmNhY2hlZBgBIAEoCBIPCgdldmVudElkGAIg",
-            "ASgFEhUKDXJlY2VpdmVyR3JvdXAYAyABKAUSFQoNY2FjaGluZ09wdGlvbhgE",
-            "IAEoBRIUCgxldmVudE9wdGlvbnMYBSABKAUSEgoKdG9BY3RvcklkcxgGIAMo",
-            "BRILCgNtc2cYByABKAwSEQoJdGltZXN0YW1wGAggASgDEhMKC2Zyb21BY3Rv",
-            "cklkGAkgASgFEgkKAWkYCiABKAUiKgoKQWNrQ29tbWFuZBIRCgl0aW1lc3Rh",
-            "bXAYASABKAMSCQoBaRgLIAEoBSJVCg1FdmVudHNDb21tYW5kEkQKBmV2ZW50",
-            "cxgBIAMoCzI0LmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2Fn",
-            "ZXMuRGlyZWN0Q29tbWFuZCIjChBKb2luTG9iYnlSZXF1ZXN0Eg8KB2xvYmJ5",
-            "SWQYASABKAkiUwoPUm9vbUxpc3RDb21tYW5kEkAKBGxpc3QYASADKAsyMi5n",
-            "YW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1lc3NhZ2VzLlJvb21PcHRp",
-            "b25zInsKDEFwcFN0YXRpc3RpYxIUCgxjb3VudE9mUm9vbXMYASABKAUSHgoW",
-            "Y291bnRPZlBsYXllcnNPblJvdXRlchgCIAEoBRIdChVjb3VudE9mUGxheWVy",
-            "c0luUm9vbXMYAyABKAUSFgoOY291bnRPZlBsYXllcnMYBCABKAUiWQoQU3Rh",
-            "dGlzdGljQ29tbWFuZBJFCghhcHBTdGF0cxgBIAEoCzIzLmdhbWVfcHJvdG9i",
-            "dWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMuQXBwU3RhdGlzdGljIlMKDEVy",
-            "cm9yQ29tbWFuZBJDCgllcnJvckluZm8YASABKAsyMC5nYW1lX3Byb3RvYnVm",
-            "X21lc3NhZ2VzLnByb3RvLm1lc3NhZ2VzLkVycm9ySW5mbyLIBQoOUmVxdWVz",
-            "dE1lc3NhZ2USCQoBaRgBIAEoBRJQCgtzZXNzaW9uT3BlbhgUIAEoCzI5Lmdh",
-            "bWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMuU2Vzc2lvbk9w",
-            "ZW5SZXF1ZXN0SAASTgoKY3JlYXRlUm9vbRgVIAEoCzI4LmdhbWVfcHJvdG9i",
-            "dWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMuQ3JlYXRlUm9vbVJlcXVlc3RI",
-            "ABJKCghqb2luUm9vbRgWIAEoCzI2LmdhbWVfcHJvdG9idWZfbWVzc2FnZXMu",
-            "cHJvdG8ubWVzc2FnZXMuSm9pblJvb21SZXF1ZXN0SAASVgoOdXBkYXRlUHJv",
-            "cGVydHkYFyABKAsyPC5nYW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1l",
-            "c3NhZ2VzLlVwZGF0ZVByb3BlcnR5UmVxdWVzdEgAElwKEXVwZGF0ZVN5c1By",
-            "b3BlcnR5GBggASgLMj8uZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5t",
-            "ZXNzYWdlcy5VcGRhdGVTeXNQcm9wZXJ0eVJlcXVlc3RIABJeChJ1cGRhdGVN",
-            "YXN0ZXJDbGllbnQYGSABKAsyQC5nYW1lX3Byb3RvYnVmX21lc3NhZ2VzLnBy",
-            "b3RvLm1lc3NhZ2VzLlVwZGF0ZU1hc3RlckNsaWVudFJlcXVlc3RIABJOCgpr",
-            "aWNrTWVtYmVyGBogASgLMjguZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90",
-            "by5tZXNzYWdlcy5LaWNrTWVtYmVyUmVxdWVzdEgAEkwKCWpvaW5Mb2JieRg2",
-            "IAEoCzI3LmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMu",
-            "Sm9pbkxvYmJ5UmVxdWVzdEgAQgkKB3JlcXVlc3QitwUKD1Jlc3BvbnNlTWVz",
-            "c2FnZRIJCgFpGAEgASgFEkMKCWVycm9ySW5mbxgCIAEoCzIwLmdhbWVfcHJv",
-            "dG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMuRXJyb3JJbmZvEk8KCmNy",
-            "ZWF0ZVJvb20YFCABKAsyOS5nYW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3Rv",
-            "Lm1lc3NhZ2VzLkNyZWF0ZVJvb21SZXNwb25zZUgAEksKCGpvaW5Sb29tGBUg",
-            "ASgLMjcuZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdlcy5K",
-            "b2luUm9vbVJlc3BvbnNlSAASVwoOdXBkYXRlUHJvcGVydHkYFiABKAsyPS5n",
-            "YW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1lc3NhZ2VzLlVwZGF0ZVBy",
-            "b3BlcnR5UmVzcG9uc2VIABJdChF1cGRhdGVTeXNQcm9wZXJ0eRgXIAEoCzJA",
-            "LmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMuVXBkYXRl",
-            "U3lzUHJvcGVydHlSZXNwb25zZUgAEl8KEnVwZGF0ZU1hc3RlckNsaWVudBgY",
-            "IAEoCzJBLmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMu",
-            "VXBkYXRlTWFzdGVyQ2xpZW50UmVzcG9uc2VIABJPCgpraWNrTWVtYmVyGBkg",
-            "ASgLMjkuZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdlcy5L",
-            "aWNrTWVtYmVyUmVzcG9uc2VIABJACgNhY2sYGiABKAsyMS5nYW1lX3Byb3Rv",
-            "YnVmX21lc3NhZ2VzLnByb3RvLm1lc3NhZ2VzLkFja0NvbW1hbmRIAEIKCghy",
-            "ZXNwb25zZSLpBAoEQm9keRJICgdyZXF1ZXN0GAEgASgLMjUuZ2FtZV9wcm90",
-            "b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdlcy5SZXF1ZXN0TWVzc2FnZUgA",
-            "EkoKCHJlc3BvbnNlGAIgASgLMjYuZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5w",
-            "cm90by5tZXNzYWdlcy5SZXNwb25zZU1lc3NhZ2VIABJGCgZkaXJlY3QYAyAB",
-            "KAsyNC5nYW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1lc3NhZ2VzLkRp",
-            "cmVjdENvbW1hbmRIABJTChByb29tTm90aWZpY2F0aW9uGAQgASgLMjcuZ2Ft",
-            "ZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdlcy5Sb29tTm90aWZp",
-            "Y2F0aW9uSAASRgoGZXZlbnRzGAUgASgLMjQuZ2FtZV9wcm90b2J1Zl9tZXNz",
-            "YWdlcy5wcm90by5tZXNzYWdlcy5FdmVudHNDb21tYW5kSAASTAoJc3RhdGlz",
-            "dGljGDIgASgLMjcuZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNz",
-            "YWdlcy5TdGF0aXN0aWNDb21tYW5kSAASSgoIcm9vbUxpc3QYMyABKAsyNi5n",
-            "YW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1lc3NhZ2VzLlJvb21MaXN0",
-            "Q29tbWFuZEgAEkQKBWVycm9yGH8gASgLMjMuZ2FtZV9wcm90b2J1Zl9tZXNz",
-            "YWdlcy5wcm90by5tZXNzYWdlcy5FcnJvckNvbW1hbmRIAEIGCgRib2R5IpMB",
-            "CgdDb21tYW5kEj8KA2NtZBgBIAEoDjIyLmdhbWVfcHJvdG9idWZfbWVzc2Fn",
-            "ZXMucHJvdG8ubWVzc2FnZXMuQ29tbWFuZFR5cGUSOQoCb3AYAiABKA4yLS5n",
-            "YW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1lc3NhZ2VzLk9wVHlwZRIM",
-            "CgRib2R5GAMgASgMKncKC0NvbW1hbmRUeXBlEgsKB3Vua25vd24QABILCgdz",
-            "ZXNzaW9uEAESCAoEY29udhACEgoKBmRpcmVjdBADEgkKBWVycm9yEAQSCQoF",
-            "bG9iYnkQBRINCglzdGF0aXN0aWMQBhIKCgZldmVudHMQBxIHCgNhY2sQCCrJ",
-            "BQoGT3BUeXBlEggKBG5vbmUQABIICgRvcGVuEAESCgoGb3BlbmVkEAISCQoF",
-            "Y2xvc2UQAxIKCgZjbG9zZWQQBBIJCgVzdGFydBAeEgsKB3N0YXJ0ZWQQHxIO",
-            "CgphZGRfcmFuZG9tECASEAoMcmFuZG9tX2FkZGVkECESEAoMbWF0Y2hfcmFu",
-            "ZG9tECISEgoOcmFuZG9tX21hdGNoZWQQIxIHCgNhZGQQJBIJCgVhZGRlZBAl",
-            "EhIKDm1lbWJlcnNfam9pbmVkECYSEgoObWVtYmVyc19vbmxpbmUQJxIKCgZy",
-            "ZW1vdmUQKBILCgdyZW1vdmVkECkSEAoMbWVtYmVyc19sZWZ0ECoSEwoPbWVt",
-            "YmVyc19vZmZsaW5lECsSGAoUdXBkYXRlX21hc3Rlcl9jbGllbnQQLBIZChVt",
-            "YXN0ZXJfY2xpZW50X3VwZGF0ZWQQLRIZChVtYXN0ZXJfY2xpZW50X2NoYW5n",
-            "ZWQQLhIKCgZ1cGRhdGUQLxILCgd1cGRhdGVkEDASEgoOdXBkYXRlZF9ub3Rp",
-            "ZnkQMRIaChZ1cGRhdGVfc3lzdGVtX3Byb3BlcnR5EDISGwoXc3lzdGVtX3By",
-            "b3BlcnR5X3VwZGF0ZWQQMxIiCh5zeXN0ZW1fcHJvcGVydHlfdXBkYXRlZF9u",
-            "b3RpZnkQNBIRCg1vcGVuZWRfbm90aWZ5EDUSCwoHdmlzaWJsZRA2EhIKDnZp",
-            "c2libGVfbm90aWZ5EDcSFgoSdXBkYXRlX3BsYXllcl9wcm9wEDgSFwoTcGxh",
-            "eWVyX3Byb3BfdXBkYXRlZBA5EhAKDHBsYXllcl9wcm9wcxA6EggKBGtpY2sQ",
-            "OxIKCgZraWNrZWQQPBIRCg1raWNrZWRfbm90aWNlED0SDQoJcm9vbV9saXN0",
-            "EGQSEAoMZmluZF9mcmllbmRzEGUSEQoNZm91bmRfZnJpZW5kcxBmQhqqAhdM",
-            "ZWFuQ2xvdWQuUGxheS5Qcm90b2NvbGIGcHJvdG8z"));
+            "B3Zpc2libGUYAiABKAsyGi5nb29nbGUucHJvdG9idWYuQm9vbFZhbHVlEhYK",
+            "DmV4cGVjdF9tZW1iZXJzGAMgASgJEhMKC21heF9tZW1iZXJzGAQgASgFIksK",
+            "ClJvb21NZW1iZXISCwoDcGlkGAEgASgJEhAKCGFjdG9yX2lkGAIgASgFEgwK",
+            "BGF0dHIYAyABKAwSEAoIaW5hY3RpdmUYBCABKAgiLAoHQXBwSW5mbxIQCghh",
+            "cHBfY29kZRgBIAEoBRIPCgdhcHBfbXNnGAIgASgJInIKCUVycm9ySW5mbxIT",
+            "CgtyZWFzb25fY29kZRgBIAEoBRIOCgZkZXRhaWwYAiABKAkSQAoIYXBwX2lu",
+            "Zm8YAyABKAsyLi5nYW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1lc3Nh",
+            "Z2VzLkFwcEluZm8ihwMKC1Jvb21PcHRpb25zEgsKA2NpZBgBIAEoCRIrCgd2",
+            "aXNpYmxlGAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLkJvb2xWYWx1ZRIoCgRv",
+            "cGVuGAMgASgLMhouZ29vZ2xlLnByb3RvYnVmLkJvb2xWYWx1ZRIWCg5lbXB0",
+            "eV9yb29tX3R0bBgEIAEoBRISCgpwbGF5ZXJfdHRsGAUgASgFEhMKC21heF9t",
+            "ZW1iZXJzGAYgASgFEgwKBGZsYWcYByABKAMSEwoLcGx1Z2luX25hbWUYCCAB",
+            "KAkSDAoEYXR0chgJIAEoDBIWCg5leHBlY3RfbWVtYmVycxgKIAMoCRIXCg9s",
+            "b2JieV9hdHRyX2tleXMYCyADKAkSQgoHbWVtYmVycxgMIAMoCzIxLmdhbWVf",
+            "cHJvdG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMuUm9vbU1lbWJlchIU",
+            "CgxtZW1iZXJfY291bnQYDSABKAUSFwoPbWFzdGVyX2FjdG9yX2lkGA4gASgF",
+            "IrIBChJTZXNzaW9uT3BlblJlcXVlc3QSDgoGYXBwX2lkGAEgASgJEg8KB3Bl",
+            "ZXJfaWQYAiABKAkSFAoMZ2FtZV92ZXJzaW9uGAMgASgJEhMKC3Nka192ZXJz",
+            "aW9uGAQgASgJEhgKEHByb3RvY29sX3ZlcnNpb24YBSABKAkSCQoBdBgGIAEo",
+            "AxIJCgFuGAcgASgJEgkKAXMYCCABKAkSFQoNY29uZmlnX2JpdG1hcBgJIAEo",
+            "AyJdChFDcmVhdGVSb29tUmVxdWVzdBJICgxyb29tX29wdGlvbnMYASABKAsy",
+            "Mi5nYW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1lc3NhZ2VzLlJvb21P",
+            "cHRpb25zImwKEkNyZWF0ZVJvb21SZXNwb25zZRJICgxyb29tX29wdGlvbnMY",
+            "ASABKAsyMi5nYW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1lc3NhZ2Vz",
+            "LlJvb21PcHRpb25zEgwKBGFkZHIYAiABKAkiuAEKD0pvaW5Sb29tUmVxdWVz",
+            "dBIOCgZyZWpvaW4YASABKAgSSAoMcm9vbV9vcHRpb25zGAIgASgLMjIuZ2Ft",
+            "ZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdlcy5Sb29tT3B0aW9u",
+            "cxITCgtleHBlY3RfYXR0chgDIAEoDBIZChFwaWdneWJhY2tfcGVlcl9pZBgE",
+            "IAEoCRIbChNjcmVhdGVfb25fbm90X2ZvdW5kGAUgASgIImoKEEpvaW5Sb29t",
+            "UmVzcG9uc2USSAoMcm9vbV9vcHRpb25zGAEgASgLMjIuZ2FtZV9wcm90b2J1",
+            "Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdlcy5Sb29tT3B0aW9ucxIMCgRhZGRy",
+            "GAIgASgJIlkKFEpvaW5Sb29tTm90aWZpY2F0aW9uEkEKBm1lbWJlchgBIAEo",
+            "CzIxLmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMuUm9v",
+            "bU1lbWJlciIoChRMZWZ0Um9vbU5vdGlmaWNhdGlvbhIQCghhY3Rvcl9pZBgB",
+            "IAEoBSJuChFLaWNrTWVtYmVyUmVxdWVzdBIXCg90YXJnZXRfYWN0b3JfaWQY",
+            "ASABKAUSQAoIYXBwX2luZm8YAiABKAsyLi5nYW1lX3Byb3RvYnVmX21lc3Nh",
+            "Z2VzLnByb3RvLm1lc3NhZ2VzLkFwcEluZm8iLQoSS2lja01lbWJlclJlc3Bv",
+            "bnNlEhcKD3RhcmdldF9hY3Rvcl9pZBgBIAEoBSJTChVVcGRhdGVQcm9wZXJ0",
+            "eVJlcXVlc3QSFwoPdGFyZ2V0X2FjdG9yX2lkGAEgASgFEhMKC2V4cGVjdF9h",
+            "dHRyGAIgASgMEgwKBGF0dHIYAyABKAwiOAoWVXBkYXRlUHJvcGVydHlSZXNw",
+            "b25zZRIMCgRhdHRyGAEgASgMEhAKCGFjdG9yX2lkGAIgASgFIjwKGlVwZGF0",
+            "ZVByb3BlcnR5Tm90aWZpY2F0aW9uEgwKBGF0dHIYASABKAwSEAoIYWN0b3Jf",
+            "aWQYAiABKAUiuwEKGFVwZGF0ZVN5c1Byb3BlcnR5UmVxdWVzdBJSCg9leHBl",
+            "Y3Rfc3lzX2F0dHIYASABKAsyOS5nYW1lX3Byb3RvYnVmX21lc3NhZ2VzLnBy",
+            "b3RvLm1lc3NhZ2VzLlJvb21TeXN0ZW1Qcm9wZXJ0eRJLCghzeXNfYXR0chgC",
+            "IAEoCzI5LmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMu",
+            "Um9vbVN5c3RlbVByb3BlcnR5ImgKGVVwZGF0ZVN5c1Byb3BlcnR5UmVzcG9u",
+            "c2USSwoIc3lzX2F0dHIYASABKAsyOS5nYW1lX3Byb3RvYnVmX21lc3NhZ2Vz",
+            "LnByb3RvLm1lc3NhZ2VzLlJvb21TeXN0ZW1Qcm9wZXJ0eSJsCh1VcGRhdGVT",
+            "eXNQcm9wZXJ0eU5vdGlmaWNhdGlvbhJLCghzeXNfYXR0chgBIAEoCzI5Lmdh",
+            "bWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMuUm9vbVN5c3Rl",
+            "bVByb3BlcnR5IjQKGVVwZGF0ZU1hc3RlckNsaWVudFJlcXVlc3QSFwoPbWFz",
+            "dGVyX2FjdG9yX2lkGAEgASgFIjUKGlVwZGF0ZU1hc3RlckNsaWVudFJlc3Bv",
+            "bnNlEhcKD21hc3Rlcl9hY3Rvcl9pZBgBIAEoBSI5Ch5VcGRhdGVNYXN0ZXJD",
+            "bGllbnROb3RpZmljYXRpb24SFwoPbWFzdGVyX2FjdG9yX2lkGAEgASgFItwE",
+            "ChBSb29tTm90aWZpY2F0aW9uEhUKDWluaXRfYnlfYWN0b3IYASABKAUSQAoI",
+            "YXBwX2luZm8YAyABKAsyLi5nYW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3Rv",
+            "Lm1lc3NhZ2VzLkFwcEluZm8SEQoJYnlfbWFzdGVyGAQgASgIElAKCWpvaW5f",
+            "cm9vbRgUIAEoCzI7LmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8ubWVz",
+            "c2FnZXMuSm9pblJvb21Ob3RpZmljYXRpb25IABJcCg91cGRhdGVfcHJvcGVy",
+            "dHkYFSABKAsyQS5nYW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1lc3Nh",
+            "Z2VzLlVwZGF0ZVByb3BlcnR5Tm90aWZpY2F0aW9uSAASYwoTdXBkYXRlX3N5",
+            "c19wcm9wZXJ0eRgWIAEoCzJELmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJv",
+            "dG8ubWVzc2FnZXMuVXBkYXRlU3lzUHJvcGVydHlOb3RpZmljYXRpb25IABJl",
+            "ChR1cGRhdGVfbWFzdGVyX2NsaWVudBgXIAEoCzJFLmdhbWVfcHJvdG9idWZf",
+            "bWVzc2FnZXMucHJvdG8ubWVzc2FnZXMuVXBkYXRlTWFzdGVyQ2xpZW50Tm90",
+            "aWZpY2F0aW9uSAASUAoJbGVmdF9yb29tGBggASgLMjsuZ2FtZV9wcm90b2J1",
+            "Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdlcy5MZWZ0Um9vbU5vdGlmaWNhdGlv",
+            "bkgAQg4KDG5vdGlmaWNhdGlvbiLQAQoNRGlyZWN0Q29tbWFuZBIOCgZjYWNo",
+            "ZWQYASABKAgSEAoIZXZlbnRfaWQYAiABKAUSFgoOcmVjZWl2ZXJfZ3JvdXAY",
+            "AyABKAUSFgoOY2FjaGluZ19vcHRpb24YBCABKAUSFQoNZXZlbnRfb3B0aW9u",
+            "cxgFIAEoBRIUCgx0b19hY3Rvcl9pZHMYBiADKAUSCwoDbXNnGAcgASgMEhEK",
+            "CXRpbWVzdGFtcBgIIAEoAxIVCg1mcm9tX2FjdG9yX2lkGAkgASgFEgkKAWkY",
+            "CiABKAUiKgoKQWNrQ29tbWFuZBIRCgl0aW1lc3RhbXAYASABKAMSCQoBaRgL",
+            "IAEoBSJVCg1FdmVudHNDb21tYW5kEkQKBmV2ZW50cxgBIAMoCzI0LmdhbWVf",
+            "cHJvdG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMuRGlyZWN0Q29tbWFu",
+            "ZCIkChBKb2luTG9iYnlSZXF1ZXN0EhAKCGxvYmJ5X2lkGAEgASgJIlMKD1Jv",
+            "b21MaXN0Q29tbWFuZBJACgRsaXN0GAEgAygLMjIuZ2FtZV9wcm90b2J1Zl9t",
+            "ZXNzYWdlcy5wcm90by5tZXNzYWdlcy5Sb29tT3B0aW9ucyKHAQoMQXBwU3Rh",
+            "dGlzdGljEhYKDmNvdW50X29mX3Jvb21zGAEgASgFEiIKGmNvdW50X29mX3Bs",
+            "YXllcnNfb25fcm91dGVyGAIgASgFEiEKGWNvdW50X29mX3BsYXllcnNfaW5f",
+            "cm9vbXMYAyABKAUSGAoQY291bnRfb2ZfcGxheWVycxgEIAEoBSJaChBTdGF0",
+            "aXN0aWNDb21tYW5kEkYKCWFwcF9zdGF0cxgBIAEoCzIzLmdhbWVfcHJvdG9i",
+            "dWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMuQXBwU3RhdGlzdGljIlQKDEVy",
+            "cm9yQ29tbWFuZBJECgplcnJvcl9pbmZvGAEgASgLMjAuZ2FtZV9wcm90b2J1",
+            "Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdlcy5FcnJvckluZm8i0gUKDlJlcXVl",
+            "c3RNZXNzYWdlEgkKAWkYASABKAUSUQoMc2Vzc2lvbl9vcGVuGBQgASgLMjku",
+            "Z2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdlcy5TZXNzaW9u",
+            "T3BlblJlcXVlc3RIABJPCgtjcmVhdGVfcm9vbRgVIAEoCzI4LmdhbWVfcHJv",
+            "dG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMuQ3JlYXRlUm9vbVJlcXVl",
+            "c3RIABJLCglqb2luX3Jvb20YFiABKAsyNi5nYW1lX3Byb3RvYnVmX21lc3Nh",
+            "Z2VzLnByb3RvLm1lc3NhZ2VzLkpvaW5Sb29tUmVxdWVzdEgAElcKD3VwZGF0",
+            "ZV9wcm9wZXJ0eRgXIAEoCzI8LmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJv",
+            "dG8ubWVzc2FnZXMuVXBkYXRlUHJvcGVydHlSZXF1ZXN0SAASXgoTdXBkYXRl",
+            "X3N5c19wcm9wZXJ0eRgYIAEoCzI/LmdhbWVfcHJvdG9idWZfbWVzc2FnZXMu",
+            "cHJvdG8ubWVzc2FnZXMuVXBkYXRlU3lzUHJvcGVydHlSZXF1ZXN0SAASYAoU",
+            "dXBkYXRlX21hc3Rlcl9jbGllbnQYGSABKAsyQC5nYW1lX3Byb3RvYnVmX21l",
+            "c3NhZ2VzLnByb3RvLm1lc3NhZ2VzLlVwZGF0ZU1hc3RlckNsaWVudFJlcXVl",
+            "c3RIABJPCgtraWNrX21lbWJlchgaIAEoCzI4LmdhbWVfcHJvdG9idWZfbWVz",
+            "c2FnZXMucHJvdG8ubWVzc2FnZXMuS2lja01lbWJlclJlcXVlc3RIABJNCgpq",
+            "b2luX2xvYmJ5GDYgASgLMjcuZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90",
+            "by5tZXNzYWdlcy5Kb2luTG9iYnlSZXF1ZXN0SABCCQoHcmVxdWVzdCLABQoP",
+            "UmVzcG9uc2VNZXNzYWdlEgkKAWkYASABKAUSRAoKZXJyb3JfaW5mbxgCIAEo",
+            "CzIwLmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMuRXJy",
+            "b3JJbmZvElAKC2NyZWF0ZV9yb29tGBQgASgLMjkuZ2FtZV9wcm90b2J1Zl9t",
+            "ZXNzYWdlcy5wcm90by5tZXNzYWdlcy5DcmVhdGVSb29tUmVzcG9uc2VIABJM",
+            "Cglqb2luX3Jvb20YFSABKAsyNy5nYW1lX3Byb3RvYnVmX21lc3NhZ2VzLnBy",
+            "b3RvLm1lc3NhZ2VzLkpvaW5Sb29tUmVzcG9uc2VIABJYCg91cGRhdGVfcHJv",
+            "cGVydHkYFiABKAsyPS5nYW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1l",
+            "c3NhZ2VzLlVwZGF0ZVByb3BlcnR5UmVzcG9uc2VIABJfChN1cGRhdGVfc3lz",
+            "X3Byb3BlcnR5GBcgASgLMkAuZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90",
+            "by5tZXNzYWdlcy5VcGRhdGVTeXNQcm9wZXJ0eVJlc3BvbnNlSAASYQoUdXBk",
+            "YXRlX21hc3Rlcl9jbGllbnQYGCABKAsyQS5nYW1lX3Byb3RvYnVmX21lc3Nh",
+            "Z2VzLnByb3RvLm1lc3NhZ2VzLlVwZGF0ZU1hc3RlckNsaWVudFJlc3BvbnNl",
+            "SAASUAoLa2lja19tZW1iZXIYGSABKAsyOS5nYW1lX3Byb3RvYnVmX21lc3Nh",
+            "Z2VzLnByb3RvLm1lc3NhZ2VzLktpY2tNZW1iZXJSZXNwb25zZUgAEkAKA2Fj",
+            "axgaIAEoCzIxLmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2Fn",
+            "ZXMuQWNrQ29tbWFuZEgAQgoKCHJlc3BvbnNlIusECgRCb2R5EkgKB3JlcXVl",
+            "c3QYASABKAsyNS5nYW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1lc3Nh",
+            "Z2VzLlJlcXVlc3RNZXNzYWdlSAASSgoIcmVzcG9uc2UYAiABKAsyNi5nYW1l",
+            "X3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1lc3NhZ2VzLlJlc3BvbnNlTWVz",
+            "c2FnZUgAEkYKBmRpcmVjdBgDIAEoCzI0LmdhbWVfcHJvdG9idWZfbWVzc2Fn",
+            "ZXMucHJvdG8ubWVzc2FnZXMuRGlyZWN0Q29tbWFuZEgAElQKEXJvb21fbm90",
+            "aWZpY2F0aW9uGAQgASgLMjcuZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90",
+            "by5tZXNzYWdlcy5Sb29tTm90aWZpY2F0aW9uSAASRgoGZXZlbnRzGAUgASgL",
+            "MjQuZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdlcy5FdmVu",
+            "dHNDb21tYW5kSAASTAoJc3RhdGlzdGljGDIgASgLMjcuZ2FtZV9wcm90b2J1",
+            "Zl9tZXNzYWdlcy5wcm90by5tZXNzYWdlcy5TdGF0aXN0aWNDb21tYW5kSAAS",
+            "SwoJcm9vbV9saXN0GDMgASgLMjYuZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5w",
+            "cm90by5tZXNzYWdlcy5Sb29tTGlzdENvbW1hbmRIABJECgVlcnJvchh/IAEo",
+            "CzIzLmdhbWVfcHJvdG9idWZfbWVzc2FnZXMucHJvdG8ubWVzc2FnZXMuRXJy",
+            "b3JDb21tYW5kSABCBgoEYm9keSKTAQoHQ29tbWFuZBI/CgNjbWQYASABKA4y",
+            "Mi5nYW1lX3Byb3RvYnVmX21lc3NhZ2VzLnByb3RvLm1lc3NhZ2VzLkNvbW1h",
+            "bmRUeXBlEjkKAm9wGAIgASgOMi0uZ2FtZV9wcm90b2J1Zl9tZXNzYWdlcy5w",
+            "cm90by5tZXNzYWdlcy5PcFR5cGUSDAoEYm9keRgDIAEoDCp3CgtDb21tYW5k",
+            "VHlwZRILCgd1bmtub3duEAASCwoHc2Vzc2lvbhABEggKBGNvbnYQAhIKCgZk",
+            "aXJlY3QQAxIJCgVlcnJvchAEEgkKBWxvYmJ5EAUSDQoJc3RhdGlzdGljEAYS",
+            "CgoGZXZlbnRzEAcSBwoDYWNrEAgqyQUKBk9wVHlwZRIICgRub25lEAASCAoE",
+            "b3BlbhABEgoKBm9wZW5lZBACEgkKBWNsb3NlEAMSCgoGY2xvc2VkEAQSCQoF",
+            "c3RhcnQQHhILCgdzdGFydGVkEB8SDgoKYWRkX3JhbmRvbRAgEhAKDHJhbmRv",
+            "bV9hZGRlZBAhEhAKDG1hdGNoX3JhbmRvbRAiEhIKDnJhbmRvbV9tYXRjaGVk",
+            "ECMSBwoDYWRkECQSCQoFYWRkZWQQJRISCg5tZW1iZXJzX2pvaW5lZBAmEhIK",
+            "Dm1lbWJlcnNfb25saW5lECcSCgoGcmVtb3ZlECgSCwoHcmVtb3ZlZBApEhAK",
+            "DG1lbWJlcnNfbGVmdBAqEhMKD21lbWJlcnNfb2ZmbGluZRArEhgKFHVwZGF0",
+            "ZV9tYXN0ZXJfY2xpZW50ECwSGQoVbWFzdGVyX2NsaWVudF91cGRhdGVkEC0S",
+            "GQoVbWFzdGVyX2NsaWVudF9jaGFuZ2VkEC4SCgoGdXBkYXRlEC8SCwoHdXBk",
+            "YXRlZBAwEhIKDnVwZGF0ZWRfbm90aWZ5EDESGgoWdXBkYXRlX3N5c3RlbV9w",
+            "cm9wZXJ0eRAyEhsKF3N5c3RlbV9wcm9wZXJ0eV91cGRhdGVkEDMSIgoec3lz",
+            "dGVtX3Byb3BlcnR5X3VwZGF0ZWRfbm90aWZ5EDQSEQoNb3BlbmVkX25vdGlm",
+            "eRA1EgsKB3Zpc2libGUQNhISCg52aXNpYmxlX25vdGlmeRA3EhYKEnVwZGF0",
+            "ZV9wbGF5ZXJfcHJvcBA4EhcKE3BsYXllcl9wcm9wX3VwZGF0ZWQQORIQCgxw",
+            "bGF5ZXJfcHJvcHMQOhIICgRraWNrEDsSCgoGa2lja2VkEDwSEQoNa2lja2Vk",
+            "X25vdGljZRA9Eg0KCXJvb21fbGlzdBBkEhAKDGZpbmRfZnJpZW5kcxBlEhEK",
+            "DWZvdW5kX2ZyaWVuZHMQZkIaqgIXTGVhbkNsb3VkLlBsYXkuUHJvdG9jb2xi",
+            "BnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.WrappersReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::LeanCloud.Play.Protocol.CommandType), typeof(global::LeanCloud.Play.Protocol.OpType), }, new pbr::GeneratedClrTypeInfo[] {
@@ -482,7 +485,7 @@ namespace LeanCloud.Play.Protocol {
     }
 
 
-    /// <summary>Field number for the "expectMembers" field.</summary>
+    /// <summary>Field number for the "expect_members" field.</summary>
     public const int ExpectMembersFieldNumber = 3;
     private string expectMembers_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -493,7 +496,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "maxMembers" field.</summary>
+    /// <summary>Field number for the "max_members" field.</summary>
     public const int MaxMembersFieldNumber = 4;
     private int maxMembers_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -692,7 +695,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "actorId" field.</summary>
+    /// <summary>Field number for the "actor_id" field.</summary>
     public const int ActorIdFieldNumber = 2;
     private int actorId_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -892,7 +895,7 @@ namespace LeanCloud.Play.Protocol {
       return new AppInfo(this);
     }
 
-    /// <summary>Field number for the "appCode" field.</summary>
+    /// <summary>Field number for the "app_code" field.</summary>
     public const int AppCodeFieldNumber = 1;
     private int appCode_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -903,7 +906,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "appMsg" field.</summary>
+    /// <summary>Field number for the "app_msg" field.</summary>
     public const int AppMsgFieldNumber = 2;
     private string appMsg_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1050,7 +1053,7 @@ namespace LeanCloud.Play.Protocol {
       return new ErrorInfo(this);
     }
 
-    /// <summary>Field number for the "reasonCode" field.</summary>
+    /// <summary>Field number for the "reason_code" field.</summary>
     public const int ReasonCodeFieldNumber = 1;
     private int reasonCode_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1072,7 +1075,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "appInfo" field.</summary>
+    /// <summary>Field number for the "app_info" field.</summary>
     public const int AppInfoFieldNumber = 3;
     private global::LeanCloud.Play.Protocol.AppInfo appInfo_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1289,7 +1292,7 @@ namespace LeanCloud.Play.Protocol {
     }
 
 
-    /// <summary>Field number for the "emptyRoomTtl" field.</summary>
+    /// <summary>Field number for the "empty_room_ttl" field.</summary>
     public const int EmptyRoomTtlFieldNumber = 4;
     private int emptyRoomTtl_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1300,7 +1303,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "playerTtl" field.</summary>
+    /// <summary>Field number for the "player_ttl" field.</summary>
     public const int PlayerTtlFieldNumber = 5;
     private int playerTtl_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1311,7 +1314,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "maxMembers" field.</summary>
+    /// <summary>Field number for the "max_members" field.</summary>
     public const int MaxMembersFieldNumber = 6;
     private int maxMembers_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1333,7 +1336,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "pluginName" field.</summary>
+    /// <summary>Field number for the "plugin_name" field.</summary>
     public const int PluginNameFieldNumber = 8;
     private string pluginName_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1355,7 +1358,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "expectMembers" field.</summary>
+    /// <summary>Field number for the "expect_members" field.</summary>
     public const int ExpectMembersFieldNumber = 10;
     private static readonly pb::FieldCodec<string> _repeated_expectMembers_codec
         = pb::FieldCodec.ForString(82);
@@ -1365,7 +1368,7 @@ namespace LeanCloud.Play.Protocol {
       get { return expectMembers_; }
     }
 
-    /// <summary>Field number for the "lobbyAttrKeys" field.</summary>
+    /// <summary>Field number for the "lobby_attr_keys" field.</summary>
     public const int LobbyAttrKeysFieldNumber = 11;
     private static readonly pb::FieldCodec<string> _repeated_lobbyAttrKeys_codec
         = pb::FieldCodec.ForString(90);
@@ -1385,7 +1388,7 @@ namespace LeanCloud.Play.Protocol {
       get { return members_; }
     }
 
-    /// <summary>Field number for the "memberCount" field.</summary>
+    /// <summary>Field number for the "member_count" field.</summary>
     public const int MemberCountFieldNumber = 13;
     private int memberCount_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1396,7 +1399,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "masterActorId" field.</summary>
+    /// <summary>Field number for the "master_actor_id" field.</summary>
     public const int MasterActorIdFieldNumber = 14;
     private int masterActorId_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1728,7 +1731,7 @@ namespace LeanCloud.Play.Protocol {
       return new SessionOpenRequest(this);
     }
 
-    /// <summary>Field number for the "appId" field.</summary>
+    /// <summary>Field number for the "app_id" field.</summary>
     public const int AppIdFieldNumber = 1;
     private string appId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1739,7 +1742,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "peerId" field.</summary>
+    /// <summary>Field number for the "peer_id" field.</summary>
     public const int PeerIdFieldNumber = 2;
     private string peerId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1750,7 +1753,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "gameVersion" field.</summary>
+    /// <summary>Field number for the "game_version" field.</summary>
     public const int GameVersionFieldNumber = 3;
     private string gameVersion_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1761,7 +1764,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "sdkVersion" field.</summary>
+    /// <summary>Field number for the "sdk_version" field.</summary>
     public const int SdkVersionFieldNumber = 4;
     private string sdkVersion_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1772,7 +1775,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "protocolVersion" field.</summary>
+    /// <summary>Field number for the "protocol_version" field.</summary>
     public const int ProtocolVersionFieldNumber = 5;
     private string protocolVersion_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1816,7 +1819,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "configBitmap" field.</summary>
+    /// <summary>Field number for the "config_bitmap" field.</summary>
     public const int ConfigBitmapFieldNumber = 9;
     private long configBitmap_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2073,7 +2076,7 @@ namespace LeanCloud.Play.Protocol {
       return new CreateRoomRequest(this);
     }
 
-    /// <summary>Field number for the "roomOptions" field.</summary>
+    /// <summary>Field number for the "room_options" field.</summary>
     public const int RoomOptionsFieldNumber = 1;
     private global::LeanCloud.Play.Protocol.RoomOptions roomOptions_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2209,7 +2212,7 @@ namespace LeanCloud.Play.Protocol {
       return new CreateRoomResponse(this);
     }
 
-    /// <summary>Field number for the "roomOptions" field.</summary>
+    /// <summary>Field number for the "room_options" field.</summary>
     public const int RoomOptionsFieldNumber = 1;
     private global::LeanCloud.Play.Protocol.RoomOptions roomOptions_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2386,7 +2389,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "roomOptions" field.</summary>
+    /// <summary>Field number for the "room_options" field.</summary>
     public const int RoomOptionsFieldNumber = 2;
     private global::LeanCloud.Play.Protocol.RoomOptions roomOptions_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2397,7 +2400,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "expectAttr" field.</summary>
+    /// <summary>Field number for the "expect_attr" field.</summary>
     public const int ExpectAttrFieldNumber = 3;
     private pb::ByteString expectAttr_ = pb::ByteString.Empty;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2408,7 +2411,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "piggybackPeerId" field.</summary>
+    /// <summary>Field number for the "piggyback_peer_id" field.</summary>
     public const int PiggybackPeerIdFieldNumber = 4;
     private string piggybackPeerId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2419,7 +2422,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "createOnNotFound" field.</summary>
+    /// <summary>Field number for the "create_on_not_found" field.</summary>
     public const int CreateOnNotFoundFieldNumber = 5;
     private bool createOnNotFound_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2619,7 +2622,7 @@ namespace LeanCloud.Play.Protocol {
       return new JoinRoomResponse(this);
     }
 
-    /// <summary>Field number for the "roomOptions" field.</summary>
+    /// <summary>Field number for the "room_options" field.</summary>
     public const int RoomOptionsFieldNumber = 1;
     private global::LeanCloud.Play.Protocol.RoomOptions roomOptions_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2916,7 +2919,7 @@ namespace LeanCloud.Play.Protocol {
       return new LeftRoomNotification(this);
     }
 
-    /// <summary>Field number for the "actorId" field.</summary>
+    /// <summary>Field number for the "actor_id" field.</summary>
     public const int ActorIdFieldNumber = 1;
     private int actorId_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3046,7 +3049,7 @@ namespace LeanCloud.Play.Protocol {
       return new KickMemberRequest(this);
     }
 
-    /// <summary>Field number for the "targetActorId" field.</summary>
+    /// <summary>Field number for the "target_actor_id" field.</summary>
     public const int TargetActorIdFieldNumber = 1;
     private int targetActorId_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3057,7 +3060,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "appInfo" field.</summary>
+    /// <summary>Field number for the "app_info" field.</summary>
     public const int AppInfoFieldNumber = 2;
     private global::LeanCloud.Play.Protocol.AppInfo appInfo_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3208,7 +3211,7 @@ namespace LeanCloud.Play.Protocol {
       return new KickMemberResponse(this);
     }
 
-    /// <summary>Field number for the "targetActorId" field.</summary>
+    /// <summary>Field number for the "target_actor_id" field.</summary>
     public const int TargetActorIdFieldNumber = 1;
     private int targetActorId_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3339,7 +3342,7 @@ namespace LeanCloud.Play.Protocol {
       return new UpdatePropertyRequest(this);
     }
 
-    /// <summary>Field number for the "targetActorId" field.</summary>
+    /// <summary>Field number for the "target_actor_id" field.</summary>
     public const int TargetActorIdFieldNumber = 1;
     private int targetActorId_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3350,7 +3353,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "expectAttr" field.</summary>
+    /// <summary>Field number for the "expect_attr" field.</summary>
     public const int ExpectAttrFieldNumber = 2;
     private pb::ByteString expectAttr_ = pb::ByteString.Empty;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3534,7 +3537,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "actorId" field.</summary>
+    /// <summary>Field number for the "actor_id" field.</summary>
     public const int ActorIdFieldNumber = 2;
     private int actorId_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3691,9 +3694,12 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "actorId" field.</summary>
+    /// <summary>Field number for the "actor_id" field.</summary>
     public const int ActorIdFieldNumber = 2;
     private int actorId_;
+    /// <summary>
+    /// 0 表示更改了房间属性，非 0 表示更改某 Player 的属性
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int ActorId {
       get { return actorId_; }
@@ -3837,7 +3843,7 @@ namespace LeanCloud.Play.Protocol {
       return new UpdateSysPropertyRequest(this);
     }
 
-    /// <summary>Field number for the "expectSysAttr" field.</summary>
+    /// <summary>Field number for the "expect_sys_attr" field.</summary>
     public const int ExpectSysAttrFieldNumber = 1;
     private global::LeanCloud.Play.Protocol.RoomSystemProperty expectSysAttr_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3848,7 +3854,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "sysAttr" field.</summary>
+    /// <summary>Field number for the "sys_attr" field.</summary>
     public const int SysAttrFieldNumber = 2;
     private global::LeanCloud.Play.Protocol.RoomSystemProperty sysAttr_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4005,7 +4011,7 @@ namespace LeanCloud.Play.Protocol {
       return new UpdateSysPropertyResponse(this);
     }
 
-    /// <summary>Field number for the "sysAttr" field.</summary>
+    /// <summary>Field number for the "sys_attr" field.</summary>
     public const int SysAttrFieldNumber = 1;
     private global::LeanCloud.Play.Protocol.RoomSystemProperty sysAttr_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4140,7 +4146,7 @@ namespace LeanCloud.Play.Protocol {
       return new UpdateSysPropertyNotification(this);
     }
 
-    /// <summary>Field number for the "sysAttr" field.</summary>
+    /// <summary>Field number for the "sys_attr" field.</summary>
     public const int SysAttrFieldNumber = 1;
     private global::LeanCloud.Play.Protocol.RoomSystemProperty sysAttr_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4275,7 +4281,7 @@ namespace LeanCloud.Play.Protocol {
       return new UpdateMasterClientRequest(this);
     }
 
-    /// <summary>Field number for the "masterActorId" field.</summary>
+    /// <summary>Field number for the "master_actor_id" field.</summary>
     public const int MasterActorIdFieldNumber = 1;
     private int masterActorId_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4404,7 +4410,7 @@ namespace LeanCloud.Play.Protocol {
       return new UpdateMasterClientResponse(this);
     }
 
-    /// <summary>Field number for the "masterActorId" field.</summary>
+    /// <summary>Field number for the "master_actor_id" field.</summary>
     public const int MasterActorIdFieldNumber = 1;
     private int masterActorId_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4533,9 +4539,12 @@ namespace LeanCloud.Play.Protocol {
       return new UpdateMasterClientNotification(this);
     }
 
-    /// <summary>Field number for the "masterActorId" field.</summary>
+    /// <summary>Field number for the "master_actor_id" field.</summary>
     public const int MasterActorIdFieldNumber = 1;
     private int masterActorId_;
+    /// <summary>
+    /// 0 表示目前没有 master
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int MasterActorId {
       get { return masterActorId_; }
@@ -4682,9 +4691,12 @@ namespace LeanCloud.Play.Protocol {
       return new RoomNotification(this);
     }
 
-    /// <summary>Field number for the "initByActor" field.</summary>
+    /// <summary>Field number for the "init_by_actor" field.</summary>
     public const int InitByActorFieldNumber = 1;
     private int initByActor_;
+    /// <summary>
+    /// 0 表示系统触发操作的通知
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int InitByActor {
       get { return initByActor_; }
@@ -4693,7 +4705,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "appInfo" field.</summary>
+    /// <summary>Field number for the "app_info" field.</summary>
     public const int AppInfoFieldNumber = 3;
     private global::LeanCloud.Play.Protocol.AppInfo appInfo_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4704,7 +4716,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "byMaster" field.</summary>
+    /// <summary>Field number for the "by_master" field.</summary>
     public const int ByMasterFieldNumber = 4;
     private bool byMaster_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4715,7 +4727,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "joinRoom" field.</summary>
+    /// <summary>Field number for the "join_room" field.</summary>
     public const int JoinRoomFieldNumber = 20;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::LeanCloud.Play.Protocol.JoinRoomNotification JoinRoom {
@@ -4726,7 +4738,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "updateProperty" field.</summary>
+    /// <summary>Field number for the "update_property" field.</summary>
     public const int UpdatePropertyFieldNumber = 21;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::LeanCloud.Play.Protocol.UpdatePropertyNotification UpdateProperty {
@@ -4737,7 +4749,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "updateSysProperty" field.</summary>
+    /// <summary>Field number for the "update_sys_property" field.</summary>
     public const int UpdateSysPropertyFieldNumber = 22;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::LeanCloud.Play.Protocol.UpdateSysPropertyNotification UpdateSysProperty {
@@ -4748,7 +4760,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "updateMasterClient" field.</summary>
+    /// <summary>Field number for the "update_master_client" field.</summary>
     public const int UpdateMasterClientFieldNumber = 23;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::LeanCloud.Play.Protocol.UpdateMasterClientNotification UpdateMasterClient {
@@ -4759,7 +4771,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "leftRoom" field.</summary>
+    /// <summary>Field number for the "left_room" field.</summary>
     public const int LeftRoomFieldNumber = 24;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::LeanCloud.Play.Protocol.LeftRoomNotification LeftRoom {
@@ -5093,7 +5105,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "eventId" field.</summary>
+    /// <summary>Field number for the "event_id" field.</summary>
     public const int EventIdFieldNumber = 2;
     private int eventId_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5104,7 +5116,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "receiverGroup" field.</summary>
+    /// <summary>Field number for the "receiver_group" field.</summary>
     public const int ReceiverGroupFieldNumber = 3;
     private int receiverGroup_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5115,7 +5127,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "cachingOption" field.</summary>
+    /// <summary>Field number for the "caching_option" field.</summary>
     public const int CachingOptionFieldNumber = 4;
     private int cachingOption_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5126,7 +5138,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "eventOptions" field.</summary>
+    /// <summary>Field number for the "event_options" field.</summary>
     public const int EventOptionsFieldNumber = 5;
     private int eventOptions_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5137,7 +5149,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "toActorIds" field.</summary>
+    /// <summary>Field number for the "to_actor_ids" field.</summary>
     public const int ToActorIdsFieldNumber = 6;
     private static readonly pb::FieldCodec<int> _repeated_toActorIds_codec
         = pb::FieldCodec.ForInt32(50);
@@ -5169,7 +5181,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "fromActorId" field.</summary>
+    /// <summary>Field number for the "from_actor_id" field.</summary>
     public const int FromActorIdFieldNumber = 9;
     private int fromActorId_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5725,7 +5737,7 @@ namespace LeanCloud.Play.Protocol {
       return new JoinLobbyRequest(this);
     }
 
-    /// <summary>Field number for the "lobbyId" field.</summary>
+    /// <summary>Field number for the "lobby_id" field.</summary>
     public const int LobbyIdFieldNumber = 1;
     private string lobbyId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5978,7 +5990,7 @@ namespace LeanCloud.Play.Protocol {
       return new AppStatistic(this);
     }
 
-    /// <summary>Field number for the "countOfRooms" field.</summary>
+    /// <summary>Field number for the "count_of_rooms" field.</summary>
     public const int CountOfRoomsFieldNumber = 1;
     private int countOfRooms_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5989,7 +6001,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "countOfPlayersOnRouter" field.</summary>
+    /// <summary>Field number for the "count_of_players_on_router" field.</summary>
     public const int CountOfPlayersOnRouterFieldNumber = 2;
     private int countOfPlayersOnRouter_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6000,7 +6012,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "countOfPlayersInRooms" field.</summary>
+    /// <summary>Field number for the "count_of_players_in_rooms" field.</summary>
     public const int CountOfPlayersInRoomsFieldNumber = 3;
     private int countOfPlayersInRooms_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6011,7 +6023,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "countOfPlayers" field.</summary>
+    /// <summary>Field number for the "count_of_players" field.</summary>
     public const int CountOfPlayersFieldNumber = 4;
     private int countOfPlayers_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6188,7 +6200,7 @@ namespace LeanCloud.Play.Protocol {
       return new StatisticCommand(this);
     }
 
-    /// <summary>Field number for the "appStats" field.</summary>
+    /// <summary>Field number for the "app_stats" field.</summary>
     public const int AppStatsFieldNumber = 1;
     private global::LeanCloud.Play.Protocol.AppStatistic appStats_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6323,7 +6335,7 @@ namespace LeanCloud.Play.Protocol {
       return new ErrorCommand(this);
     }
 
-    /// <summary>Field number for the "errorInfo" field.</summary>
+    /// <summary>Field number for the "error_info" field.</summary>
     public const int ErrorInfoFieldNumber = 1;
     private global::LeanCloud.Play.Protocol.ErrorInfo errorInfo_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6496,7 +6508,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "sessionOpen" field.</summary>
+    /// <summary>Field number for the "session_open" field.</summary>
     public const int SessionOpenFieldNumber = 20;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::LeanCloud.Play.Protocol.SessionOpenRequest SessionOpen {
@@ -6507,7 +6519,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "createRoom" field.</summary>
+    /// <summary>Field number for the "create_room" field.</summary>
     public const int CreateRoomFieldNumber = 21;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::LeanCloud.Play.Protocol.CreateRoomRequest CreateRoom {
@@ -6518,7 +6530,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "joinRoom" field.</summary>
+    /// <summary>Field number for the "join_room" field.</summary>
     public const int JoinRoomFieldNumber = 22;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::LeanCloud.Play.Protocol.JoinRoomRequest JoinRoom {
@@ -6529,7 +6541,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "updateProperty" field.</summary>
+    /// <summary>Field number for the "update_property" field.</summary>
     public const int UpdatePropertyFieldNumber = 23;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::LeanCloud.Play.Protocol.UpdatePropertyRequest UpdateProperty {
@@ -6540,7 +6552,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "updateSysProperty" field.</summary>
+    /// <summary>Field number for the "update_sys_property" field.</summary>
     public const int UpdateSysPropertyFieldNumber = 24;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::LeanCloud.Play.Protocol.UpdateSysPropertyRequest UpdateSysProperty {
@@ -6551,7 +6563,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "updateMasterClient" field.</summary>
+    /// <summary>Field number for the "update_master_client" field.</summary>
     public const int UpdateMasterClientFieldNumber = 25;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::LeanCloud.Play.Protocol.UpdateMasterClientRequest UpdateMasterClient {
@@ -6562,7 +6574,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "kickMember" field.</summary>
+    /// <summary>Field number for the "kick_member" field.</summary>
     public const int KickMemberFieldNumber = 26;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::LeanCloud.Play.Protocol.KickMemberRequest KickMember {
@@ -6573,7 +6585,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "joinLobby" field.</summary>
+    /// <summary>Field number for the "join_lobby" field.</summary>
     public const int JoinLobbyFieldNumber = 54;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::LeanCloud.Play.Protocol.JoinLobbyRequest JoinLobby {
@@ -6960,7 +6972,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "errorInfo" field.</summary>
+    /// <summary>Field number for the "error_info" field.</summary>
     public const int ErrorInfoFieldNumber = 2;
     private global::LeanCloud.Play.Protocol.ErrorInfo errorInfo_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6971,7 +6983,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "createRoom" field.</summary>
+    /// <summary>Field number for the "create_room" field.</summary>
     public const int CreateRoomFieldNumber = 20;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::LeanCloud.Play.Protocol.CreateRoomResponse CreateRoom {
@@ -6982,7 +6994,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "joinRoom" field.</summary>
+    /// <summary>Field number for the "join_room" field.</summary>
     public const int JoinRoomFieldNumber = 21;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::LeanCloud.Play.Protocol.JoinRoomResponse JoinRoom {
@@ -6993,7 +7005,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "updateProperty" field.</summary>
+    /// <summary>Field number for the "update_property" field.</summary>
     public const int UpdatePropertyFieldNumber = 22;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::LeanCloud.Play.Protocol.UpdatePropertyResponse UpdateProperty {
@@ -7004,7 +7016,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "updateSysProperty" field.</summary>
+    /// <summary>Field number for the "update_sys_property" field.</summary>
     public const int UpdateSysPropertyFieldNumber = 23;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::LeanCloud.Play.Protocol.UpdateSysPropertyResponse UpdateSysProperty {
@@ -7015,7 +7027,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "updateMasterClient" field.</summary>
+    /// <summary>Field number for the "update_master_client" field.</summary>
     public const int UpdateMasterClientFieldNumber = 24;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::LeanCloud.Play.Protocol.UpdateMasterClientResponse UpdateMasterClient {
@@ -7026,7 +7038,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "kickMember" field.</summary>
+    /// <summary>Field number for the "kick_member" field.</summary>
     public const int KickMemberFieldNumber = 25;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::LeanCloud.Play.Protocol.KickMemberResponse KickMember {
@@ -7444,7 +7456,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "roomNotification" field.</summary>
+    /// <summary>Field number for the "room_notification" field.</summary>
     public const int RoomNotificationFieldNumber = 4;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::LeanCloud.Play.Protocol.RoomNotification RoomNotification {
@@ -7477,7 +7489,7 @@ namespace LeanCloud.Play.Protocol {
       }
     }
 
-    /// <summary>Field number for the "roomList" field.</summary>
+    /// <summary>Field number for the "room_list" field.</summary>
     public const int RoomListFieldNumber = 51;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::LeanCloud.Play.Protocol.RoomListCommand RoomList {
