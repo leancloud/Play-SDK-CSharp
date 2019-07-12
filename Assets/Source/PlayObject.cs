@@ -192,7 +192,7 @@ namespace LeanCloud.Play {
         /// <param name="key">属性名称</param>
         /// <param name="val">返回属性值</param>
         public bool TryGetByte(object key, out byte val) {
-            if (Data.TryGetValue(key, out var valObj) &&
+            if (Data.TryGetValue(key, out var valObj) && valObj is byte &&
                 byte.TryParse(valObj.ToString(), out val)) {
                 return true;
             }
@@ -207,7 +207,7 @@ namespace LeanCloud.Play {
         /// <param name="key">属性名称</param>
         /// <param name="val">返回属性值</param>
         public bool TryGetShort(object key, out short val) {
-            if (Data.TryGetValue(key, out var valObj) &&
+            if (Data.TryGetValue(key, out var valObj) && valObj is int &&
                 short.TryParse(valObj.ToString(), out val)) {
                 return true;
             }
@@ -222,7 +222,7 @@ namespace LeanCloud.Play {
         /// <param name="key">属性名称</param>
         /// <param name="val">返回属性值</param>
         public bool TryGetInt(object key, out int val) {
-            if (Data.TryGetValue(key, out var valObj) &&
+            if (Data.TryGetValue(key, out var valObj) && valObj is int &&
                 int.TryParse(valObj.ToString(), out val)) {
                 return true;
             }
@@ -237,7 +237,7 @@ namespace LeanCloud.Play {
         /// <param name="key">属性名称</param>
         /// <param name="val">返回属性值</param>
         public bool TryGetLong(object key, out long val) {
-            if (Data.TryGetValue(key, out var valObj) &&
+            if (Data.TryGetValue(key, out var valObj) && valObj is long &&
                 long.TryParse(valObj.ToString(), out val)) {
                 return true;
             }
@@ -252,7 +252,7 @@ namespace LeanCloud.Play {
         /// <param name="key">属性名称</param>
         /// <param name="val">返回属性值</param>
         public bool TryGetFloat(object key, out float val) {
-            if (Data.TryGetValue(key, out var valObj) &&
+            if (Data.TryGetValue(key, out var valObj) && valObj is float &&
                 float.TryParse(valObj.ToString(), out val)) {
                 return true;
             }
@@ -267,7 +267,7 @@ namespace LeanCloud.Play {
         /// <param name="key">属性名称</param>
         /// <param name="val">返回属性值</param>
         public bool TryGetDouble(object key, out double val) {
-            if (Data.TryGetValue(key, out var valObj) &&
+            if (Data.TryGetValue(key, out var valObj) && valObj is double &&
                 double.TryParse(valObj.ToString(), out val)) {
                 return true;
             }
@@ -282,7 +282,7 @@ namespace LeanCloud.Play {
         /// <param name="key">属性名称</param>
         /// <param name="val">返回属性值</param>
         public bool TryGetString(object key, out string val) {
-            if (Data.TryGetValue(key, out var valObj)) {
+            if (Data.TryGetValue(key, out var valObj) && valObj is string) { 
                 val = valObj.ToString();
                 return true;
             }
@@ -297,7 +297,7 @@ namespace LeanCloud.Play {
         /// <param name="key">属性名称</param>
         /// <param name="val">返回属性值</param>
         public bool TryGetBytes(object key, out byte[] val) {
-            if (Data.TryGetValue(key, out var valObj)) {
+            if (Data.TryGetValue(key, out var valObj) && valObj is byte[]) {
                 val = valObj as byte[];
                 return true;
             }
@@ -312,7 +312,7 @@ namespace LeanCloud.Play {
         /// <param name="key">属性名称</param>
         /// <param name="val">返回属性值</param>
         public bool TryGetPlayObject(object key, out PlayObject val) {
-            if (Data.TryGetValue(key, out var valObj)) {
+            if (Data.TryGetValue(key, out var valObj) && valObj is PlayObject) {
                 val = valObj as PlayObject;
                 return true;
             }
@@ -327,7 +327,7 @@ namespace LeanCloud.Play {
         /// <param name="key">属性名称</param>
         /// <param name="val">返回属性值</param>
         public bool TryGetPlayArray(object key, out PlayArray val) {
-            if (Data.TryGetValue(key, out var valObj)) {
+            if (Data.TryGetValue(key, out var valObj) && valObj is PlayArray) {
                 val = valObj as PlayArray;
                 return true;
             }
@@ -443,6 +443,25 @@ namespace LeanCloud.Play {
         public PlayArray GetPlayArray(object key) {
             TryGetPlayArray(key, out PlayArray val);
             return val;
+        }
+
+        /// <summary>
+        /// 获取属性 T 值
+        /// </summary>
+        /// <returns>The get.</returns>
+        /// <param name="key">Key.</param>
+        /// <typeparam name="T">The 1st type parameter.</typeparam>
+        public T Get<T>(object key) {
+            return (T) Data[key];
+        }
+
+        /// <summary>
+        /// 属性是否为空
+        /// </summary>
+        /// <returns><c>true</c>, if null was ised, <c>false</c> otherwise.</returns>
+        /// <param name="key">Key.</param>
+        public bool IsNull(object key) {
+            return Data[key] == null;
         }
     }
 }

@@ -25,8 +25,8 @@ namespace LeanCloud.Play.Test
             }).Unwrap().OnSuccess(_ => {
                 c0.OnRoomCustomPropertiesChanged += changedProps => {
                     var props = c0.Room.CustomProperties;
-                    Assert.AreEqual(props["name"] as string, "leancloud");
-                    Assert.AreEqual(int.Parse(props["gold"].ToString()), 1000);
+                    Assert.AreEqual(props.GetString("name"), "leancloud");
+                    Assert.AreEqual(props.GetInt("gold"), 1000);
                     f0 = true;
                 };
                 return c1.Connect();
@@ -35,8 +35,8 @@ namespace LeanCloud.Play.Test
             }).Unwrap().OnSuccess(_ => {
                 c1.OnRoomCustomPropertiesChanged += changedProps => {
                     var props = c1.Room.CustomProperties;
-                    Assert.AreEqual(props["name"] as string, "leancloud");
-                    Assert.AreEqual(int.Parse(props["gold"].ToString()), 1000);
+                    Assert.AreEqual(props.GetString("name"), "leancloud");
+                    Assert.AreEqual(props.GetInt("gold"), 1000);
                     f1 = true;
                 };
                 var newProps = new PlayObject {
@@ -98,11 +98,11 @@ namespace LeanCloud.Play.Test
             }).Unwrap().OnSuccess(_ => {
                 c0.OnPlayerCustomPropertiesChanged += (player, changedProps) => {
                     var props = player.CustomProperties;
-                    Assert.AreEqual(props["nickname"], "LeanCloud");
-                    Assert.AreEqual(props["gold"], 100);
+                    Assert.AreEqual(props.GetString("nickname"), "LeanCloud");
+                    Assert.AreEqual(props.GetInt("gold"), 100);
                     var attr = props["attr"] as PlayObject;
-                    Assert.AreEqual(attr["hp"], 10);
-                    Assert.AreEqual(attr["mp"], 20);
+                    Assert.AreEqual(attr.GetInt("hp"), 10);
+                    Assert.AreEqual(attr.GetInt("mp"), 20);
                     Debug.Log("c0 check done");
                     f0 = true;
                 };
@@ -112,11 +112,11 @@ namespace LeanCloud.Play.Test
             }).Unwrap().OnSuccess(_ => {
                 c1.OnPlayerCustomPropertiesChanged += (player, changedProps) => {
                     var p = player.CustomProperties;
-                    Assert.AreEqual(p["nickname"], "LeanCloud");
-                    Assert.AreEqual(p["gold"], 100);
+                    Assert.AreEqual(p.GetString("nickname"), "LeanCloud");
+                    Assert.AreEqual(p.GetInt("gold"), 100);
                     var attr = p["attr"] as PlayObject;
-                    Assert.AreEqual(attr["hp"], 10);
-                    Assert.AreEqual(attr["mp"], 20);
+                    Assert.AreEqual(attr.GetInt("hp"), 10);
+                    Assert.AreEqual(attr.GetInt("mp"), 20);
                     Debug.Log("c1 check done");
                     f1 = true;
                 };
@@ -129,7 +129,8 @@ namespace LeanCloud.Play.Test
                         } 
                     }
                 };
-                return c0.SetPlayerCustomProperties(c1.Player.ActorId, props);
+                return c1.Player.SetCustomProperties(props);
+                //return c0.SetPlayerCustomProperties(c1.Player.ActorId, props);
             });
 
             while (!f0 || !f1) {
@@ -208,6 +209,48 @@ namespace LeanCloud.Play.Test
             await c.Player.SetCustomProperties(props);
             await c.Player.SetCustomProperties(props);
             c.Close();
+            Logger.LogDelegate -= Utils.Log;
+        }
+
+        [UnityTest]
+        public IEnumerator SetNullProperty() {
+            Logger.LogDelegate += Utils.Log;
+
+            var f0 = false;
+            var f1 = false;
+            var roomName = "cp6_r";
+            var c = Utils.NewClient("cp6");
+
+            c.Connect().OnSuccess(_ => {
+                return c.CreateRoom(roomName);
+            }).Unwrap().OnSuccess(_ => {
+                c.OnRoomCustomPropertiesChanged += (__) => { 
+                    if (c.Room.CustomProperties.GetString("name") == "leancloud") {
+                        f0 = true;
+                        Debug.Log("============== f0 is true");
+                    }
+                    if (c.Room.CustomProperties.IsNull("name")) {
+                        f1 = true;
+                        Debug.Log("============== f1 is true");
+                    }
+                };
+                var props = new PlayObject {
+                    { "name", "leancloud" }
+                };
+                return c.Room.SetCustomProperties(props);
+            }).Unwrap().OnSuccess(_ => {
+                var props = new PlayObject {
+                    { "name", null }
+                };
+                return c.Room.SetCustomProperties(props);
+            });
+
+            while (!f0 || !f1) {
+                yield return null;
+            }
+
+            c.Close();
+
             Logger.LogDelegate -= Utils.Log;
         }
     }

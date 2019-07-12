@@ -8,12 +8,12 @@ using Google.Protobuf;
 
 namespace LeanCloud.Play {
     internal class LobbyConnection : Connection {
-        internal LobbyConnection() {
+        internal LobbyConnection(PlayContext context): base(context) {
 
         }
 
-        internal static async Task<LobbyConnection> Connect(string appId, string server, string userId, string gameVersion) {
-            LobbyConnection connection = new LobbyConnection();
+        internal static async Task<LobbyConnection> Connect(PlayContext context, string appId, string server, string userId, string gameVersion) {
+            LobbyConnection connection = new LobbyConnection(context);
             await connection.Connect(server, userId);
             await connection.OpenSession(appId, userId, gameVersion);
             return connection;
@@ -79,6 +79,7 @@ namespace LeanCloud.Play {
                 request.JoinRoom.ExpectAttr = ByteString.CopyFrom(CodecUtils.SerializePlayObject(matchProperties));
             }
             if (expectedUserIds != null) {
+                request.JoinRoom.RoomOptions = new Protocol.RoomOptions();
                 request.JoinRoom.RoomOptions.ExpectMembers.AddRange(expectedUserIds);
             }
             var res = await SendRequest(CommandType.Conv, OpType.AddRandom, request);
@@ -110,13 +111,17 @@ namespace LeanCloud.Play {
             };
         }
 
-        internal async Task<LobbyRoom> MatchRandom(string piggybackUserId, PlayObject matchProperties) {
+        internal async Task<LobbyRoom> MatchRandom(string piggybackUserId, PlayObject matchProperties, List<string> expectedUserIds) {
             var request = NewRequest();
             request.JoinRoom = new JoinRoomRequest { 
                 PiggybackPeerId = piggybackUserId
             };
             if (matchProperties != null) {
                 request.JoinRoom.ExpectAttr = ByteString.CopyFrom(CodecUtils.SerializePlayObject(matchProperties));
+            }
+            if (expectedUserIds != null) {
+                request.JoinRoom.RoomOptions = new Protocol.RoomOptions();
+                request.JoinRoom.RoomOptions.ExpectMembers.AddRange(expectedUserIds);
             }
             var res = await SendRequest(CommandType.Conv, OpType.MatchRandom, request);
             return Utils.ConvertToLobbyRoom(res.Response.JoinRoom.RoomOptions);

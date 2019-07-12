@@ -249,12 +249,31 @@ namespace LeanCloud.Play {
         }
 
         /// <summary>
+        /// 获取元素的具体类型值
+        /// </summary>
+        /// <returns>The get.</returns>
+        /// <param name="index">Index.</param>
+        /// <typeparam name="T">The 1st type parameter.</typeparam>
+        public T Get<T>(int index) {
+            return (T)Data[index];
+        }
+
+        /// <summary>
         /// 转换至 T 类型链表
         /// </summary>
         /// <returns>The list.</returns>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
         public List<T> ToList<T>() {
             return Data.Cast<T>().ToList();
+        }
+
+        /// <summary>
+        /// 属性是否为空
+        /// </summary>
+        /// <returns><c>true</c>, if null was ised, <c>false</c> otherwise.</returns>
+        /// <param name="index">Index.</param>
+        public bool IsNull(int index) {
+            return Data[index] == null;
         }
     }
 }
