@@ -1,5 +1,5 @@
 language: csharp
-solution: Play-SDK-CSharp.sln
+solution: SDK/SDK.sln
 before_install:
 - sudo apt-get install doxygen
 addons:
