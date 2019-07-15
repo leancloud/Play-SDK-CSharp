@@ -9,68 +9,93 @@ using System.Threading.Tasks;
 namespace LeanCloud.Play.Test
 {
     public class CreateRoomTest {
-        [Test]
-        public async void CreateNullNameRoom() {
+        [UnityTest]
+        public IEnumerator CreateNullNameRoom() {
             Logger.LogDelegate += Utils.Log;
 
+            var f = false;
             var c = Utils.NewClient("crt0");
-            await c.Connect();
-            var room = await c.CreateRoom();
-            Debug.Log(room.Name);
-            c.Close();
+            c.Connect().OnSuccess(_ => {
+                return c.CreateRoom();
+            }).Unwrap().OnSuccess(_ => {
+                var room = _.Result;
+                Debug.Log(room.Name);
+                c.Close();
+                f = true;
+            });
 
+            while (!f) {
+                yield return null;
+            }
             Logger.LogDelegate -= Utils.Log;
         }
 
-        [Test]
-        public async void CreateSimpleRoom() {
+        [UnityTest]
+        public IEnumerator CreateSimpleRoom() {
             Logger.LogDelegate += Utils.Log;
 
+            var f = false;
             var roomName = "crt1_r";
             var c = Utils.NewClient("crt1");
-            await c.Connect();
-            var room = await c.CreateRoom(roomName);
-            Assert.AreEqual(room.Name, roomName);
-            c.Close();
+            c.Connect().OnSuccess(_ => {
+                return c.CreateRoom(roomName);
+            }).Unwrap().OnSuccess(_ => {
+                var room = _.Result;
+                Assert.AreEqual(room.Name, roomName);
+                c.Close();
+                f = true;
+            });
 
+            while (!f) {
+                yield return null;
+            }
             Logger.LogDelegate -= Utils.Log;
         }
 
-        [Test]
-        public async void CreateCustomRoom() {
+        [UnityTest]
+        public IEnumerator CreateCustomRoom() {
             Logger.LogDelegate += Utils.Log;
 
+            var f = false;
             var roomName = $"crt2_r_{Random.Range(0, 1000000)}";
             var roomTitle = "LeanCloud Room";
             var c = Utils.NewClient(roomName);
-            await c.Connect();
-            var roomOptions = new RoomOptions {
-                Visible = false,
-                EmptyRoomTtl = 60,
-                MaxPlayerCount = 2,
-                PlayerTtl = 60,
-                CustomRoomProperties = new PlayObject {
+            c.Connect().OnSuccess(_ => {
+                var roomOptions = new RoomOptions {
+                    Visible = false,
+                    EmptyRoomTtl = 60,
+                    MaxPlayerCount = 2,
+                    PlayerTtl = 60,
+                    CustomRoomProperties = new PlayObject {
                     { "title", roomTitle },
                     { "level", 2 },
                 },
-                CustoRoomPropertyKeysForLobby = new List<string> { "level" }
-            };
-            var expectedUserIds = new List<string> { "world" };
-            var room = await c.JoinOrCreateRoom(roomName, roomOptions, expectedUserIds);
-            Assert.AreEqual(room.Name, roomName);
-            //Assert.AreEqual(room.Visible, false);
-            var props = room.CustomProperties;
-            Debug.Log($"title: {props["title"]}");
-            Debug.Log($"level: {props["level"]}");
-            Assert.AreEqual(props["title"], roomTitle);
-            Assert.AreEqual(props["level"], 2);
-            c.Close();
+                    CustoRoomPropertyKeysForLobby = new List<string> { "level" }
+                };
+                var expectedUserIds = new List<string> { "world" };
+                return c.JoinOrCreateRoom(roomName, roomOptions, expectedUserIds);
+            }).Unwrap().OnSuccess(_ => {
+                var room = _.Result;
+                Assert.AreEqual(room.Name, roomName);
+                var props = room.CustomProperties;
+                Debug.Log($"title: {props["title"]}");
+                Debug.Log($"level: {props["level"]}");
+                Assert.AreEqual(props["title"], roomTitle);
+                Assert.AreEqual(props["level"], 2);
+                c.Close();
+                f = true;
+            });
 
+            while (!f) {
+                yield return null;
+            }
             Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]
         public IEnumerator MasterAndLocal() {
+            Logger.LogDelegate += Utils.Log;
+
             var flag = false;
             var roomName = "crt3_r";
             var c0 = Utils.NewClient("crt3_0");
@@ -89,27 +114,35 @@ namespace LeanCloud.Play.Test
                 return c1.JoinRoom(roomName);
             }).Unwrap().OnSuccess(_ => {
                 Assert.AreEqual(c1.Player.IsLocal, true);
+                c0.Close();
+                c1.Close();
             });
 
             while (!flag) {
                 yield return null;
             }
-            c0.Close();
-            c1.Close();
+            Logger.LogDelegate -= Utils.Log;
         }
 
-        [Test]
-        public async void CreateRoomFailed() {
+        [UnityTest]
+        public IEnumerator CreateRoomFailed() {
             Logger.LogDelegate += Utils.Log;
 
+            var f = false;
             var roomName = "crt5_ r";
             var c = Utils.NewClient("crt5");
-            await c.Connect();
-            try {
-                var room = await c.CreateRoom(roomName);
-            } catch (PlayException e) {
+            c.Connect().OnSuccess(_ => {
+                return c.CreateRoom(roomName);
+            }).Unwrap().ContinueWith(_ => {
+                Assert.AreEqual(_.IsFaulted, true);
+                var e = _.Exception.InnerException as PlayException;
                 Assert.AreEqual(e.Code, 4316);
                 c.Close();
+                f = true;
+            });
+
+            while (!f) {
+                yield return null;
             }
             Logger.LogDelegate -= Utils.Log;
         }

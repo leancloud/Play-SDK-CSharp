@@ -207,7 +207,7 @@ namespace LeanCloud.Play {
         /// <param name="key">属性名称</param>
         /// <param name="val">返回属性值</param>
         public bool TryGetShort(object key, out short val) {
-            if (Data.TryGetValue(key, out var valObj) && valObj is int &&
+            if (Data.TryGetValue(key, out var valObj) && valObj is short &&
                 short.TryParse(valObj.ToString(), out val)) {
                 return true;
             }

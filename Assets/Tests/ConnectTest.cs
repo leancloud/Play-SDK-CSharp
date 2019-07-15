@@ -10,15 +10,21 @@ namespace LeanCloud.Play.Test
 {
     public class ConnectTest
     {
-        [Test]
-        public async void Connect() {
+        [UnityTest]
+        public IEnumerator Connect() {
             Logger.LogDelegate += Utils.Log;
 
+            var f = false;
             var c = Utils.NewClient("ct0");
-            await c.Connect();
-            Debug.Log($"{c.UserId} connected.");
-            c.Close();
+            c.Connect().OnSuccess(_ => {
+                Debug.Log($"{c.UserId} connected.");
+                c.Close();
+                f = true;
+            });
 
+            while (!f) {
+                yield return null;
+            }
             Logger.LogDelegate -= Utils.Log;
         }
 
@@ -43,49 +49,79 @@ namespace LeanCloud.Play.Test
                 return c1.Connect();
             }).Unwrap().OnSuccess(_ => {
                 Debug.Log($"{c1.UserId} connected at {Thread.CurrentThread.ManagedThreadId}");
+                c1.Close();
                 f1 = true;
             });
 
             while (!f0 || !f1) {
                 yield return null;
             }
-            c1.Close();
             Logger.LogDelegate -= Utils.Log;
         }
 
-        [Test]
-        public async void CloseFromLobby() {
-            var c = Utils.NewClient("ct2");
-            await c.Connect();
-            c.Close();
-            c = Utils.NewClient("ct2");
-            await c.Connect();
-            c.Close();
-        }
-
-        [Test]
-        public async void CloseFromGame() {
-            var c = Utils.NewClient("ct3");
-            await c.Connect();
-            await c.CreateRoom();
-            c.Close();
-            c = Utils.NewClient("ct3");
-            await c.Connect();
-            await c.CreateRoom();
-            c.Close();
-        }
-
-        [Test]
-        public async void ConnectFailed() {
+        [UnityTest]
+        public IEnumerator CloseFromLobby() {
             Logger.LogDelegate += Utils.Log;
 
+            var f = false;
+            var c = Utils.NewClient("ct2");
+            c.Connect().ContinueWith(_ => {
+                Assert.AreEqual(_.IsFaulted, false);
+                c.Close();
+                c = Utils.NewClient("ct2");
+                return c.Connect();
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
+                c.Close();
+                f = true;
+            });
+
+            while (!f) {
+                yield return null;
+            }
+            Logger.LogDelegate -= Utils.Log;
+        }
+
+        [UnityTest]
+        public IEnumerator CloseFromGame() {
+            Logger.LogDelegate += Utils.Log;
+
+            var f = false;
+            var c = Utils.NewClient("ct3");
+            c.Connect().OnSuccess(_ => {
+                return c.CreateRoom();
+            }).ContinueWith(_ => {
+                c.Close();
+                Assert.AreEqual(_.IsFaulted, false);
+                c = Utils.NewClient("ct3");
+                return c.Connect();
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
+                return c.CreateRoom();
+            }).Unwrap().OnSuccess(_ => {
+                c.Close();
+                f = true;
+            });
+
+            while (!f) {
+                yield return null;
+            }
+            Logger.LogDelegate -= Utils.Log;
+        }
+
+        [UnityTest]
+        public IEnumerator ConnectFailed() {
+            Logger.LogDelegate += Utils.Log;
+
+            var f = false;
             var c = Utils.NewClient("ct4 ");
-            try {
-                await c.Connect();
-                Assert.AreEqual(true, false);
-            } catch (PlayException e) {
+            c.Connect().ContinueWith(_ => { 
+                Assert.AreEqual(_.IsFaulted, true);
+                var e = _.Exception.InnerException as PlayException;
                 Assert.AreEqual(e.Code, 4104);
-                Debug.Log(e.Message);
+                f = true;
+            });
+
+            while (!f) {
+                yield return null;
             }
             Logger.LogDelegate -= Utils.Log;
         }

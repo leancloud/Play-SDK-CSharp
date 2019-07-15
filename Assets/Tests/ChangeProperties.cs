@@ -44,43 +44,50 @@ namespace LeanCloud.Play.Test
                     { "gold", 1000 },
                 };
                 return c0.SetRoomCustomProperties(newProps);
+            }).Unwrap().OnSuccess(_ => {
+                c0.Close();
+                c1.Close();
             });
 
             while (!f0 || !f1) {
                 yield return null;
             }
-            c0.Close();
-            c1.Close();
             Logger.LogDelegate -= Utils.Log;
         }
 
-        [Test]
-        public async void ChangeRoomPropertiesWithCAS() {
+        [UnityTest]
+        public IEnumerator ChangeRoomPropertiesWithCAS() {
             Logger.LogDelegate += Utils.Log;
 
-            Debug.Log("hello");
+            var f = false;
             var roomName = "cp1_r";
             var c = Utils.NewClient("cp1");
-            await c.Connect();
-            var options = new RoomOptions { 
-                CustomRoomProperties = new PlayObject {
+
+            c.Connect().OnSuccess(_ => {
+                var options = new RoomOptions {
+                    CustomRoomProperties = new PlayObject {
                     { "id", 1 },
                     { "gold", 100 }
                 }
-            };
-            var room = await c.CreateRoom(roomName, options);
-
-            var newProps = new PlayObject {
+                };
+                return c.CreateRoom(roomName, options);
+            }).Unwrap().OnSuccess(_ => {
+                var newProps = new PlayObject {
                     { "gold", 200 },
                 };
-            var expectedValues = new PlayObject {
+                var expectedValues = new PlayObject {
                     { "id", 2 }
                 };
+                return c.SetRoomCustomProperties(newProps, expectedValues);
+            }).Unwrap().OnSuccess(_ => {
+                Assert.AreEqual(c.Room.CustomProperties["gold"], 100);
+                c.Close();
+                f = true;
+            });
 
-            await c.SetRoomCustomProperties(newProps, expectedValues);
-            Assert.AreEqual(c.Room.CustomProperties["gold"], 100);
-
-            c.Close();
+            while (!f) {
+                yield return null;
+            }
             Logger.LogDelegate -= Utils.Log;
         }
 
@@ -141,74 +148,103 @@ namespace LeanCloud.Play.Test
             Logger.LogDelegate -= Utils.Log;
         }
 
-        [Test]
-        public async void ChangePlayerPropertiesWithCAS() {
+        [UnityTest]
+        public IEnumerator ChangePlayerPropertiesWithCAS() {
             Logger.LogDelegate += Utils.Log;
 
+            var f = false;
             var roomName = "cp3_r";
             var c = Utils.NewClient("cp3");
+            c.Connect().OnSuccess(_ => {
+                return c.CreateRoom(roomName);
+            }).Unwrap().OnSuccess(_ => {
+                var props = new PlayObject {
+                    { "id", 1 },
+                    { "nickname", "lean" }
+                };
+                return c.Player.SetCustomProperties(props);
+            }).Unwrap().OnSuccess(_ => {
+                var newProps = new PlayObject {
+                    { "nickname", "cloud" }
+                };
+                var expectedValues = new PlayObject {
+                    { "id", 2 }
+                };
+                return c.Player.SetCustomProperties(newProps, expectedValues);
+            }).Unwrap().OnSuccess(_ => {
+                Assert.AreEqual(c.Player.CustomProperties["nickname"], "lean");
+                c.Close();
+                f = true;
+            });
 
-            await c.Connect();
-            await c.CreateRoom(roomName);
-            var props = new PlayObject {
-                { "id", 1 },
-                { "nickname", "lean" }
-            };
-            await c.Player.SetCustomProperties(props);
-
-            var newProps = new PlayObject {
-                { "nickname", "cloud" }
-            };
-            var expectedValues = new PlayObject {
-                { "id", 2 }
-            };
-            await c.Player.SetCustomProperties(newProps, expectedValues);
-            Assert.AreEqual(c.Player.CustomProperties["nickname"], "lean");
-            c.Close();
-
+            while (!f) {
+                yield return null;
+            }
             Logger.LogDelegate -= Utils.Log;
         }
 
-        [Test]
-        public async void GetPlayerPropertiesWhenJoinRoom() {
+        [UnityTest]
+        public IEnumerator GetPlayerPropertiesWhenJoinRoom() {
+            Logger.LogDelegate += Utils.Log;
+
+            var f = false;
             var roomName = "cp4_r";
             var c0 = Utils.NewClient("cp4_0");
             var c1 = Utils.NewClient("cp4_1");
 
-            await c0.Connect();
-            await c0.CreateRoom(roomName);
-            var props = new PlayObject {
-                { "ready", true }
-            };
-            await c0.Player.SetCustomProperties(props);
+            c0.Connect().OnSuccess(_ => {
+                return c0.CreateRoom(roomName);
+            }).Unwrap().OnSuccess(_ => {
+                var props = new PlayObject {
+                    { "ready", true }
+                };
+                return c0.Player.SetCustomProperties(props);
+            }).Unwrap().OnSuccess(_ => {
+                return c1.Connect();
+            }).Unwrap().OnSuccess(_ => { 
+                return c1.JoinRoom(roomName);
+            }).Unwrap().OnSuccess(_ => {
+                var master = c1.Room.Master;
+                Assert.AreEqual(master.CustomProperties.GetBool("ready"), true);
+                c0.Close();
+                c1.Close();
+                f = true;
+            });
 
-            await c1.Connect();
-            await c1.JoinRoom(roomName);
-            var master = c1.Room.Master;
-
-            Assert.AreEqual(bool.Parse(master.CustomProperties["ready"].ToString()), true);
-
-            c0.Close();
-            c1.Close();
+            while (!f) {
+                yield return null;
+            }
+            Logger.LogDelegate -= Utils.Log;
         }
 
-        [Test]
-        public async void ChangePropertiesWithSameValue() {
+        [UnityTest]
+        public IEnumerator ChangePropertiesWithSameValue() {
             Logger.LogDelegate += Utils.Log;
 
+            var f = false;
             var roomName = "cp5_r";
             var c = Utils.NewClient("cp5");
-
-            await c.Connect();
-            await c.CreateRoom(roomName);
             var props = new PlayObject {
                 { "ready", true }
             };
-            await c.Room.SetCustomProperties(props);
-            await c.Room.SetCustomProperties(props);
-            await c.Player.SetCustomProperties(props);
-            await c.Player.SetCustomProperties(props);
-            c.Close();
+
+            c.Connect().OnSuccess(_ => {
+                return c.CreateRoom(roomName);
+            }).Unwrap().OnSuccess(_ => {
+                return c.Room.SetCustomProperties(props);
+            }).Unwrap().OnSuccess(_ => {
+                return c.Room.SetCustomProperties(props);
+            }).Unwrap().OnSuccess(_ => { 
+                return c.Player.SetCustomProperties(props);
+            }).Unwrap().OnSuccess(_ => {
+                c.Player.SetCustomProperties(props);
+                c.Close();
+                f = true;
+            });
+
+            while (!f) {
+                yield return null;
+            }
             Logger.LogDelegate -= Utils.Log;
         }
 
