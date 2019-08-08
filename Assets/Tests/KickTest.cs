@@ -69,7 +69,7 @@ namespace LeanCloud.Play.Test
             }).Unwrap().OnSuccess(_ => {
                 Debug.Log($"{c1.UserId} joined room");
             });
-
+            
             while (!flag) {
                 yield return null;
             }

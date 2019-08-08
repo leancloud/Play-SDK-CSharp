@@ -66,32 +66,42 @@ namespace LeanCloud.Play.Test
             Logger.LogDelegate -= Utils.Log;
         }
 
-        [Test]
-        public async void JoinWithExpectedUserIds() {
+        [UnityTest]
+        public IEnumerator JoinWithExpectedUserIds() {
+            Logger.LogDelegate += Utils.Log;
+
+            var f = false;
             var roomName = "jrt2_r";
             var c0 = Utils.NewClient("jrt2_0");
             var c1 = Utils.NewClient("jrt2_1");
             var c2 = Utils.NewClient("jrt2_2");
-            await c0.Connect();
-            var roomOptions = new RoomOptions { 
-                MaxPlayerCount = 2
-            };
-            await c0.CreateRoom(roomName, roomOptions, new List<string> { "jrt2_2" });
-
-            await c1.Connect();
-            try {
-                await c1.JoinRoom(roomName);
-            } catch (PlayException e) {
+            c0.Connect().OnSuccess(_ => {
+                var roomOptions = new RoomOptions {
+                    MaxPlayerCount = 2
+                };
+                return c0.CreateRoom(roomName, roomOptions, new List<string> { "jrt2_2" });
+            }).Unwrap().OnSuccess(_ => {
+                return c1.Connect();
+            }).Unwrap().OnSuccess(_ => {
+                return c1.JoinRoom(roomName);
+            }).Unwrap().ContinueWith(_ => {
+                Assert.AreEqual(_.IsFaulted, true);
+                var e = _.Exception.InnerException as PlayException;
                 Assert.AreEqual(e.Code, 4302);
-                Debug.Log(e.Detail);
-            }
+                return c2.Connect();
+            }).Unwrap().OnSuccess(_ => {
+                return c2.JoinRoom(roomName);
+            }).Unwrap().OnSuccess(_ => {
+                c0.Close();
+                c1.Close();
+                c2.Close();
+                f = true;
+            });
 
-            await c2.Connect();
-            var room = await c2.JoinRoom(roomName);
-            Assert.AreEqual(room.Name, roomName);
-            c0.Close();
-            c1.Close();
-            c2.Close();
+            while (!f) {
+                yield return null;
+            }
+            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]

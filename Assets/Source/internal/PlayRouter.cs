@@ -4,7 +4,10 @@ using System.Net;
 using System.Collections.Generic;
 
 namespace LeanCloud.Play {
-    internal class PlayRouter {
+    public class PlayRouter {
+        const string EAST_CHINA_SUFFIX = "-9Nh9j0Va";
+        const string US_SUFFIX = "-MdYXbMMI";
+
         readonly string appId;
         readonly string playServer;
 
@@ -64,10 +67,28 @@ namespace LeanCloud.Play {
                     }
                 } catch (Exception e) {
                     Logger.Error(e.Message);
-                    tcs.SetException(e);
+                    url = GetFallbackRouter(appId);
+                    Logger.Debug($"Fallback router: {url}");
+                    tcs.SetResult(url);
                 }
             });
             return tcs.Task;
+        }
+
+        public static string GetFallbackRouter(string appId) {
+            if (string.IsNullOrEmpty(appId)) {
+                throw new ArgumentNullException(nameof(appId));
+            }
+            string prefix = appId.Substring(0, 8).ToLower();
+            string suffix = appId.Substring(appId.Length - 9, 9);
+            switch (suffix) {
+                case EAST_CHINA_SUFFIX:
+                    return $"https://{prefix}.play.lncldapi.com/1/multiplayer/router/route";
+                case US_SUFFIX:
+                    return $"https://{prefix}.play.lncldglobal.com/1/multiplayer/router/route";
+                default:
+                    return $"https://{prefix}.play.lncld.com/1/multiplayer/router/route";
+            }
         }
     }
 }

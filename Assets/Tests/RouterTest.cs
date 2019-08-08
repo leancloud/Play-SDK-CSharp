@@ -6,10 +6,8 @@ using UnityEngine.TestTools;
 using LeanCloud.Play;
 using System.Threading.Tasks;
 
-namespace LeanCloud.Play.Test
-{
-    public class RouterTest
-    {
+namespace LeanCloud.Play.Test {
+    public class RouterTest {
         [UnityTest]
         public IEnumerator PlayServer() {
             Logger.LogDelegate += Utils.Log;
@@ -20,7 +18,7 @@ namespace LeanCloud.Play.Test
             var userId = "rt0";
             var playServer = "https://api2.ziting.wang";
             var c = new Client(appId, appKey, userId, playServer: playServer);
-            c.Connect().OnSuccess(_ => { 
+            c.Connect().OnSuccess(_ => {
                 return c.CreateRoom();
             }).Unwrap().OnSuccess(_ => {
                 c.Close();
@@ -31,6 +29,16 @@ namespace LeanCloud.Play.Test
                 yield return null;
             }
             Logger.LogDelegate -= Utils.Log;
+        }
+
+        [Test]
+        public void FallbackRouter() {
+            Debug.Log(PlayRouter.GetFallbackRouter("FQr8l8LLvdxIwhMHN77sNluX-9Nh9j0Va"));
+            Assert.AreEqual(PlayRouter.GetFallbackRouter("FQr8l8LLvdxIwhMHN77sNluX-9Nh9j0Va"), "https://fqr8l8ll.play.lncldapi.com/1/multiplayer/router/route");
+            Debug.Log(PlayRouter.GetFallbackRouter("FQr8l8LLvdxIwhMHN77sNluX-MdYXbMMI"));
+            Assert.AreEqual(PlayRouter.GetFallbackRouter("FQr8l8LLvdxIwhMHN77sNluX-MdYXbMMI"), "https://fqr8l8ll.play.lncldglobal.com/1/multiplayer/router/route");
+            Debug.Log(PlayRouter.GetFallbackRouter("BMYV4RKSTwo8WSqt8q9ezcWF-gzGzoHsz"));
+            Assert.AreEqual(PlayRouter.GetFallbackRouter("BMYV4RKSTwo8WSqt8q9ezcWF-gzGzoHsz"), "https://bmyv4rks.play.lncld.com/1/multiplayer/router/route");
         }
     }
 }
