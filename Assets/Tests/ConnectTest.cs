@@ -10,10 +10,13 @@ namespace LeanCloud.Play.Test
 {
     public class ConnectTest
     {
+        [SetUp]
+        public void Setup() {
+            Logger.LogDelegate += Utils.Log;
+        }
+
         [UnityTest]
         public IEnumerator Connect() {
-            Logger.LogDelegate += Utils.Log;
-
             var f = false;
             var c = Utils.NewClient("ct0");
             c.Connect().OnSuccess(_ => {

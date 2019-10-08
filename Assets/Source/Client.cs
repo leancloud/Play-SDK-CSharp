@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
 using LeanCloud.Play.Protocol;
-using WebSocketSharp;
 
 namespace LeanCloud.Play {
     public class Client {
@@ -60,6 +59,8 @@ namespace LeanCloud.Play {
 
         readonly PlayContext context;
 
+        LobbyService lobbyService;
+
         /// <summary>
         /// LeanCloud App Id
         /// </summary>
@@ -100,8 +101,8 @@ namespace LeanCloud.Play {
             get; private set;
         }
 
-        PlayRouter playRouter;
-        LobbyRouter lobbyRouter;
+        AppRouter playRouter;
+        GameRouter lobbyRouter;
         LobbyConnection lobbyConn;
         GameConnection gameConn;
 
@@ -138,8 +139,6 @@ namespace LeanCloud.Play {
         /// <param name="gameVersion">游戏版本号</param>
         /// <param name="playServer">游戏服务器地址</param>
         public Client(string appId, string appKey, string userId, bool ssl = true, string gameVersion = "0.0.1", string playServer = null) {
-            WebSocket.FragmentLength = 5 * 1024;
-
             AppId = appId;
             AppKey = appKey;
             UserId = userId;
@@ -153,8 +152,8 @@ namespace LeanCloud.Play {
             UnityEngine.Object.DontDestroyOnLoad(playGO);
             context = playGO.AddComponent<PlayContext>();
 
-            playRouter = new PlayRouter(appId, playServer);
-            lobbyRouter = new LobbyRouter(appId, false, null);
+            playRouter = new AppRouter(appId, playServer);
+            lobbyRouter = new GameRouter(appId, appKey, userId, false, null);
         }
 
         /// <summary>
@@ -171,18 +170,10 @@ namespace LeanCloud.Play {
                 throw new PlayException(PlayExceptionCode.StateError,
                     string.Format("You cannot call Connect() on {0} state", state.ToString()));
             }
-            try {
-                state = PlayState.CONNECTING;
-                lobbyConn = await ConnectLobby();
-                state = PlayState.LOBBY;
-                Logger.Debug("connected at: {0}", Thread.CurrentThread.ManagedThreadId);
-                lobbyConn.OnMessage += OnLobbyConnMessage;
-                lobbyConn.OnClose += OnLobbyConnClose;
-                return this;
-            } catch (Exception e) {
-                state = PlayState.INIT;
-                throw e;
-            }
+            lobbyService = new LobbyService(AppId, AppKey, UserId);
+            await lobbyService.Authorize();
+            Logger.Debug("connected at: {0}", Thread.CurrentThread.ManagedThreadId);
+            return this;
         }
 
         /// <summary>
@@ -194,6 +185,9 @@ namespace LeanCloud.Play {
                 throw new PlayException(PlayExceptionCode.StateError,
                     string.Format("You cannot call JoinLobby() on {0} state", state.ToString()));
             }
+            await lobbyService.Authorize();
+            lobbyConn = new LobbyConnection();
+            await lobbyConn.Connect(AppId, null, GameVersion, UserId, null);
             await lobbyConn.JoinLobby();
         }
 
@@ -213,8 +207,10 @@ namespace LeanCloud.Play {
                 state = PlayState.LOBBY_TO_GAME;
                 var lobbyRoom = await lobbyConn.CreateRoom(roomName, roomOptions, expectedUserIds);
                 var roomId = lobbyRoom.RoomId;
-                var server = lobbyRoom.PrimaryUrl;
-                gameConn = await GameConnection.Connect(context, AppId, server, UserId, GameVersion);
+                var server = lobbyRoom.Url;
+                gameConn = new GameConnection();
+                await lobbyService.Authorize();
+                await gameConn.Connect(AppId, server, GameVersion, UserId, null);
                 var room = await gameConn.CreateRoom(roomId, roomOptions, expectedUserIds);
                 LobbyToGame(gameConn, room);
                 return room;
@@ -239,8 +235,8 @@ namespace LeanCloud.Play {
                 state = PlayState.LOBBY_TO_GAME;
                 var lobbyRoom = await lobbyConn.JoinRoom(roomName, expectedUserIds);
                 var roomId = lobbyRoom.RoomId;
-                var server = lobbyRoom.PrimaryUrl;
-                gameConn = await GameConnection.Connect(context, AppId, server, UserId, GameVersion);
+                var server = lobbyRoom.Url;
+                gameConn = new GameConnection();
                 Room = await gameConn.JoinRoom(roomId, expectedUserIds);
                 LobbyToGame(gameConn, Room);
                 return Room;
@@ -264,8 +260,8 @@ namespace LeanCloud.Play {
                 state = PlayState.LOBBY_TO_GAME;
                 var lobbyRoom = await lobbyConn.RejoinRoom(roomName);
                 var roomId = lobbyRoom.RoomId;
-                var server = lobbyRoom.PrimaryUrl;
-                gameConn = await GameConnection.Connect(context, AppId, server, UserId, GameVersion);
+                var server = lobbyRoom.Url;
+                gameConn = new GameConnection();
                 Room = await gameConn.JoinRoom(roomId, null);
                 LobbyToGame(gameConn, Room);
                 return Room;
@@ -292,8 +288,8 @@ namespace LeanCloud.Play {
                 var lobbyRoom = await lobbyConn.JoinOrCreateRoom(roomName, roomOptions, expectedUserIds);
                 var create = lobbyRoom.Create;
                 var roomId = lobbyRoom.RoomId;
-                var server = lobbyRoom.PrimaryUrl;
-                gameConn = await GameConnection.Connect(context, AppId, server, UserId, GameVersion);
+                var server = lobbyRoom.Url;
+                gameConn = new GameConnection();
                 if (create) {
                     Room = await gameConn.CreateRoom(roomId, roomOptions, expectedUserIds);
                 } else {
@@ -322,8 +318,8 @@ namespace LeanCloud.Play {
                 state = PlayState.LOBBY_TO_GAME;
                 var lobbyRoom = await lobbyConn.JoinRandomRoom(matchProperties, expectedUserIds);
                 var roomId = lobbyRoom.RoomId;
-                var server = lobbyRoom.PrimaryUrl;
-                gameConn = await GameConnection.Connect(context, AppId, server, UserId, GameVersion);
+                var server = lobbyRoom.Url;
+                gameConn = new GameConnection();
                 Room = await gameConn.JoinRoom(roomId, expectedUserIds);
                 LobbyToGame(gameConn, Room);
                 return Room;
@@ -587,7 +583,7 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 暂停消息队列
         /// </summary>
-        public void PauseMessageQueue() { 
+        public void PauseMessageQueue() {
             context.IsMessageQueueRunning = false;
         }
 
@@ -711,7 +707,7 @@ namespace LeanCloud.Play {
                     HandleUnknownMsg(cmd, op, body);
                     break;
             }
-        }   
+        }
 
         void OnGameConnClose(int code, string reason) {
             context.Post(() => {
@@ -793,7 +789,7 @@ namespace LeanCloud.Play {
         }
 
         void HandleSendEvent(DirectCommand directCommand) {
-            var eventId = (byte) directCommand.EventId;
+            var eventId = (byte)directCommand.EventId;
             var eventData = CodecUtils.DeserializePlayObject(directCommand.Msg);
             var senderId = directCommand.FromActorId;
             OnCustomEvent?.Invoke(eventId, eventData, senderId);
@@ -822,15 +818,17 @@ namespace LeanCloud.Play {
         }
 
         Task<LobbyConnection> ConnectLobby() {
-            return playRouter.Fetch().OnSuccess(t => {
-                var serverUrl = t.Result;
-                Logger.Debug("play server: {0} at {1}", serverUrl, Thread.CurrentThread.ManagedThreadId);
-                return lobbyRouter.Fetch(serverUrl);
-            }).Unwrap().OnSuccess(t => {
-                var lobbyUrl = t.Result;
-                Logger.Debug("wss server: {0} at {1}", lobbyUrl, Thread.CurrentThread.ManagedThreadId);
-                return LobbyConnection.Connect(context, AppId, lobbyUrl, UserId, GameVersion);
-            }).Unwrap();
+            return null;
+            //return playRouter.Fetch().OnSuccess(t => {
+            //    var serverUrl = t.Result;
+            //    Logger.Debug("play server: {0} at {1}", serverUrl, Thread.CurrentThread.ManagedThreadId);
+                
+            //    return lobbyRouter.Fetch(serverUrl);
+            //}).Unwrap().OnSuccess(t => {
+            //    var lobbyUrl = t.Result;
+            //    Logger.Debug("wss server: {0} at {1}", lobbyUrl, Thread.CurrentThread.ManagedThreadId);
+            //    return LobbyConnection.Connect(context, AppId, lobbyUrl, UserId, GameVersion);
+            //}).Unwrap();
         }
 
         void LobbyToGame(GameConnection gc, Room room) {
@@ -843,7 +841,7 @@ namespace LeanCloud.Play {
             gameConn.OnClose += OnGameConnClose;
             Room = room;
             Room.Client = this;
-            foreach (var player in Room.PlayerList) { 
+            foreach (var player in Room.PlayerList) {
                 if (player.UserId == UserId) {
                     Player = player;
                 }
@@ -863,7 +861,7 @@ namespace LeanCloud.Play {
         }
 
         // 调试时模拟断线
-        public void _Disconnect() { 
+        public void _Disconnect() {
             if (state == PlayState.LOBBY) {
                 lobbyConn.Disconnect();
             } else if (state == PlayState.GAME) {

@@ -2,21 +2,19 @@
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Linq;
+using System.Net.WebSockets;
 using LeanCloud.Play.Protocol;
 using Google.Protobuf;
 
 namespace LeanCloud.Play {
     internal class LobbyConnection : Connection {
-        internal LobbyConnection(PlayContext context): base(context) {
-
-        }
-
-        internal static async Task<LobbyConnection> Connect(PlayContext context, string appId, string server, string userId, string gameVersion) {
-            LobbyConnection connection = new LobbyConnection(context);
-            await connection.Connect(server, userId);
-            await connection.OpenSession(appId, userId, gameVersion);
-            return connection;
+        internal async Task Connect(string appId, string server, string gameVersion, string userId, string sessionToken) {
+            client = new ClientWebSocket();
+            client.Options.AddSubProtocol("protobuf.1");
+            client.Options.KeepAliveInterval = TimeSpan.FromSeconds(10);
+            await client.ConnectAsync(new Uri(server), default);
+            string url = $"{server}/1/multiplayer/lobby/websocket?appId={appId}&userId={userId}&protocolVersion={Config.ProtocolVersion}&gameVersion={gameVersion}&sessionToken={sessionToken}";
+            await client.ConnectAsync(new Uri(url), CancellationToken.None);
         }
 
         internal async Task JoinLobby() {
@@ -34,7 +32,7 @@ namespace LeanCloud.Play {
             var roomRes = res.Response.CreateRoom;
             return new LobbyRoomResult {
                 RoomId = roomRes.RoomOptions.Cid,
-                PrimaryUrl = roomRes.Addr,
+                Url = roomRes.Addr
             };
         }
 
@@ -52,7 +50,7 @@ namespace LeanCloud.Play {
             var roomRes = res.Response.JoinRoom;
             return new LobbyRoomResult { 
                 RoomId = roomRes.RoomOptions.Cid,
-                PrimaryUrl = roomRes.Addr
+                Url = roomRes.Addr
             };
         }
 
@@ -68,7 +66,7 @@ namespace LeanCloud.Play {
             var roomRes = res.Response.JoinRoom;
             return new LobbyRoomResult { 
                 RoomId = roomRes.RoomOptions.Cid,
-                PrimaryUrl = roomRes.Addr
+                Url = roomRes.Addr
             };
         }
 
@@ -86,7 +84,7 @@ namespace LeanCloud.Play {
             var roomRes = res.Response.JoinRoom;
             return new LobbyRoomResult { 
                 RoomId = roomRes.RoomOptions.Cid,
-                PrimaryUrl = roomRes.Addr
+                Url = roomRes.Addr
             };
         }
 
@@ -101,13 +99,13 @@ namespace LeanCloud.Play {
                 return new LobbyRoomResult {
                     Create = true,
                     RoomId = res.Response.CreateRoom.RoomOptions.Cid,
-                    PrimaryUrl = res.Response.CreateRoom.Addr
+                    Url = res.Response.CreateRoom.Addr
                 };
             }
             return new LobbyRoomResult { 
                 Create = false,
                 RoomId = res.Response.JoinRoom.RoomOptions.Cid,
-                PrimaryUrl = res.Response.JoinRoom.Addr
+                Url = res.Response.JoinRoom.Addr
             };
         }
 

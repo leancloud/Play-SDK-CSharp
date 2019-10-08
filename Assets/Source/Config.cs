@@ -2,8 +2,10 @@
 
 namespace LeanCloud.Play {
 	internal static class Config {
+        // 协议版本号
+        public static string ProtocolVersion = "0";
 		// SDK 版本号
-		public static string PlayVersion = "0.2.0";
+		public static string SDKVersion = "0.2.0";
 
 		public static string NorthCNServerURL = "https://game-router-cn-n1.leancloud.cn/v1/router";
 

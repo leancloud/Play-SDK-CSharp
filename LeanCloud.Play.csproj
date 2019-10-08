@@ -2,8 +2,6 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
-    <CscToolPath>/Applications/Unity/Hub/Editor/2019.1.0f2/Unity.app/Contents/Tools/RoslynScripts</CscToolPath>
-    <CscToolExe>unity_csc.sh</CscToolExe>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -54,6 +52,9 @@
     <UnityVersion>2019.1.0f2</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Analyzer Include="/Applications/Visual Studio.app/Contents/Resources/lib/monodevelop/AddIns/MonoDevelop.Unity/Analyzers/Microsoft.Unity.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="UnityEngine">
       <HintPath>/Applications/Unity/Hub/Editor/2019.1.0f2/Unity.app/Contents/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>
@@ -65,16 +66,16 @@
     <Compile Include="Assets\Source\Client.cs" />
     <Compile Include="Assets\Source\CodecUtils.cs" />
     <Compile Include="Assets\Source\Config.cs" />
+    <Compile Include="Assets\Source\internal\AppRouter.cs" />
     <Compile Include="Assets\Source\internal\CommandWrapper.cs" />
     <Compile Include="Assets\Source\internal\Connection.cs" />
     <Compile Include="Assets\Source\internal\CustomType.cs" />
     <Compile Include="Assets\Source\internal\GameConnection.cs" />
+    <Compile Include="Assets\Source\internal\GameRouter.cs" />
     <Compile Include="Assets\Source\internal\LobbyConnection.cs" />
-    <Compile Include="Assets\Source\internal\LobbyRoomResult.cs" />
-    <Compile Include="Assets\Source\internal\LobbyRouter.cs" />
+    <Compile Include="Assets\Source\internal\LobbyService.cs" />
     <Compile Include="Assets\Source\internal\Message.cs" />
     <Compile Include="Assets\Source\internal\PlayContext.cs" />
-    <Compile Include="Assets\Source\internal\PlayRouter.cs" />
     <Compile Include="Assets\Source\internal\ResponseWrapper.cs" />
     <Compile Include="Assets\Source\LobbyRoom.cs" />
     <Compile Include="Assets\Source\PlayArray.cs" />
@@ -300,9 +301,6 @@
     <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
       <HintPath>/Applications/Visual Studio.app/Contents/Resources/lib/monodevelop/AddIns/MonoDevelop.Unity/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
-    <Reference Include="websocket-sharp">
-      <HintPath>/Users/onerainyu/LeanCloud/Play-SDK-CSharp/Assets/Plugins/websocket-sharp.dll</HintPath>
-    </Reference>
     <Reference Include="Google.Protobuf">
       <HintPath>/Users/onerainyu/LeanCloud/Play-SDK-CSharp/Assets/Plugins/Google.Protobuf.dll</HintPath>
     </Reference>
@@ -326,6 +324,9 @@
     </Reference>
     <Reference Include="UnityEditor.Purchasing">
       <HintPath>/Users/onerainyu/LeanCloud/Play-SDK-CSharp/Library/PackageCache/com.unity.purchasing@2.0.6/Editor/UnityEditor.Purchasing.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>/Users/onerainyu/LeanCloud/Play-SDK-CSharp/Assets/Plugins/Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>/Applications/Unity/Hub/Editor/2019.1.0f2/Unity.app/Contents/NetStandard/ref/2.0.0/netstandard.dll</HintPath>

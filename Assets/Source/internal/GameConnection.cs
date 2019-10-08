@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Net.WebSockets;
 using System.Linq;
 using LeanCloud.Play.Protocol;
 using Google.Protobuf;
@@ -11,15 +13,13 @@ namespace LeanCloud.Play {
             get; private set;
         }
 
-        internal GameConnection(PlayContext context): base(context) {
-        
-        }
-
-        internal static async Task<GameConnection> Connect(PlayContext context, string appId, string server, string userId, string gameVersion) {
-            var connection = new GameConnection(context);
-            await connection.Connect(server, userId);
-            await connection.OpenSession(appId, userId, gameVersion);
-            return connection;
+        internal async Task Connect(string appId, string server, string gameVersion, string userId, string sessionToken) {
+            client = new ClientWebSocket();
+            client.Options.AddSubProtocol("protobuf.1");
+            client.Options.KeepAliveInterval = TimeSpan.FromSeconds(10);
+            await client.ConnectAsync(new Uri(server), default);
+            string url = $"{server}session?appId={appId}&userId={userId}&gameVersion={gameVersion}&sdkVersion={Config.SDKVersion}&protocolVersion={Config.ProtocolVersion}&sessionToken={sessionToken}";
+            await client.ConnectAsync(new Uri(url), CancellationToken.None);
         }
 
         internal async Task<Room> CreateRoom(string roomId, RoomOptions roomOptions, List<string> expectedUserIds) {
