@@ -35,7 +35,7 @@ namespace LeanCloud.Play {
         }
 
         internal static Room ConvertToRoom(Protocol.RoomOptions options) {
-            var room = new Room {
+            var room = new Room(null) {
                 Name = options.Cid,
                 Open = options.Open == null || options.Open.Value,
                 Visible = options.Visible == null || options.Visible.Value,

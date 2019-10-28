@@ -5,15 +5,20 @@ using UnityEngine;
 using UnityEngine.TestTools;
 using System.Threading.Tasks;
 
-namespace LeanCloud.Play.Test
-{
-    public class LobbyTest
-    {
-        [UnityTest, Timeout(100000)]
-        public IEnumerator RoomListUpdate()
-        {
+namespace LeanCloud.Play.Test {
+    public class LobbyTest {
+        [SetUp]
+        public void SetUp() {
             Logger.LogDelegate += Utils.Log;
+        }
 
+        [TearDown]
+        public void TearDown() {
+            Logger.LogDelegate -= Utils.Log;
+        }
+
+        [UnityTest, Timeout(100000)]
+        public IEnumerator RoomListUpdate() {
             var f = false;
             var c0 = Utils.NewClient("lt0_0");
             var c1 = Utils.NewClient("lt0_1");
@@ -49,7 +54,6 @@ namespace LeanCloud.Play.Test
             c1.Close();
             c2.Close();
             c3.Close();
-            Logger.LogDelegate -= Utils.Log;
         }
     }
 }

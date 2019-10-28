@@ -9,10 +9,21 @@ using System.Threading.Tasks;
 namespace LeanCloud.Play.Test
 {
     public class CreateRoomTest {
-        [UnityTest]
-        public IEnumerator CreateNullNameRoom() {
+        [SetUp]
+        public void SetUp() {
+            Debug.Log("Set up");
             Logger.LogDelegate += Utils.Log;
+        }
 
+        [TearDown]
+        public void TearDown() {
+            Debug.Log("Tear down");
+            Logger.LogDelegate -= Utils.Log;
+        }
+
+        [UnityTest]
+        [Order(0)]
+        public IEnumerator CreateNullNameRoom() {
             var f = false;
             var c = Utils.NewClient("crt0");
             c.Connect().OnSuccess(_ => {
@@ -27,17 +38,16 @@ namespace LeanCloud.Play.Test
             while (!f) {
                 yield return null;
             }
-            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]
+        [Order(1)]
         public IEnumerator CreateSimpleRoom() {
-            Logger.LogDelegate += Utils.Log;
-
             var f = false;
             var roomName = "crt1_r";
             var c = Utils.NewClient("crt1");
             c.Connect().OnSuccess(_ => {
+                Debug.Log("connected");
                 return c.CreateRoom(roomName);
             }).Unwrap().OnSuccess(_ => {
                 var room = _.Result;
@@ -49,13 +59,11 @@ namespace LeanCloud.Play.Test
             while (!f) {
                 yield return null;
             }
-            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]
+        [Order(2)]
         public IEnumerator CreateCustomRoom() {
-            Logger.LogDelegate += Utils.Log;
-
             var f = false;
             var roomName = $"crt2_r_{Random.Range(0, 1000000)}";
             var roomTitle = "LeanCloud Room";
@@ -67,9 +75,9 @@ namespace LeanCloud.Play.Test
                     MaxPlayerCount = 2,
                     PlayerTtl = 60,
                     CustomRoomProperties = new PlayObject {
-                    { "title", roomTitle },
-                    { "level", 2 },
-                },
+                        { "title", roomTitle },
+                        { "level", 2 },
+                    },
                     CustoRoomPropertyKeysForLobby = new List<string> { "level" }
                 };
                 var expectedUserIds = new List<string> { "world" };
@@ -89,13 +97,11 @@ namespace LeanCloud.Play.Test
             while (!f) {
                 yield return null;
             }
-            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]
+        [Order(3)]
         public IEnumerator MasterAndLocal() {
-            Logger.LogDelegate += Utils.Log;
-
             var flag = false;
             var roomName = "crt3_r";
             var c0 = Utils.NewClient("crt3_0");
@@ -121,13 +127,11 @@ namespace LeanCloud.Play.Test
             while (!flag) {
                 yield return null;
             }
-            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]
+        [Order(4)]
         public IEnumerator CreateRoomFailed() {
-            Logger.LogDelegate += Utils.Log;
-
             var f = false;
             var roomName = "crt5_ r";
             var c = Utils.NewClient("crt5");
@@ -144,7 +148,6 @@ namespace LeanCloud.Play.Test
             while (!f) {
                 yield return null;
             }
-            Logger.LogDelegate -= Utils.Log;
         }
     }
 }

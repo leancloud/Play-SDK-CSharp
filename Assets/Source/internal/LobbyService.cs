@@ -2,9 +2,13 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using Newtonsoft.Json;
 
 namespace LeanCloud.Play {
+    /// <summary>
+    /// 创建 / 加入房间结果
+    /// </summary>
     internal class LobbyRoomResult {
         [JsonProperty("cid")]
         internal string RoomId {
@@ -23,22 +27,19 @@ namespace LeanCloud.Play {
     }
 
     internal class LobbyService {
-        readonly string appId;
-        readonly string appKey;
-        readonly string userId;
-        bool insecure;
-        string feature;
+        const string USER_SESSION_TOKEN_KEY = "X-LC-PLAY-MULTIPLAYER-SESSION-TOKEN";
+        const string APPLICATION_JSON = "application/json";
+
+        readonly Client client;
 
         GameRouter gameRouter;
 
-        internal LobbyService(string appId, string appKey, string userId) {
-            this.appId = appId;
-            this.appKey = appKey;
-            this.userId = userId;
+        internal LobbyService(Client client) {
+            this.client = client;
         }
 
         internal async Task<LobbyInfo> Authorize() {
-            gameRouter = new GameRouter(appId, appKey, userId, insecure, feature);
+            gameRouter = new GameRouter(client.AppId, client.AppKey, client.UserId, !client.Ssl, null);
             return await gameRouter.Authorize();
         }
 
@@ -46,23 +47,12 @@ namespace LeanCloud.Play {
             LobbyInfo lobbyInfo = await gameRouter.Authorize();
             string path = "/1/multiplayer/lobby/room";
             string fullUrl = $"{lobbyInfo.Url}{path}";
+            Logger.Debug(fullUrl);
             Dictionary<string, object> body = new Dictionary<string, object>();
             if (!string.IsNullOrEmpty(roomName)) {
                 body.Add("cid", roomName);
             }
-            HttpClient client = new HttpClient();
-            HttpRequestMessage request = new HttpRequestMessage {
-                RequestUri = new Uri(fullUrl),
-                Method = HttpMethod.Post,
-                Content = new StringContent(JsonConvert.SerializeObject(body))
-            };
-            HttpResponseMessage response = await client.SendAsync(request);
-            client.Dispose();
-            request.Dispose();
-            string content = await response.Content.ReadAsStringAsync();
-            response.Dispose();
-
-            return JsonConvert.DeserializeObject<LobbyRoomResult>(content);
+            return await Request(fullUrl, lobbyInfo.SessionToken, body);
         }
 
         internal async Task<LobbyRoomResult> JoinRoom(string roomName, List<string> expectedUserIds, bool rejoin, bool createOnNotFound) {
@@ -84,19 +74,7 @@ namespace LeanCloud.Play {
             if (createOnNotFound) {
                 body.Add("createOnNotFound", createOnNotFound);
             }
-            HttpClient client = new HttpClient();
-            HttpRequestMessage request = new HttpRequestMessage {
-                RequestUri = new Uri(fullUrl),
-                Method = HttpMethod.Post,
-                Content = new StringContent(JsonConvert.SerializeObject(body))
-            };
-            HttpResponseMessage response = await client.SendAsync(request);
-            client.Dispose();
-            request.Dispose();
-            string content = await response.Content.ReadAsStringAsync();
-            response.Dispose();
-
-            return JsonConvert.DeserializeObject<LobbyRoomResult>(content);
+            return await Request(fullUrl, lobbyInfo.SessionToken, body);
         }
 
         internal async Task<LobbyRoomResult> JoinRandomRoom(PlayObject matchProperties, List<string> expectedUserIds) {
@@ -114,19 +92,7 @@ namespace LeanCloud.Play {
             if (expectedUserIds != null) {
                 body.Add("expectMembers", expectedUserIds);
             }
-            HttpClient client = new HttpClient();
-            HttpRequestMessage request = new HttpRequestMessage {
-                RequestUri = new Uri(fullUrl),
-                Method = HttpMethod.Post,
-                Content = new StringContent(JsonConvert.SerializeObject(body))
-            };
-            HttpResponseMessage response = await client.SendAsync(request);
-            client.Dispose();
-            request.Dispose();
-            string content = await response.Content.ReadAsStringAsync();
-            response.Dispose();
-
-            return JsonConvert.DeserializeObject<LobbyRoomResult>(content);
+            return await Request(fullUrl, lobbyInfo.SessionToken, body);
         }
 
         internal async Task<LobbyRoomResult> MatchRandom(string piggybackUserId, PlayObject matchProperties, List<string> expectedUserIds) {
@@ -145,19 +111,44 @@ namespace LeanCloud.Play {
             if (expectedUserIds != null) {
                 body.Add("expectMembers", expectedUserIds);
             }
-            HttpClient client = new HttpClient();
-            HttpRequestMessage request = new HttpRequestMessage {
-                RequestUri = new Uri(fullUrl),
-                Method = HttpMethod.Post,
-                Content = new StringContent(JsonConvert.SerializeObject(body))
-            };
-            HttpResponseMessage response = await client.SendAsync(request);
-            client.Dispose();
-            request.Dispose();
-            string content = await response.Content.ReadAsStringAsync();
-            response.Dispose();
+            return await Request(fullUrl, lobbyInfo.SessionToken, body);
+        }
 
-            return JsonConvert.DeserializeObject<LobbyRoomResult>(content);
+        async Task<LobbyRoomResult> Request(string url, string sessionToken, Dictionary<string, object> body) {
+            HttpClient httpClient = null;
+            HttpRequestMessage request = null;
+            HttpResponseMessage response = null;
+            try {
+                httpClient = new HttpClient();
+                request = new HttpRequestMessage {
+                    RequestUri = new Uri(url),
+                    Method = HttpMethod.Post,
+                    Content = new StringContent(JsonConvert.SerializeObject(body))
+                };
+                AddHeaders(request.Content.Headers);
+                request.Content.Headers.Add(USER_SESSION_TOKEN_KEY, sessionToken);
+                response = await httpClient.SendAsync(request);
+                string content = await response.Content.ReadAsStringAsync();
+                Logger.Debug(content);
+                return JsonConvert.DeserializeObject<LobbyRoomResult>(content);
+            } finally {
+                if (httpClient != null) {
+                    httpClient.Dispose();
+                }
+                if (request != null) {
+                    request.Dispose();
+                }
+                if (response != null) {
+                    response.Dispose();
+                }
+            }
+        }
+
+        void AddHeaders(HttpContentHeaders headers) {
+            headers.Add("X-LC-ID", client.AppId);
+            headers.Add("X-LC-KEY", client.AppKey);
+            headers.Add("X-LC-PLAY-USER-ID", client.UserId);
+            headers.ContentType = new MediaTypeHeaderValue(APPLICATION_JSON);
         }
     }
 }

@@ -8,18 +8,19 @@ using LeanCloud.Play.Protocol;
 using Google.Protobuf;
 
 namespace LeanCloud.Play {
-    internal class GameConnection : Connection {
+    public class GameConnection : Connection {
         internal Room Room {
             get; private set;
         }
 
-        internal async Task Connect(string appId, string server, string gameVersion, string userId, string sessionToken) {
+        public async Task Connect(string appId, string server, string gameVersion, string userId, string sessionToken) {
             client = new ClientWebSocket();
             client.Options.AddSubProtocol("protobuf.1");
             client.Options.KeepAliveInterval = TimeSpan.FromSeconds(10);
-            await client.ConnectAsync(new Uri(server), default);
             string url = $"{server}session?appId={appId}&userId={userId}&gameVersion={gameVersion}&sdkVersion={Config.SDKVersion}&protocolVersion={Config.ProtocolVersion}&sessionToken={sessionToken}";
+            Logger.Debug(url);
             await client.ConnectAsync(new Uri(url), CancellationToken.None);
+            _ = StartReceive();
         }
 
         internal async Task<Room> CreateRoom(string roomId, RoomOptions roomOptions, List<string> expectedUserIds) {
@@ -174,7 +175,7 @@ namespace LeanCloud.Play {
             if (options.TargetActorIds != null) {
                 direct.ToActorIds.AddRange(options.TargetActorIds);
             }
-            Send(CommandType.Direct, OpType.None, new Body { 
+            _ = Send(CommandType.Direct, OpType.None, new Body { 
                 Direct = direct
             });
             return Task.FromResult(true);
@@ -210,6 +211,14 @@ namespace LeanCloud.Play {
 
         protected override int GetPingDuration() {
             return 7;
+        }
+
+        protected override string GetFastOpenUrl(string server, string appId, string gameVersion, string userId, string sessionToken) {
+            return $"{server}session?appId={appId}&sdkVersion={Config.SDKVersion}&protocolVersion={Config.ProtocolVersion}&gameVersion=${gameVersion}&userId=${userId}&sessionToken=${sessionToken}";
+        }
+
+        protected override void HandleNotification(CommandType cmd, OpType op, Body body) {
+            throw new NotImplementedException();
         }
     }
 }

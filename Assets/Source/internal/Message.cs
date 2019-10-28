@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 namespace LeanCloud.Play {
-    internal class Message {
+    public class Message {
 
         private Message() { }
 

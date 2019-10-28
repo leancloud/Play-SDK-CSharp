@@ -77,6 +77,7 @@
     <Compile Include="Assets\Source\internal\Message.cs" />
     <Compile Include="Assets\Source\internal\PlayContext.cs" />
     <Compile Include="Assets\Source\internal\ResponseWrapper.cs" />
+    <Compile Include="Assets\Source\Lobby.cs" />
     <Compile Include="Assets\Source\LobbyRoom.cs" />
     <Compile Include="Assets\Source\PlayArray.cs" />
     <Compile Include="Assets\Source\Player.cs" />
@@ -304,6 +305,9 @@
     <Reference Include="Google.Protobuf">
       <HintPath>/Users/onerainyu/LeanCloud/Play-SDK-CSharp/Assets/Plugins/Google.Protobuf.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>/Users/onerainyu/LeanCloud/Play-SDK-CSharp/Assets/Plugins/Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.Advertisements.Editor">
       <HintPath>/Users/onerainyu/LeanCloud/Play-SDK-CSharp/Library/PackageCache/com.unity.ads@2.3.1/Runtime/UnityEngine.Advertisements.Editor.dll</HintPath>
     </Reference>
@@ -324,9 +328,6 @@
     </Reference>
     <Reference Include="UnityEditor.Purchasing">
       <HintPath>/Users/onerainyu/LeanCloud/Play-SDK-CSharp/Library/PackageCache/com.unity.purchasing@2.0.6/Editor/UnityEditor.Purchasing.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>/Users/onerainyu/LeanCloud/Play-SDK-CSharp/Assets/Plugins/Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>/Applications/Unity/Hub/Editor/2019.1.0f2/Unity.app/Contents/NetStandard/ref/2.0.0/netstandard.dll</HintPath>

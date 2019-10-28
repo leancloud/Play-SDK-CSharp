@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -13,6 +12,32 @@ namespace LeanCloud.Play.Test
         [SetUp]
         public void Setup() {
             Logger.LogDelegate += Utils.Log;
+        }
+
+        [UnityTest]
+        public IEnumerator FastOpen() {
+            bool f = false;
+
+            GameConnection gameConn = new GameConnection();
+            string appId = "FQr8l8LLvdxIwhMHN77sNluX-9Nh9j0Va";
+            string server = "wss://cn-e1-cell2.leancloud.cn:5769/";
+            string gameVersion = "0.0.1";
+            string userId = "lean";
+            string sessionToken = "be5090bd3d471ecb41ac71bcede88a2d";
+            gameConn.Connect(appId, server, gameVersion, userId, sessionToken).ContinueWith(t => {
+                if (t.IsFaulted) {
+                    Debug.Log($"failed: {t.Exception.InnerException.Message}");
+                } else {
+                    Debug.Log("success");
+                    f = true;
+                }
+            });
+
+            while (!f) {
+                yield return null;
+            }
+
+            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]

@@ -10,11 +10,24 @@ namespace LeanCloud.Play {
     /// 房间类
     /// </summary>
 	public class Room {
+        enum State {
+            Init,
+            Joining,
+            Game,
+            Leaving,
+            Disconnected,
+            Closed
+        }
+
         internal Client Client {
             get; set;
         }
 
         internal Dictionary<int, Player> playerDict;
+
+        GameConnection gameConn;
+
+        State state;
 
         /// <summary>
         /// 房间名称
@@ -23,6 +36,7 @@ namespace LeanCloud.Play {
 		public string Name {
             get; internal set;
         }
+
         /// <summary>
         /// 房间是否开启
         /// </summary>
@@ -93,6 +107,26 @@ namespace LeanCloud.Play {
                 lock (playerDict) {
                     return playerDict.Values.ToList();
                 }
+            }
+        }
+
+        internal Room(Client client) {
+            Client = client;
+        }
+
+        internal async Task Create(string roomName, RoomOptions roomOptions, List<string> expectedUserIds) {
+            state = State.Joining;
+            try {
+                var lobbyRoom = await Client.lobbyService.CreateRoom(roomName);
+                gameConn = new GameConnection();
+                await Client.lobbyService.Authorize();
+                await gameConn.Connect(Client.AppId, lobbyRoom.Url, Client.GameVersion, Client.UserId, null);
+                var room = await gameConn.CreateRoom(lobbyRoom.RoomId, roomOptions, expectedUserIds);
+                //LobbyToGame(gameConn, room);
+            } catch (Exception e) {
+                Logger.Error(e.Message);
+                state = State.Closed;
+                throw e;
             }
         }
 

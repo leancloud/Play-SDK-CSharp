@@ -11,7 +11,7 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 大厅房间列表更新事件
         /// </summary>
-        public event Action<List<LobbyRoom>> OnLobbyRoomListUpdated;
+        public Action<List<LobbyRoom>> OnLobbyRoomListUpdated;
         /// <summary>
         /// 有玩家加入房间事件
         /// </summary>
@@ -59,7 +59,7 @@ namespace LeanCloud.Play {
 
         readonly PlayContext context;
 
-        LobbyService lobbyService;
+        internal LobbyService lobbyService;
 
         /// <summary>
         /// LeanCloud App Id
@@ -101,8 +101,6 @@ namespace LeanCloud.Play {
             get; private set;
         }
 
-        AppRouter playRouter;
-        GameRouter lobbyRouter;
         LobbyConnection lobbyConn;
         GameConnection gameConn;
 
@@ -112,6 +110,8 @@ namespace LeanCloud.Play {
         /// 大厅房间列表
         /// </summary>
         public List<LobbyRoom> LobbyRoomList;
+
+        Lobby lobby;
 
         /// <summary>
         /// 当前房间对象
@@ -146,14 +146,10 @@ namespace LeanCloud.Play {
             GameVersion = gameVersion;
 
             state = PlayState.INIT;
-            Logger.Debug("start at {0}", Thread.CurrentThread.ManagedThreadId);
-
+          
             var playGO = new GameObject("LeanCloud.Play");
             UnityEngine.Object.DontDestroyOnLoad(playGO);
             context = playGO.AddComponent<PlayContext>();
-
-            playRouter = new AppRouter(appId, playServer);
-            lobbyRouter = new GameRouter(appId, appKey, userId, false, null);
         }
 
         /// <summary>
@@ -170,7 +166,7 @@ namespace LeanCloud.Play {
                 throw new PlayException(PlayExceptionCode.StateError,
                     string.Format("You cannot call Connect() on {0} state", state.ToString()));
             }
-            lobbyService = new LobbyService(AppId, AppKey, UserId);
+            lobbyService = new LobbyService(this);
             await lobbyService.Authorize();
             Logger.Debug("connected at: {0}", Thread.CurrentThread.ManagedThreadId);
             return this;
@@ -181,14 +177,26 @@ namespace LeanCloud.Play {
         /// </summary>
         /// <returns>The lobby.</returns>
         public async Task JoinLobby() {
-            if (state != PlayState.LOBBY) {
-                throw new PlayException(PlayExceptionCode.StateError,
-                    string.Format("You cannot call JoinLobby() on {0} state", state.ToString()));
+            try {
+                if (lobby != null) {
+                    throw new Exception("You are already in lobby.");
+                }
+                lobby = new Lobby(this);
+                await lobby.Join();
+            } catch (Exception e) {
+                Logger.Error(e.Message);
             }
-            await lobbyService.Authorize();
-            lobbyConn = new LobbyConnection();
-            await lobbyConn.Connect(AppId, null, GameVersion, UserId, null);
-            await lobbyConn.JoinLobby();
+        }
+
+        /// <summary>
+        /// 离开大厅
+        /// </summary>
+        /// <returns></returns>
+        public async Task LeaveLobby() {
+            if (lobby == null) {
+                throw new Exception("You are not in lobby yet.");
+            }
+            await lobby.Leave();
         }
 
         /// <summary>
@@ -199,25 +207,31 @@ namespace LeanCloud.Play {
         /// <param name="roomOptions">创建房间选项</param>
         /// <param name="expectedUserIds">期望用户 Id 列表</param>
         public async Task<Room> CreateRoom(string roomName = null, RoomOptions roomOptions = null, List<string> expectedUserIds = null) {
-            if (state != PlayState.LOBBY) {
-                throw new PlayException(PlayExceptionCode.StateError,
-                    string.Format("You cannot call CreateRoom() on {0} state", state.ToString()));
+            if (Room != null) {
+                throw new Exception("You are already in room.");
             }
-            try {
-                state = PlayState.LOBBY_TO_GAME;
-                var lobbyRoom = await lobbyConn.CreateRoom(roomName, roomOptions, expectedUserIds);
-                var roomId = lobbyRoom.RoomId;
-                var server = lobbyRoom.Url;
-                gameConn = new GameConnection();
-                await lobbyService.Authorize();
-                await gameConn.Connect(AppId, server, GameVersion, UserId, null);
-                var room = await gameConn.CreateRoom(roomId, roomOptions, expectedUserIds);
-                LobbyToGame(gameConn, room);
-                return room;
-            } catch (Exception e) {
-                state = PlayState.LOBBY;
-                throw e;
-            }
+            // TODO 关闭 Lobby
+
+            Room = new Room(this);
+            await Room.Create(roomName, roomOptions, expectedUserIds);
+            return Room;
+
+
+            //try {
+            //    var lobbyRoom = await lobbyService.CreateRoom(roomName);
+            //    var roomId = lobbyRoom.RoomId;
+            //    var server = lobbyRoom.Url;
+            //    gameConn = new GameConnection();
+            //    await lobbyService.Authorize();
+            //    await gameConn.Connect(AppId, server, GameVersion, UserId, null);
+            //    var room = await gameConn.CreateRoom(roomId, roomOptions, expectedUserIds);
+            //    //LobbyToGame(gameConn, room);
+            //    return room;
+            //} catch (Exception e) {
+            //    Logger.Error(e.Message);
+            //    state = PlayState.LOBBY;
+            //    throw e;
+            //}
         }
 
         /// <summary>
@@ -607,50 +621,10 @@ namespace LeanCloud.Play {
         }
 
         void OnLobbyConnMessage(CommandType cmd, OpType op, Body body) {
-            switch (cmd) {
-                case CommandType.Lobby:
-                    switch (op) {
-                        case OpType.RoomList:
-                            HandleRoomListMsg(body);
-                            break;
-                        default:
-                            HandleUnknownMsg(cmd, op, body);
-                            break;
-                    }
-                    break;
-                case CommandType.Statistic:
-                    break;
-                case CommandType.Error:
-                    HandleErrorMsg(body);
-                    break;
-                default:
-                    HandleUnknownMsg(cmd, op, body);
-                    break;
-            }
+            
         }
 
-        void HandleRoomListMsg(Body body) {
-            LobbyRoomList = new List<LobbyRoom>();
-            foreach (var roomOpts in body.RoomList.List) {
-                var lobbyRoom = Utils.ConvertToLobbyRoom(roomOpts);
-                LobbyRoomList.Add(lobbyRoom);
-            }
-            OnLobbyRoomListUpdated?.Invoke(LobbyRoomList);
-        }
-
-        void HandleErrorMsg(Body body) {
-            Logger.Error("error msg: {0}", body);
-            var errorInfo = body.Error.ErrorInfo;
-            OnError?.Invoke(errorInfo.ReasonCode, errorInfo.Detail);
-        }
-
-        void HandleUnknownMsg(CommandType cmd, OpType op, Body body) {
-            try {
-                Logger.Error("unknown msg: {0}/{1} {2}", cmd, op, body);
-            } catch (Exception e) {
-                Logger.Error(e.Message);
-            }
-        }
+        
 
         void OnLobbyConnClose(int code, string reason) {
             context.Post(() => {
@@ -691,7 +665,7 @@ namespace LeanCloud.Play {
                             HandleRoomKicked(body.RoomNotification);
                             break;
                         default:
-                            HandleUnknownMsg(cmd, op, body);
+                            //HandleUnknownMsg(cmd, op, body);
                             break;
                     }
                     break;
@@ -701,10 +675,10 @@ namespace LeanCloud.Play {
                     HandleSendEvent(body.Direct);
                     break;
                 case CommandType.Error:
-                    HandleErrorMsg(body);
+                    //HandleErrorMsg(body);
                     break;
                 default:
-                    HandleUnknownMsg(cmd, op, body);
+                    //HandleUnknownMsg(cmd, op, body);
                     break;
             }
         }

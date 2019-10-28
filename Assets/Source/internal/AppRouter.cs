@@ -29,7 +29,7 @@ namespace LeanCloud.Play {
 
         internal string Url {
             get {
-                return $"https://{PrimaryUrl ?? SecondaryUrl}/1/multiplayer/router/route";
+                return $"https://{PrimaryUrl ?? SecondaryUrl}/1/multiplayer/router/authorize";
             }
         }
 
@@ -55,7 +55,7 @@ namespace LeanCloud.Play {
 
         internal async Task<string> Fetch() {
             if (playServer != null) {
-                return $"{playServer}/1/multiplayer/router/route";
+                return $"{playServer}/1/multiplayer/router/authorize";
             }
             if (appInfo != null && appInfo.IsValid) {
                 Logger.Debug("Get server from cache");
@@ -79,14 +79,19 @@ namespace LeanCloud.Play {
                 RequestUri = new Uri($"https://app-router.leancloud.cn/2/route?appId={appId}"),
                 Method = HttpMethod.Get
             };
-            HttpResponseMessage response = await client.SendAsync(request);
-            client.Dispose();
-            request.Dispose();
+            try {
+                HttpResponseMessage response = await client.SendAsync(request);
 
-            string content = await response.Content.ReadAsStringAsync();
-            response.Dispose();
-
-            return JsonConvert.DeserializeObject<AppRouterInfo>(content);
+                try {
+                    string content = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<AppRouterInfo>(content);
+                } finally {
+                    response.Dispose();
+                }
+            } finally {
+                client.Dispose();
+                request.Dispose();
+            }
         }
     }
 }

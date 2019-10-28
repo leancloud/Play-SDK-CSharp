@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Net.WebSockets;
@@ -8,7 +7,15 @@ using LeanCloud.Play.Protocol;
 using Google.Protobuf;
 
 namespace LeanCloud.Play {
-    internal abstract class Connection {
+    public abstract class Connection {
+        enum State {
+            Init,
+            Connecting,
+            Connected,
+            Disconnected,
+            Closed,
+        }
+
         const int RECV_BUFFER_SIZE = 1024;
         static readonly string PING = "{}";
 
@@ -18,6 +25,7 @@ namespace LeanCloud.Play {
 
         internal event Action<CommandType, OpType, Body> OnMessage;
         internal event Action<int, string> OnClose;
+        internal event Action<int, string> OnError;
         
         string userId;
 
@@ -29,8 +37,12 @@ namespace LeanCloud.Play {
         }
 
         public async Task Close() {
-            if (IsOpen) {
-                await client.CloseAsync(WebSocketCloseStatus.NormalClosure, "1", CancellationToken.None);
+            try {
+                if (IsOpen) {
+                    await client.CloseAsync(WebSocketCloseStatus.NormalClosure, "1", CancellationToken.None);
+                }
+            } catch (Exception e) {
+                Logger.Error(e.Message);
             }
         }
 
@@ -46,6 +58,20 @@ namespace LeanCloud.Play {
             client.Options.KeepAliveInterval = TimeSpan.FromSeconds(10);
             await client.ConnectAsync(new Uri(server), default);
             _ = StartReceive();
+        }
+
+        internal async Task<Task<ResponseWrapper>> Connect(string appId, string server, string gameVersion, string userId, string sessionToken) {
+            this.userId = userId;
+            TaskCompletionSource<ResponseWrapper> tcs = new TaskCompletionSource<ResponseWrapper>();
+            client = new ClientWebSocket();
+            client.Options.AddSubProtocol("protobuf.1");
+            client.Options.KeepAliveInterval = TimeSpan.FromSeconds(10);
+            string newServer = server.Replace("https://", "wss://");
+            string url = GetFastOpenUrl(newServer, appId, gameVersion, userId, sessionToken);
+            await client.ConnectAsync(new Uri(url), default);
+            _ = StartReceive();
+            responses.Add(0, tcs);
+            return tcs.Task;
         }
 
         protected Task<ResponseWrapper> SendRequest(CommandType cmd, OpType op, RequestMessage request) {
@@ -82,7 +108,7 @@ namespace LeanCloud.Play {
             }
         }
 
-        async Task StartReceive() {
+        protected async Task StartReceive() {
             byte[] buffer = new byte[RECV_BUFFER_SIZE];
             try {
                 while (client.State == WebSocketState.Open) {
@@ -97,14 +123,15 @@ namespace LeanCloud.Play {
                         data = await MergeData(data, buffer, result.Count);
                     } while (!result.EndOfMessage);
                     try {
-                        var command = Command.Parser.ParseFrom(data);
-                        var cmd = command.Cmd;
-                        var op = command.Op;
-                        var body = Body.Parser.ParseFrom(command.Body);
+                        Command command = Command.Parser.ParseFrom(data);
+                        CommandType cmd = command.Cmd;
+                        OpType op = command.Op;
+                        Body body = Body.Parser.ParseFrom(command.Body);
                         Logger.Debug("{0} <= {1}/{2}: {3}", userId, cmd, op, body);
                         HandleCommand(cmd, op, body);
                     } catch (Exception e) {
-
+                        Logger.Error(e.Message);
+                        throw e;
                     }
                 }
             } catch (Exception e) {
@@ -124,7 +151,7 @@ namespace LeanCloud.Play {
 
 
 
-        internal Connection() {
+        public Connection() {
             responses = new Dictionary<int, TaskCompletionSource<ResponseWrapper>>();
         }
 
@@ -159,11 +186,15 @@ namespace LeanCloud.Play {
                     }
                 }
             } else {
-                OnMessage?.Invoke(cmd, op, body);
+                HandleNotification(cmd, op, body);
             }
         }
 
+        protected abstract string GetFastOpenUrl(string server, string appId, string gameVersion, string userId, string sessionToken);
+
         protected abstract int GetPingDuration();
+
+        protected abstract void HandleNotification(CommandType cmd, OpType op, Body body);
 
         static volatile int requestI = 1;
         static readonly object requestILock = new object();
@@ -181,6 +212,20 @@ namespace LeanCloud.Play {
                 I = RequestI
             };
             return request;
+        }
+
+        protected void HandleErrorMsg(Body body) {
+            Logger.Error("error msg: {0}", body);
+            var errorInfo = body.Error.ErrorInfo;
+            OnError?.Invoke(errorInfo.ReasonCode, errorInfo.Detail);
+        }
+
+        protected void HandleUnknownMsg(CommandType cmd, OpType op, Body body) {
+            try {
+                Logger.Error("unknown msg: {0}/{1} {2}", cmd, op, body);
+            } catch (Exception e) {
+                Logger.Error(e.Message);
+            }
         }
     }
 }

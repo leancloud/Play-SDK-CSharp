@@ -1,21 +1,13 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Net.WebSockets;
 using LeanCloud.Play.Protocol;
 using Google.Protobuf;
 
 namespace LeanCloud.Play {
     internal class LobbyConnection : Connection {
-        internal async Task Connect(string appId, string server, string gameVersion, string userId, string sessionToken) {
-            client = new ClientWebSocket();
-            client.Options.AddSubProtocol("protobuf.1");
-            client.Options.KeepAliveInterval = TimeSpan.FromSeconds(10);
-            await client.ConnectAsync(new Uri(server), default);
-            string url = $"{server}/1/multiplayer/lobby/websocket?appId={appId}&userId={userId}&protocolVersion={Config.ProtocolVersion}&gameVersion={gameVersion}&sessionToken={sessionToken}";
-            await client.ConnectAsync(new Uri(url), CancellationToken.None);
-        }
+        internal Action<List<LobbyRoom>> OnRoomListUpdated;
+
 
         internal async Task JoinLobby() {
             var request = NewRequest();
@@ -127,6 +119,42 @@ namespace LeanCloud.Play {
 
         protected override int GetPingDuration() {
             return 20;
+        }
+
+        protected override string GetFastOpenUrl(string server, string appId, string gameVersion, string userId, string sessionToken) {
+            return $"{server}/1/multiplayer/lobby/websocket?appId={appId}&sdkVersion={Config.SDKVersion}&protocolVersion={Config.ProtocolVersion}&gameVersion={gameVersion}&userId={userId}&sessionToken={sessionToken}";
+        }
+
+        protected override void HandleNotification(CommandType cmd, OpType op, Body body) {
+            switch (cmd) {
+                case CommandType.Lobby:
+                    switch (op) {
+                        case OpType.RoomList:
+                            HandleRoomListMsg(body);
+                            break;
+                        default:
+                            HandleUnknownMsg(cmd, op, body);
+                            break;
+                    }
+                    break;
+                case CommandType.Statistic:
+                    break;
+                case CommandType.Error:
+                    HandleErrorMsg(body);
+                    break;
+                default:
+                    HandleUnknownMsg(cmd, op, body);
+                    break;
+            }
+        }
+
+        void HandleRoomListMsg(Body body) {
+            List<LobbyRoom> LobbyRoomList = new List<LobbyRoom>();
+            foreach (var roomOpts in body.RoomList.List) {
+                var lobbyRoom = Utils.ConvertToLobbyRoom(roomOpts);
+                LobbyRoomList.Add(lobbyRoom);
+            }
+            OnRoomListUpdated?.Invoke(LobbyRoomList);
         }
     }
 }

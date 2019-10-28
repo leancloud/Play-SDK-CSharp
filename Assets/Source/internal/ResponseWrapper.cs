@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using LeanCloud.Play.Protocol;
 
-internal class ResponseWrapper {
+public class ResponseWrapper {
     internal CommandType Cmd {
         get; set;
     }
