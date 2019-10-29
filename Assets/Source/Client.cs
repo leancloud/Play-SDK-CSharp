@@ -15,47 +15,47 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 有玩家加入房间事件
         /// </summary>
-        public event Action<Player> OnPlayerRoomJoined;
+        public Action<Player> OnPlayerRoomJoined;
         /// <summary>
         /// 有玩家离开房间事件
         /// </summary>
-        public event Action<Player> OnPlayerRoomLeft;
+        public Action<Player> OnPlayerRoomLeft;
         /// <summary>
         /// 房主切换事件
         /// </summary>
-        public event Action<Player> OnMasterSwitched;
+        public Action<Player> OnMasterSwitched;
         /// <summary>
         /// 房间自定义属性更新事件
         /// </summary>
-        public event Action<PlayObject> OnRoomCustomPropertiesChanged;
+        public Action<PlayObject> OnRoomCustomPropertiesChanged;
         /// <summary>
         /// 房间系统属性更新事件，目前包括：房间开关，可见性，最大玩家数量，预留玩家 Id 列表
         /// </summary>
-        public event Action<PlayObject> OnRoomSystemPropertiesChanged;
+        public Action<PlayObject> OnRoomSystemPropertiesChanged;
         /// <summary>
         /// 玩家自定义属性更新事件
         /// </summary>
-        public event Action<Player, PlayObject> OnPlayerCustomPropertiesChanged;
+        public Action<Player, PlayObject> OnPlayerCustomPropertiesChanged;
         /// <summary>
         /// 玩家在线 / 离线变化事件
         /// </summary>
-        public event Action<Player> OnPlayerActivityChanged;
+        public Action<Player> OnPlayerActivityChanged;
         /// <summary>
         /// 用户自定义事件
         /// </summary>
-        public event Action<byte, PlayObject, int> OnCustomEvent;
+        public Action<byte, PlayObject, int> OnCustomEvent;
         /// <summary>
         /// 被踢出房间事件
         /// </summary>
-        public event Action<int?, string> OnRoomKicked;
+        public Action<int?, string> OnRoomKicked;
         /// <summary>
         /// 断线事件
         /// </summary>
-        public event Action OnDisconnected;
+        public Action OnDisconnected;
         /// <summary>
         /// 错误事件
         /// </summary>
-        public event Action<int, string> OnError;
+        public Action<int, string> OnError;
 
         readonly PlayContext context;
 
@@ -99,17 +99,21 @@ namespace LeanCloud.Play {
         /// <value>The game version.</value>
         public string GameVersion {
             get; private set;
-        }
-
-        LobbyConnection lobbyConn;
-        GameConnection gameConn;
+        }   
 
         PlayState state;
 
         /// <summary>
         /// 大厅房间列表
         /// </summary>
-        public List<LobbyRoom> LobbyRoomList;
+        public List<LobbyRoom> LobbyRoomList {
+            get {
+                if (lobby == null) {
+                    return null;
+                }
+                return lobby.LobbyRoomList;
+            }
+        }
 
         Lobby lobby;
 
@@ -118,7 +122,7 @@ namespace LeanCloud.Play {
         /// </summary>
         /// <value>The room.</value>
         public Room Room {
-            get; private set;
+            get; internal set;
         }
 
         /// <summary>
@@ -210,28 +214,13 @@ namespace LeanCloud.Play {
             if (Room != null) {
                 throw new Exception("You are already in room.");
             }
-            // TODO 关闭 Lobby
-
+            // 关闭 Lobby
+            if (lobby != null) {
+                await lobby.Close();
+            }
             Room = new Room(this);
             await Room.Create(roomName, roomOptions, expectedUserIds);
             return Room;
-
-
-            //try {
-            //    var lobbyRoom = await lobbyService.CreateRoom(roomName);
-            //    var roomId = lobbyRoom.RoomId;
-            //    var server = lobbyRoom.Url;
-            //    gameConn = new GameConnection();
-            //    await lobbyService.Authorize();
-            //    await gameConn.Connect(AppId, server, GameVersion, UserId, null);
-            //    var room = await gameConn.CreateRoom(roomId, roomOptions, expectedUserIds);
-            //    //LobbyToGame(gameConn, room);
-            //    return room;
-            //} catch (Exception e) {
-            //    Logger.Error(e.Message);
-            //    state = PlayState.LOBBY;
-            //    throw e;
-            //}
         }
 
         /// <summary>
@@ -241,23 +230,16 @@ namespace LeanCloud.Play {
         /// <param name="roomName">房间 Id</param>
         /// <param name="expectedUserIds">期望用户 Id 列表</param>
         public async Task<Room> JoinRoom(string roomName, List<string> expectedUserIds = null) {
-            if (state != PlayState.LOBBY) {
-                throw new PlayException(PlayExceptionCode.StateError,
-                    string.Format("You cannot call JoinRoom() on {0} state", state.ToString()));
+            if (Room != null) {
+                throw new Exception("You are already in room.");
             }
-            try {
-                state = PlayState.LOBBY_TO_GAME;
-                var lobbyRoom = await lobbyConn.JoinRoom(roomName, expectedUserIds);
-                var roomId = lobbyRoom.RoomId;
-                var server = lobbyRoom.Url;
-                gameConn = new GameConnection();
-                Room = await gameConn.JoinRoom(roomId, expectedUserIds);
-                LobbyToGame(gameConn, Room);
-                return Room;
-            } catch (Exception e) {
-                state = PlayState.LOBBY;
-                throw e;
+            // 关闭 Lobby
+            if (lobby != null) {
+                await lobby.Close();
             }
+            Room = new Room(this);
+            await Room.Join(roomName, expectedUserIds);
+            return Room;
         }
 
         /// <summary>
@@ -266,23 +248,13 @@ namespace LeanCloud.Play {
         /// <returns>The room.</returns>
         /// <param name="roomName">房间 Id</param>
         public async Task<Room> RejoinRoom(string roomName) {
-            if (state != PlayState.LOBBY) {
-                throw new PlayException(PlayExceptionCode.StateError,
-                    string.Format("You cannot call RejoinRoom() on {0} state", state.ToString()));
+            // 关闭 Lobby
+            if (lobby != null) {
+                await lobby.Close();
             }
-            try {
-                state = PlayState.LOBBY_TO_GAME;
-                var lobbyRoom = await lobbyConn.RejoinRoom(roomName);
-                var roomId = lobbyRoom.RoomId;
-                var server = lobbyRoom.Url;
-                gameConn = new GameConnection();
-                Room = await gameConn.JoinRoom(roomId, null);
-                LobbyToGame(gameConn, Room);
-                return Room;
-            } catch (Exception e) {
-                state = PlayState.LOBBY;
-                throw e;
-            }
+            Room = new Room(this);
+            await Room.Rejoin(roomName);
+            return Room;
         }
 
         /// <summary>
@@ -293,28 +265,16 @@ namespace LeanCloud.Play {
         /// <param name="roomOptions">创建房间选项</param>
         /// <param name="expectedUserIds">期望用户 Id 列表</param>
         public async Task<Room> JoinOrCreateRoom(string roomName, RoomOptions roomOptions = null, List<string> expectedUserIds = null) {
-            if (state != PlayState.LOBBY) {
-                throw new PlayException(PlayExceptionCode.StateError,
-                    string.Format("You cannot call JoinOrCreateRoom() on {0} state", state.ToString()));
+            if (Room != null) {
+                throw new Exception("You are already in room.");
             }
-            try {
-                state = PlayState.LOBBY_TO_GAME;
-                var lobbyRoom = await lobbyConn.JoinOrCreateRoom(roomName, roomOptions, expectedUserIds);
-                var create = lobbyRoom.Create;
-                var roomId = lobbyRoom.RoomId;
-                var server = lobbyRoom.Url;
-                gameConn = new GameConnection();
-                if (create) {
-                    Room = await gameConn.CreateRoom(roomId, roomOptions, expectedUserIds);
-                } else {
-                    Room = await gameConn.JoinRoom(roomId, expectedUserIds);
-                }
-                LobbyToGame(gameConn, Room);
-                return Room;
-            } catch (Exception e) {
-                state = PlayState.LOBBY;
-                throw e;
+            // 关闭 Lobby
+            if (lobby != null) {
+                await lobby.Close();
             }
+            Room = new Room(this);
+            await Room.JoinOrCreate(roomName, roomOptions, expectedUserIds);
+            return Room;
         }
 
         /// <summary>
@@ -324,23 +284,16 @@ namespace LeanCloud.Play {
         /// <param name="matchProperties">匹配属性</param>
         /// <param name="expectedUserIds">期望用户 Id 列表</param>
         public async Task<Room> JoinRandomRoom(PlayObject matchProperties = null, List<string> expectedUserIds = null) {
-            if (state != PlayState.LOBBY) {
-                throw new PlayException(PlayExceptionCode.StateError,
-                    string.Format("You cannot call JoinRandomRoom() on {0} state", state.ToString()));
+            if (Room != null) {
+                throw new Exception("You are already in room.");
             }
-            try {
-                state = PlayState.LOBBY_TO_GAME;
-                var lobbyRoom = await lobbyConn.JoinRandomRoom(matchProperties, expectedUserIds);
-                var roomId = lobbyRoom.RoomId;
-                var server = lobbyRoom.Url;
-                gameConn = new GameConnection();
-                Room = await gameConn.JoinRoom(roomId, expectedUserIds);
-                LobbyToGame(gameConn, Room);
-                return Room;
-            } catch (Exception e) {
-                state = PlayState.LOBBY;
-                throw e;
+            // 关闭 Lobby
+            if (lobby != null) {
+                await lobby.Close();
             }
+            Room = new Room(this);
+            await Room.JoinRandom(matchProperties, expectedUserIds);
+            return Room;
         }
 
         /// <summary>
@@ -348,17 +301,11 @@ namespace LeanCloud.Play {
         /// </summary>
         /// <returns>The and rejoin.</returns>
         public async Task<Room> ReconnectAndRejoin() {
-            if (state != PlayState.DISCONNECT) {
-                throw new PlayException(PlayExceptionCode.StateError,
-                    string.Format("You cannot call ReconnectAndRejoin() on {0} state", state.ToString()));
-            }
             if (Room == null) {
                 throw new ArgumentNullException(nameof(Room));
             }
             await Connect();
-            Logger.Debug("Connect at {0}", Thread.CurrentThread.ManagedThreadId);
             var room = await RejoinRoom(Room.Name);
-            Logger.Debug("Rejoin at {0}", Thread.CurrentThread.ManagedThreadId);
             return room;
         }
 
@@ -368,13 +315,9 @@ namespace LeanCloud.Play {
         /// <returns>The random.</returns>
         /// <param name="piggybackUserId">占位用户 Id</param>
         /// <param name="matchProperties">匹配属性</param>
-        public async Task<LobbyRoom> MatchRandom(string piggybackUserId, PlayObject matchProperties = null, List<string> expectedUserIds = null) {
-            if (state != PlayState.LOBBY) {
-                throw new PlayException(PlayExceptionCode.StateError,
-                    string.Format("You cannot call MatchRandom() on {0} state", state.ToString()));
-            }
-            var lobbyRoom = await lobbyConn.MatchRandom(piggybackUserId, matchProperties, expectedUserIds);
-            return lobbyRoom;
+        public async Task<string> MatchRandom(string piggybackUserId, PlayObject matchProperties = null, List<string> expectedUserIds = null) {
+            var lobbyRoom = await lobbyService.MatchRandom(piggybackUserId, matchProperties, expectedUserIds);
+            return lobbyRoom.RoomId;
         }
 
         /// <summary>
@@ -382,24 +325,10 @@ namespace LeanCloud.Play {
         /// </summary>
         /// <returns>The room.</returns>
         public async Task LeaveRoom() {
-            if (state != PlayState.GAME) {
-                throw new PlayException(PlayExceptionCode.StateError,
-                    string.Format("You cannot call LeaveRoom() on {0} state", state.ToString()));
+            if (Room == null) {
+                throw new Exception("You are not in room yet.");
             }
-            state = PlayState.GAME_TO_LOBBY;
-            try {
-                await gameConn.LeaveRoom();
-            } catch (Exception e) {
-                state = PlayState.GAME;
-                throw e;
-            }
-            try {
-                lobbyConn = await ConnectLobby();
-                GameToLobby(lobbyConn);
-            } catch (Exception e) {
-                state = PlayState.INIT;
-                throw e;
-            }
+            await Room.Leave();
         }
 
         /// <summary>
@@ -408,14 +337,11 @@ namespace LeanCloud.Play {
         /// <returns>The room open.</returns>
         /// <param name="open">是否开启</param>
         public async Task<bool> SetRoomOpen(bool open) {
-            if (state != PlayState.GAME) {
-                throw new PlayException(PlayExceptionCode.StateError,
-                    string.Format("You cannot call SetRoomOpened() on {0} state", state.ToString()));
+            if (Room == null) {
+                throw new Exception("You are not in room yet.");
             }
-            var sysProps = await gameConn.SetRoomOpen(open);
-            Room.MergeSystemProperties(sysProps);
-            return Room.Open;
-        }
+            return await Room.SetOpen(open);
+        } 
 
         /// <summary>
         /// 设置房间可见性
@@ -423,13 +349,10 @@ namespace LeanCloud.Play {
         /// <returns>The room visible.</returns>
         /// <param name="visible">是否可见</param>
         public async Task<bool> SetRoomVisible(bool visible) {
-            if (state != PlayState.GAME) {
-                throw new PlayException(PlayExceptionCode.StateError,
-                    string.Format("You cannot call SetRoomVisible() on {0} state", state.ToString()));
+            if (Room == null) {
+                throw new Exception("You are not in room yet.");
             }
-            var sysProps = await gameConn.SetRoomVisible(visible);
-            Room.MergeSystemProperties(sysProps);
-            return Room.Visible;
+            return await Room.SetVisible(visible);
         }
 
         /// <summary>
@@ -438,13 +361,10 @@ namespace LeanCloud.Play {
         /// <returns>The room max player count.</returns>
         /// <param name="count">数量</param>
         public async Task<int> SetRoomMaxPlayerCount(int count) {
-            if (state != PlayState.GAME) {
-                throw new PlayException(PlayExceptionCode.StateError,
-                    string.Format("You cannot call SetRoomMaxPlayerCount() on {0} state", state.ToString()));
+            if (Room == null) {
+                throw new Exception("You are not in room yet.");
             }
-            var sysProps = await gameConn.SetRoomMaxPlayerCount(count);
-            Room.MergeSystemProperties(sysProps);
-            return Room.MaxPlayerCount;
+            return await Room.SetMaxPlayerCount(count);
         }
 
         /// <summary>
@@ -453,13 +373,10 @@ namespace LeanCloud.Play {
         /// <returns>The room expected user identifiers.</returns>
         /// <param name="expectedUserIds">期望用户 Id 列表</param>
         public async Task<List<string>> SetRoomExpectedUserIds(List<string> expectedUserIds) {
-            if (state != PlayState.GAME) {
-                throw new PlayException(PlayExceptionCode.StateError,
-                    string.Format("You cannot call SetRoomExpectedUserIds() on {0} state", state.ToString()));
+            if (Room == null) {
+                throw new Exception("You are not in room yet.");
             }
-            var sysProps = await gameConn.SetRoomExpectedUserIds(expectedUserIds);
-            Room.MergeSystemProperties(sysProps);
-            return Room.ExpectedUserIds;
+            return await Room.SetExpectedUserIds(expectedUserIds);
         }
 
         /// <summary>
@@ -467,12 +384,10 @@ namespace LeanCloud.Play {
         /// </summary>
         /// <returns>The room expected user identifiers.</returns>
         public async Task ClearRoomExpectedUserIds() {
-            if (state != PlayState.GAME) {
-                throw new PlayException(PlayExceptionCode.StateError,
-                    string.Format("You cannot call ClearRoomExpectedUserIds() on {0} state", state.ToString()));
+            if (Room == null) {
+                throw new Exception("You are not in room yet.");
             }
-            var sysProps = await gameConn.ClearRoomExpectedUserIds();
-            Room.MergeSystemProperties(sysProps);
+            await Room.ClearExpectedUserIds();
         }
 
         /// <summary>
@@ -481,13 +396,10 @@ namespace LeanCloud.Play {
         /// <returns>The room expected user identifiers.</returns>
         /// <param name="expectedUserIds">增加的期望用户 Id 列表</param>
         public async Task<List<string>> AddRoomExpectedUserIds(List<string> expectedUserIds) {
-            if (state != PlayState.GAME) {
-                throw new PlayException(PlayExceptionCode.StateError,
-                    string.Format("You cannot call AddRoomExpectedUserIds() on {0} state", state.ToString()));
+            if (Room == null) {
+                throw new Exception("You are not in room yet.");
             }
-            var sysProps = await gameConn.AddRoomExpectedUserIds(expectedUserIds);
-            Room.MergeSystemProperties(sysProps);
-            return Room.ExpectedUserIds;
+            return await Room.AddExpectedUserIds(expectedUserIds);
         }
 
         /// <summary>
@@ -496,13 +408,10 @@ namespace LeanCloud.Play {
         /// <returns>The room expected user identifiers.</returns>
         /// <param name="expectedUserIds">删除的期望用户 Id 列表</param>
         public async Task<List<string>> RemoveRoomExpectedUserIds(List<string> expectedUserIds) {
-            if (state != PlayState.GAME) {
-                throw new PlayException(PlayExceptionCode.StateError,
-                    string.Format("You cannot call RemoveRoomExpectedUserIds() on {0} state", state.ToString()));
+            if (Room == null) {
+                throw new Exception("You are not in room yet.");
             }
-            var sysProps = await gameConn.RemoveRoomExpectedUserIds(expectedUserIds);
-            Room.MergeSystemProperties(sysProps);
-            return Room.ExpectedUserIds;
+            return await Room.RemoveExpectedUserIds(expectedUserIds);
         }
 
         /// <summary>
@@ -511,12 +420,10 @@ namespace LeanCloud.Play {
         /// <returns>The master.</returns>
         /// <param name="newMasterId">新房主的 Actor Id</param>
         public async Task<Player> SetMaster(int newMasterId) {
-            if (state != PlayState.GAME) {
-                throw new PlayException(PlayExceptionCode.StateError,
-                    string.Format("You cannot call SetMaster() on {0} state", state.ToString()));
+            if (Room == null) {
+                throw new Exception("You are not in room yet.");
             }
-            Room.MasterActorId = await gameConn.SetMaster(newMasterId);
-            return Room.Master;
+            return await Room.SetMaster(newMasterId);
         }
 
         /// <summary>
@@ -527,12 +434,10 @@ namespace LeanCloud.Play {
         /// <param name="code">附加码</param>
         /// <param name="reason">附加消息</param>
         public async Task KickPlayer(int actorId, int code = 0, string reason = null) {
-            if (state != PlayState.GAME) {
-                throw new PlayException(PlayExceptionCode.StateError,
-                    string.Format("You cannot call KickPlayer() on {0} state", state.ToString()));
+            if (Room == null) {
+                throw new Exception("You are not in room yet.");
             }
-            var playerId = await gameConn.KickPlayer(actorId, code, reason);
-            Room.RemovePlayer(playerId);
+            await Room.KickPlayer(actorId, code, reason);
         }
 
         /// <summary>
@@ -543,17 +448,10 @@ namespace LeanCloud.Play {
         /// <param name="eventData">事件参数</param>
         /// <param name="options">事件选项</param>
         public Task SendEvent(byte eventId, PlayObject eventData = null, SendEventOptions options = null) {
-            if (state != PlayState.GAME) {
-                throw new PlayException(PlayExceptionCode.StateError,
-                    string.Format("You cannot call SendEvent() on {0} state", state.ToString()));
+            if (Room == null) {
+                throw new Exception("You are not in room yet.");
             }
-            var opts = options;
-            if (opts == null) {
-                opts = new SendEventOptions {
-                    ReceiverGroup = ReceiverGroup.All
-                };
-            }
-            return gameConn.SendEvent(eventId, eventData, opts);
+            return Room.SendEvent(eventId, eventData, options);
         }
 
         /// <summary>
@@ -563,14 +461,10 @@ namespace LeanCloud.Play {
         /// <param name="properties">自定义属性</param>
         /// <param name="expectedValues">用于 CAS 的期望属性</param>
         public async Task SetRoomCustomProperties(PlayObject properties, PlayObject expectedValues = null) {
-            if (state != PlayState.GAME) {
-                throw new PlayException(PlayExceptionCode.StateError,
-                    string.Format("You cannot call SetRoomCustomProperties() on {0} state", state.ToString()));
+            if (Room == null) {
+                throw new Exception("You are not in room yet.");
             }
-            var changedProps = await gameConn.SetRoomCustomProperties(properties, expectedValues);
-            if (!changedProps.IsEmpty) {
-                Room.MergeCustomProperties(changedProps);
-            }
+            await Room.SetCustomProperties(properties, expectedValues);
         }
 
         /// <summary>
@@ -581,17 +475,10 @@ namespace LeanCloud.Play {
         /// <param name="properties">自定义属性</param>
         /// <param name="expectedValues">用于 CAS 的期望属性</param>
         public async Task SetPlayerCustomProperties(int actorId, PlayObject properties, PlayObject expectedValues = null) {
-            if (state != PlayState.GAME) {
-                throw new PlayException(PlayExceptionCode.StateError,
-                    string.Format("You cannot call SetPlayerCustomProperties() on {0} state", state.ToString()));
+            if (Room == null) {
+                throw new Exception("You are not in room yet.");
             }
-            var res = await gameConn.SetPlayerCustomProperties(actorId, properties, expectedValues);
-            if (!res.Item2.IsEmpty) {
-                var playerId = res.Item1;
-                var player = Room.GetPlayer(playerId);
-                var changedProps = res.Item2;
-                player.MergeCustomProperties(changedProps);
-            }
+            await Room.SetPlayerCustomProperties(actorId, properties, expectedValues);
         }
 
         /// <summary>
@@ -611,13 +498,15 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 关闭服务
         /// </summary>
-        public void Close() {
-            if (state == PlayState.LOBBY) {
-                lobbyConn.Close();
-            } else if (state == PlayState.GAME) {
-                gameConn.Close();
+        public async Task Close() {
+            if (lobby != null) {
+                await lobby.Close();
             }
-            state = PlayState.CLOSE;
+            if (Room != null) {
+                await Room.Close();
+            }
+            // TODO Clear
+
         }
 
         void OnLobbyConnMessage(CommandType cmd, OpType op, Body body) {
@@ -771,76 +660,19 @@ namespace LeanCloud.Play {
 
         void HandleRoomKicked(RoomNotification roomNotification) {
             state = PlayState.GAME_TO_LOBBY;
-            // 建立连接
-            ConnectLobby().ContinueWith(t => {
-                context.Post(() => {
-                    if (t.IsFaulted) {
-                        state = PlayState.INIT;
-                        throw t.Exception.InnerException;
-                    }
-                    GameToLobby(t.Result);
-                    var appInfo = roomNotification.AppInfo;
-                    if (appInfo != null) {
-                        var code = appInfo.AppCode;
-                        var reason = appInfo.AppMsg;
-                        OnRoomKicked?.Invoke(code, reason);
-                    } else {
-                        OnRoomKicked?.Invoke(null, null);
-                    }
-                });
-            });
-        }
-
-        Task<LobbyConnection> ConnectLobby() {
-            return null;
-            //return playRouter.Fetch().OnSuccess(t => {
-            //    var serverUrl = t.Result;
-            //    Logger.Debug("play server: {0} at {1}", serverUrl, Thread.CurrentThread.ManagedThreadId);
-                
-            //    return lobbyRouter.Fetch(serverUrl);
-            //}).Unwrap().OnSuccess(t => {
-            //    var lobbyUrl = t.Result;
-            //    Logger.Debug("wss server: {0} at {1}", lobbyUrl, Thread.CurrentThread.ManagedThreadId);
-            //    return LobbyConnection.Connect(context, AppId, lobbyUrl, UserId, GameVersion);
-            //}).Unwrap();
-        }
-
-        void LobbyToGame(GameConnection gc, Room room) {
-            state = PlayState.GAME;
-            lobbyConn.OnMessage -= OnLobbyConnMessage;
-            lobbyConn.OnClose -= OnLobbyConnClose;
-            lobbyConn.Close();
-            gameConn = gc;
-            gameConn.OnMessage += OnGameConnMessage;
-            gameConn.OnClose += OnGameConnClose;
-            Room = room;
-            Room.Client = this;
-            foreach (var player in Room.PlayerList) {
-                if (player.UserId == UserId) {
-                    Player = player;
-                }
-                player.Client = this;
+            var appInfo = roomNotification.AppInfo;
+            if (appInfo != null) {
+                var code = appInfo.AppCode;
+                var reason = appInfo.AppMsg;
+                OnRoomKicked?.Invoke(code, reason);
+            } else {
+                OnRoomKicked?.Invoke(null, null);
             }
-        }
-
-        void GameToLobby(LobbyConnection lc) {
-            state = PlayState.LOBBY;
-            gameConn.OnMessage -= OnGameConnMessage;
-            gameConn.OnClose -= OnGameConnClose;
-            gameConn.Close();
-            Logger.Debug("connected at: {0}", Thread.CurrentThread.ManagedThreadId);
-            lobbyConn = lc;
-            lobbyConn.OnMessage += OnLobbyConnMessage;
-            lobbyConn.OnClose += OnLobbyConnClose;
         }
 
         // 调试时模拟断线
         public void _Disconnect() {
-            if (state == PlayState.LOBBY) {
-                lobbyConn.Disconnect();
-            } else if (state == PlayState.GAME) {
-                gameConn.Disconnect();
-            }
+            
         }
     }
 }

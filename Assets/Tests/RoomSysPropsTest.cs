@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using UnityEngine;
@@ -9,10 +8,18 @@ using UnityEngine.TestTools;
 namespace LeanCloud.Play.Test {
     public class RoomSysPropsTest
     {
+        [SetUp]
+        public void SetUp() {
+            Logger.LogDelegate += Utils.Log;
+        }
+
+        [TearDown]
+        public void TearDown() {
+            Logger.LogDelegate -= Utils.Log;
+        }
+
         [UnityTest]
         public IEnumerator RoomOpen() {
-            Logger.LogDelegate += Utils.Log;
-
             var flag = false;
             var c = Utils.NewClient("rsp0");
             Room room = null;
@@ -33,13 +40,10 @@ namespace LeanCloud.Play.Test {
                 yield return null;
             }
             c.Close();
-            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]
         public IEnumerator RoomVisible() {
-            Logger.LogDelegate += Utils.Log;
-
             var flag = false;
             var c = Utils.NewClient("rsp1");
             Room room = null;
@@ -60,13 +64,10 @@ namespace LeanCloud.Play.Test {
                 yield return null;
             }
             c.Close();
-            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]
         public IEnumerator RoomMaxPlayerCount() {
-            Logger.LogDelegate += Utils.Log;
-
             var flag = false;
             var c = Utils.NewClient("rsp2");
             Room room = null;
@@ -87,13 +88,10 @@ namespace LeanCloud.Play.Test {
                 yield return null;
             }
             c.Close();
-            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]
         public IEnumerator RoomSetAndClearExpectedUserIds() {
-            Logger.LogDelegate += Utils.Log;
-
             var f1 = false;
             var f2 = false;
             var c = Utils.NewClient("rsp3");
@@ -122,13 +120,10 @@ namespace LeanCloud.Play.Test {
                 yield return null;
             }
             c.Close();
-            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]
         public IEnumerator RoomAddAndRemoveExpectedUserIds() {
-            Logger.LogDelegate += Utils.Log;
-
             var f1 = false;
             var f2 = false;
             var f3 = false;
@@ -164,7 +159,6 @@ namespace LeanCloud.Play.Test {
                 yield return null;
             }
             c.Close();
-            Logger.LogDelegate -= Utils.Log;
         }
     }
 }

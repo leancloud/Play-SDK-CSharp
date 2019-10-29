@@ -9,10 +9,18 @@ namespace LeanCloud.Play.Test
 {
     public class MessageQueueTest
     {
+        [SetUp]
+        public void SetUp() {
+            Logger.LogDelegate += Utils.Log;
+        }
+
+        [TearDown]
+        public void TearDown() {
+            Logger.LogDelegate -= Utils.Log;
+        }
+
         [UnityTest]
         public IEnumerator PauseAndResume() {
-            Logger.LogDelegate += Utils.Log;
-
             var f0 = false;
             var f1 = false;
 
@@ -54,7 +62,6 @@ namespace LeanCloud.Play.Test
             }
             c0.Close();
             c1.Close();
-            Logger.LogDelegate -= Utils.Log;
         }
     }
 }

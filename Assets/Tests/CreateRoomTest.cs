@@ -11,13 +11,11 @@ namespace LeanCloud.Play.Test
     public class CreateRoomTest {
         [SetUp]
         public void SetUp() {
-            Debug.Log("Set up");
             Logger.LogDelegate += Utils.Log;
         }
 
         [TearDown]
         public void TearDown() {
-            Debug.Log("Tear down");
             Logger.LogDelegate -= Utils.Log;
         }
 
@@ -28,10 +26,10 @@ namespace LeanCloud.Play.Test
             var c = Utils.NewClient("crt0");
             c.Connect().OnSuccess(_ => {
                 return c.CreateRoom();
-            }).Unwrap().OnSuccess(_ => {
+            }).Unwrap().OnSuccess(async _ => {
                 var room = _.Result;
                 Debug.Log(room.Name);
-                c.Close();
+                await c.Close();
                 f = true;
             });
 
@@ -49,11 +47,13 @@ namespace LeanCloud.Play.Test
             c.Connect().OnSuccess(_ => {
                 Debug.Log("connected");
                 return c.CreateRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }).Unwrap().OnSuccess(async _ => {  
                 var room = _.Result;
                 Assert.AreEqual(room.Name, roomName);
-                c.Close();
+                Debug.Log("close");
+                await c.Close();
                 f = true;
+                Debug.Log("created");
             });
 
             while (!f) {
@@ -82,7 +82,7 @@ namespace LeanCloud.Play.Test
                 };
                 var expectedUserIds = new List<string> { "world" };
                 return c.JoinOrCreateRoom(roomName, roomOptions, expectedUserIds);
-            }).Unwrap().OnSuccess(_ => {
+            }).Unwrap().OnSuccess(async _ => {
                 var room = _.Result;
                 Assert.AreEqual(room.Name, roomName);
                 var props = room.CustomProperties;
@@ -90,7 +90,7 @@ namespace LeanCloud.Play.Test
                 Debug.Log($"level: {props["level"]}");
                 Assert.AreEqual(props["title"], roomTitle);
                 Assert.AreEqual(props["level"], 2);
-                c.Close();
+                await c.Close();
                 f = true;
             });
 
@@ -120,8 +120,8 @@ namespace LeanCloud.Play.Test
                 return c1.JoinRoom(roomName);
             }).Unwrap().OnSuccess(_ => {
                 Assert.AreEqual(c1.Player.IsLocal, true);
-                c0.Close();
-                c1.Close();
+                _ = c0.Close();
+                _ = c1.Close();
             });
 
             while (!flag) {
@@ -137,11 +137,11 @@ namespace LeanCloud.Play.Test
             var c = Utils.NewClient("crt5");
             c.Connect().OnSuccess(_ => {
                 return c.CreateRoom(roomName);
-            }).Unwrap().ContinueWith(_ => {
+            }).Unwrap().ContinueWith(async _ => { 
                 Assert.AreEqual(_.IsFaulted, true);
                 var e = _.Exception.InnerException as PlayException;
                 Assert.AreEqual(e.Code, 4316);
-                c.Close();
+                await c.Close();
                 f = true;
             });
 

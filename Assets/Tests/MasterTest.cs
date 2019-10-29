@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -8,6 +7,16 @@ using System.Threading.Tasks;
 namespace LeanCloud.Play.Test
 {
     public class MasterTest {
+        [SetUp]
+        public void SetUp() {
+            Logger.LogDelegate += Utils.Log;
+        }
+
+        [TearDown]
+        public void TearDown() {
+            Logger.LogDelegate -= Utils.Log;
+        }
+
         [UnityTest]
         public IEnumerator SetNewMaster() {
             var f0 = false;
@@ -48,8 +57,6 @@ namespace LeanCloud.Play.Test
 
         [UnityTest]
         public IEnumerator MasterLeave() {
-            Logger.LogDelegate += Utils.Log;
-
             var f0 = false;
             var f1 = false;
             var roomName = "mt1_r";
@@ -79,13 +86,10 @@ namespace LeanCloud.Play.Test
             }
             c0.Close();
             c1.Close();
-            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]
         public IEnumerator FixMaster() {
-            Logger.LogDelegate += Utils.Log;
-
             var f0 = false;
             var f1 = false;
             var roomName = "mt2_r";
@@ -121,7 +125,6 @@ namespace LeanCloud.Play.Test
             }
             c0.Close();
             c1.Close();
-            Logger.LogDelegate -= Utils.Log;
         }
     }
 }

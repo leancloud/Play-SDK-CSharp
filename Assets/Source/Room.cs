@@ -117,12 +117,13 @@ namespace LeanCloud.Play {
         internal async Task Create(string roomName, RoomOptions roomOptions, List<string> expectedUserIds) {
             state = State.Joining;
             try {
-                var lobbyRoom = await Client.lobbyService.CreateRoom(roomName);
+                LobbyRoomResult lobbyRoom = await Client.lobbyService.CreateRoom(roomName);
                 gameConn = new GameConnection();
-                await Client.lobbyService.Authorize();
-                await gameConn.Connect(Client.AppId, lobbyRoom.Url, Client.GameVersion, Client.UserId, null);
-                var room = await gameConn.CreateRoom(lobbyRoom.RoomId, roomOptions, expectedUserIds);
-                //LobbyToGame(gameConn, room);
+                LobbyInfo lobbyInfo = await Client.lobbyService.Authorize();
+                await gameConn.Connect(Client.AppId, lobbyRoom.Url, Client.GameVersion, Client.UserId, lobbyInfo.SessionToken);
+                Room room = await gameConn.CreateRoom(lobbyRoom.RoomId, roomOptions, expectedUserIds);
+                Init(room);
+                state = State.Game;
             } catch (Exception e) {
                 Logger.Error(e.Message);
                 state = State.Closed;
@@ -130,13 +131,109 @@ namespace LeanCloud.Play {
             }
         }
 
+        internal async Task Join(string roomName, List<string> expectedUserIds) {
+            state = State.Joining;
+            try {
+                LobbyRoomResult lobbyRoom = await Client.lobbyService.JoinRoom(roomName, expectedUserIds, false, false);
+                gameConn = new GameConnection();
+                LobbyInfo lobbyInfo = await Client.lobbyService.Authorize();
+                await gameConn.Connect(Client.AppId, lobbyRoom.Url, Client.GameVersion, Client.UserId, lobbyInfo.SessionToken);
+                Room room = await gameConn.JoinRoom(lobbyRoom.RoomId, expectedUserIds);
+                Init(room);
+                state = State.Game;
+            } catch (Exception e) {
+                Logger.Error(e.Message);
+                state = State.Closed;
+                throw e;
+            }
+        }
+
+        internal async Task Rejoin(string roomName) {
+            state = State.Joining;
+            try {
+                LobbyInfo lobbyInfo = await Client.lobbyService.Authorize();
+                LobbyRoomResult lobbyRoom = await Client.lobbyService.JoinRoom(roomName, null, true, false);
+                gameConn = new GameConnection();
+                await gameConn.Connect(Client.AppId, lobbyRoom.Url, Client.GameVersion, Client.UserId, lobbyInfo.SessionToken);
+                Room room = await gameConn.JoinRoom(lobbyRoom.RoomId, null);
+                Init(room);
+                state = State.Game;
+            } catch (Exception e) {
+                state = State.Closed;
+                throw e;
+            }
+        }
+
+        internal async Task JoinOrCreate(string roomName, RoomOptions roomOptions, List<string> expectedUserIds) {
+            state = State.Joining;
+            try {
+                LobbyInfo lobbyInfo = await Client.lobbyService.Authorize();
+                LobbyRoomResult lobbyRoom = await Client.lobbyService.JoinRoom(roomName, null, false, true);
+                gameConn = new GameConnection();
+                await gameConn.Connect(Client.AppId, lobbyRoom.Url, Client.GameVersion, Client.UserId, lobbyInfo.SessionToken);
+                Room room;
+                if (lobbyRoom.Create) {
+                    room = await gameConn.CreateRoom(lobbyRoom.RoomId, roomOptions, expectedUserIds);
+                } else {
+                    room = await gameConn.JoinRoom(lobbyRoom.RoomId, null);
+                }
+                Init(room);
+                state = State.Game;
+            } catch (Exception e) {
+                state = State.Closed;
+                throw e;
+            }
+        }
+
+        internal async Task JoinRandom(PlayObject matchProperties, List<string> expectedUserIds) {
+            state = State.Joining;
+            try {
+                LobbyInfo lobbyInfo = await Client.lobbyService.Authorize();
+                LobbyRoomResult lobbyRoom = await Client.lobbyService.JoinRandomRoom(matchProperties, expectedUserIds);
+                gameConn = new GameConnection();
+                await gameConn.Connect(Client.AppId, lobbyRoom.Url, Client.GameVersion, Client.UserId, lobbyInfo.SessionToken);
+                Room room = await gameConn.JoinRoom(lobbyRoom.RoomId, expectedUserIds);
+                Init(room);
+                state = State.Game;
+            } catch (Exception e) {
+                state = State.Closed;
+                throw e;
+            }
+        }
+
+        internal async Task Leave() {
+            Client.Room = null;
+            await gameConn.LeaveRoom();
+            // TODO
+
+        }
+
         /// <summary>
         /// 设置房间的自定义属性
         /// </summary>
         /// <param name="properties">自定义属性</param>
         /// <param name="expectedValues">期望属性，用于 CAS 检测</param>
-        public Task SetCustomProperties(PlayObject properties, PlayObject expectedValues = null) {
-            return Client.SetRoomCustomProperties(properties, expectedValues);
+        public async Task SetCustomProperties(PlayObject properties, PlayObject expectedValues = null) {
+            if (state != State.Game) {
+                throw new PlayException(PlayExceptionCode.StateError, $"Error state: {state}");
+            }
+            var changedProps = await gameConn.SetRoomCustomProperties(properties, expectedValues);
+            if (!changedProps.IsEmpty) {
+                MergeCustomProperties(changedProps);
+            }
+        }
+
+        public async Task SetPlayerCustomProperties(int actorId, PlayObject properties, PlayObject expectedValues) {
+            if (state != State.Game) {
+                throw new PlayException(PlayExceptionCode.StateError, $"Error state: {state}");
+            }
+            var res = await gameConn.SetPlayerCustomProperties(actorId, properties, expectedValues);
+            if (!res.Item2.IsEmpty) {
+                var playerId = res.Item1;
+                var player = GetPlayer(playerId);
+                var changedProps = res.Item2;
+                player.MergeCustomProperties(changedProps);
+            }
         }
 
         /// <summary>
@@ -157,9 +254,11 @@ namespace LeanCloud.Play {
         /// 设置开启 / 关闭
         /// </summary>
         /// <returns>The open.</returns>
-        /// <param name="opened">是否开启</param>
-        public Task<bool> SetOpen(bool opened) {
-            return Client.SetRoomOpen(opened);
+        /// <param name="open">是否开启</param>
+        public async Task<bool> SetOpen(bool open) {
+            var sysProps = await gameConn.SetRoomOpen(open);
+            MergeSystemProperties(sysProps);
+            return Open;
         }
 
         /// <summary>
@@ -167,8 +266,10 @@ namespace LeanCloud.Play {
         /// </summary>
         /// <returns>The visible.</returns>
         /// <param name="visible">是否可见</param>
-        public Task<bool> SetVisible(bool visible) {
-            return Client.SetRoomVisible(visible);
+        public async Task<bool> SetVisible(bool visible) {
+            var sysProps = await gameConn.SetRoomVisible(visible);
+            MergeSystemProperties(sysProps);
+            return Visible;
         }
 
         /// <summary>
@@ -176,8 +277,10 @@ namespace LeanCloud.Play {
         /// </summary>
         /// <returns>The max player count.</returns>
         /// <param name="count">数量</param>
-        public Task<int> SetMaxPlayerCount(int count) {
-            return Client.SetRoomMaxPlayerCount(count);
+        public async Task<int> SetMaxPlayerCount(int count) {
+            var sysProps = await gameConn.SetRoomMaxPlayerCount(count);
+            MergeSystemProperties(sysProps);
+            return MaxPlayerCount;
         }
 
         /// <summary>
@@ -185,16 +288,19 @@ namespace LeanCloud.Play {
         /// </summary>
         /// <returns>The expected user identifiers.</returns>
         /// <param name="expectedUserIds">玩家 Id 列表</param>
-        public Task<List<string>> SetExpectedUserIds(List<string> expectedUserIds) {
-            return Client.SetRoomExpectedUserIds(expectedUserIds);
+        public async Task<List<string>> SetExpectedUserIds(List<string> expectedUserIds) {
+            var sysProps = await gameConn.SetRoomExpectedUserIds(expectedUserIds);
+            MergeSystemProperties(sysProps);
+            return ExpectedUserIds;
         }
 
         /// <summary>
         /// 清空期望玩家
         /// </summary>
         /// <returns>The expected user identifiers.</returns>
-        public Task ClearExpectedUserIds() {
-            return Client.ClearRoomExpectedUserIds();
+        public async Task ClearExpectedUserIds() {
+            var sysProps = await gameConn.ClearRoomExpectedUserIds();
+            MergeSystemProperties(sysProps);
         }
 
         /// <summary>
@@ -202,8 +308,10 @@ namespace LeanCloud.Play {
         /// </summary>
         /// <returns>The expected user identifiers.</returns>
         /// <param name="expectedUserIds">玩家 Id 列表</param>
-        public Task<List<string>> AddExpectedUserIds(List<string> expectedUserIds) {
-            return Client.AddRoomExpectedUserIds(expectedUserIds);
+        public async Task<List<string>> AddExpectedUserIds(List<string> expectedUserIds) {
+            var sysProps = await gameConn.AddRoomExpectedUserIds(expectedUserIds);
+            MergeSystemProperties(sysProps);
+            return ExpectedUserIds;
         }
 
         /// <summary>
@@ -211,8 +319,40 @@ namespace LeanCloud.Play {
         /// </summary>
         /// <returns>The expected user identifiers.</returns>
         /// <param name="expectedUserIds">玩家 Id 列表</param>
-        public Task<List<string>> RemoveExpectedUserIds(List<string> expectedUserIds) {
-            return Client.RemoveRoomExpectedUserIds(expectedUserIds);
+        public async Task<List<string>> RemoveExpectedUserIds(List<string> expectedUserIds) {
+            var sysProps = await gameConn.RemoveRoomExpectedUserIds(expectedUserIds);
+            MergeSystemProperties(sysProps);
+            return ExpectedUserIds;
+        }
+
+        public async Task<Player> SetMaster(int newMasterId) {
+            MasterActorId = await gameConn.SetMaster(newMasterId);
+            return Master;
+        }
+
+        public async Task KickPlayer(int actorId, int code, string reason) {
+            var playerId = await gameConn.KickPlayer(actorId, code, reason);
+            RemovePlayer(playerId);
+        }
+
+        public Task SendEvent(byte eventId, PlayObject eventData, SendEventOptions options) {
+            var opts = options;
+            if (opts == null) {
+                opts = new SendEventOptions {
+                    ReceiverGroup = ReceiverGroup.All
+                };
+            }
+           return gameConn.SendEvent(eventId, eventData, opts);
+        }
+
+        internal async Task Close() {
+            try {
+                await gameConn.Close();
+            } catch (Exception e) {
+                Logger.Error(e.Message);
+            } finally {
+                Logger.Debug("Room closed.");
+            }
         }
 
         internal void AddPlayer(Player player) {
@@ -270,6 +410,20 @@ namespace LeanCloud.Play {
             if (changedProps.TryGetValue("expectedUserIds", out object expectedUserIds)) {
                 ExpectedUserIds = expectedUserIds as List<string>;
             }
+        }
+
+        void Init(Room room) {
+            if (room == null) {
+                return;
+            }
+            Name = room.Name;
+            Open = room.Open;
+            Visible = room.Visible;
+            MaxPlayerCount = room.MaxPlayerCount;
+            MasterActorId = room.MasterActorId;
+            ExpectedUserIds = room.ExpectedUserIds;
+            playerDict = room.playerDict;
+            CustomProperties = room.CustomProperties;
         }
     }
 }

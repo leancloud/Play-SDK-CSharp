@@ -10,10 +10,18 @@ namespace LeanCloud.Play.Test
 {
     public class ChangeProperties
     {
+        [SetUp]
+        public void SetUp() {
+            Logger.LogDelegate += Utils.Log;
+        }
+
+        [TearDown]
+        public void TearDown() {
+            Logger.LogDelegate -= Utils.Log;
+        }
+
         [UnityTest]
         public IEnumerator ChangeRoomProperties() {
-            Logger.LogDelegate += Utils.Log;
-
             var roomName = "cp0_r";
             var f0 = false;
             var f1 = false;
@@ -52,13 +60,10 @@ namespace LeanCloud.Play.Test
             while (!f0 || !f1) {
                 yield return null;
             }
-            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]
         public IEnumerator ChangeRoomPropertiesWithCAS() {
-            Logger.LogDelegate += Utils.Log;
-
             var f = false;
             var roomName = "cp1_r";
             var c = Utils.NewClient("cp1");
@@ -88,13 +93,10 @@ namespace LeanCloud.Play.Test
             while (!f) {
                 yield return null;
             }
-            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]
         public IEnumerator ChangePlayerProperties() {
-            Logger.LogDelegate += Utils.Log;
-
             var f0 = false;
             var f1 = false;
             var roomName = "cp2_r";
@@ -145,13 +147,10 @@ namespace LeanCloud.Play.Test
             }
             c0.Close();
             c1.Close();
-            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]
         public IEnumerator ChangePlayerPropertiesWithCAS() {
-            Logger.LogDelegate += Utils.Log;
-
             var f = false;
             var roomName = "cp3_r";
             var c = Utils.NewClient("cp3");
@@ -180,13 +179,10 @@ namespace LeanCloud.Play.Test
             while (!f) {
                 yield return null;
             }
-            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]
         public IEnumerator GetPlayerPropertiesWhenJoinRoom() {
-            Logger.LogDelegate += Utils.Log;
-
             var f = false;
             var roomName = "cp4_r";
             var c0 = Utils.NewClient("cp4_0");
@@ -214,13 +210,10 @@ namespace LeanCloud.Play.Test
             while (!f) {
                 yield return null;
             }
-            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]
         public IEnumerator ChangePropertiesWithSameValue() {
-            Logger.LogDelegate += Utils.Log;
-
             var f = false;
             var roomName = "cp5_r";
             var c = Utils.NewClient("cp5");
@@ -245,13 +238,10 @@ namespace LeanCloud.Play.Test
             while (!f) {
                 yield return null;
             }
-            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]
         public IEnumerator SetNullProperty() {
-            Logger.LogDelegate += Utils.Log;
-
             var f0 = false;
             var f1 = false;
             var roomName = "cp6_r";
@@ -286,8 +276,6 @@ namespace LeanCloud.Play.Test
             }
 
             c.Close();
-
-            Logger.LogDelegate -= Utils.Log;
         }
     }
 }

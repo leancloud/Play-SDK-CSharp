@@ -9,10 +9,18 @@ namespace LeanCloud.Play.Test
 {
     public class KickTest
     {
+        [SetUp]
+        public void SetUp() {
+            Logger.LogDelegate += Utils.Log;
+        }
+
+        [TearDown]
+        public void TearDown() {
+            Logger.LogDelegate -= Utils.Log;
+        }
+
         [UnityTest]
         public IEnumerator Kick() {
-            Logger.LogDelegate += Utils.Log;
-
             var flag = false;
             var roomName = "kt0_r";
             var c0 = Utils.NewClient("kt0_0");
@@ -41,13 +49,10 @@ namespace LeanCloud.Play.Test
             }
             c0.Close();
             c1.Close();
-            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]
         public IEnumerator KickWithMsg() {
-            Logger.LogDelegate += Utils.Log;
-
             var flag = false;
             var roomName = "kt1_r";
             var c0 = Utils.NewClient("kt1_0");
@@ -75,7 +80,6 @@ namespace LeanCloud.Play.Test
             }
             c0.Close();
             c1.Close();
-            Logger.LogDelegate -= Utils.Log;
         }
     }
 }

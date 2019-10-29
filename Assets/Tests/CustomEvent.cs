@@ -9,10 +9,18 @@ namespace LeanCloud.Play.Test
 {
     public class CustomEvent
     {
+        [SetUp]
+        public void SetUp() {
+            Logger.LogDelegate += Utils.Log;
+        }
+
+        [TearDown]
+        public void TearDown() {
+            Logger.LogDelegate -= Utils.Log;
+        }
+
         [UnityTest]
         public IEnumerator CustomEventWithReceiverGroup() {
-            Logger.LogDelegate += Utils.Log;
-
             var f = false;
             var roomName = "ce0_r";
             var c0 = Utils.NewClient("ce0_0");
@@ -48,13 +56,10 @@ namespace LeanCloud.Play.Test
             }
             c0.Close();
             c1.Close();
-            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]
         public IEnumerator CustomEventWithTargetIds() {
-            Logger.LogDelegate += Utils.Log;
-
             var f = false;
             var roomName = "ce1_r";
             var c0 = Utils.NewClient("ce1_0");
@@ -90,14 +95,11 @@ namespace LeanCloud.Play.Test
             }
             c0.Close();
             c1.Close();
-            Logger.LogDelegate -= Utils.Log;
         }
 
 
         [UnityTest]
         public IEnumerator SimpleEvent() {
-            Logger.LogDelegate += Utils.Log;
-
             var f0 = false;
             var f1 = false;
             var roomName = "ce2_r";
@@ -129,7 +131,6 @@ namespace LeanCloud.Play.Test
             }
             c0.Close();
             c1.Close();
-            Logger.LogDelegate -= Utils.Log;
         }
     }
 }

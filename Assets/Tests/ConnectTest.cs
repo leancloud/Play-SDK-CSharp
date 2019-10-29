@@ -10,8 +10,13 @@ namespace LeanCloud.Play.Test
     public class ConnectTest
     {
         [SetUp]
-        public void Setup() {
+        public void SetUp() {
             Logger.LogDelegate += Utils.Log;
+        }
+
+        [TearDown]
+        public void TearDown() {
+            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]
@@ -36,8 +41,6 @@ namespace LeanCloud.Play.Test
             while (!f) {
                 yield return null;
             }
-
-            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]
@@ -53,7 +56,6 @@ namespace LeanCloud.Play.Test
             while (!f) {
                 yield return null;
             }
-            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]
@@ -84,7 +86,6 @@ namespace LeanCloud.Play.Test
             while (!f0 || !f1) {
                 yield return null;
             }
-            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]
@@ -106,7 +107,6 @@ namespace LeanCloud.Play.Test
             while (!f) {
                 yield return null;
             }
-            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]
@@ -132,7 +132,6 @@ namespace LeanCloud.Play.Test
             while (!f) {
                 yield return null;
             }
-            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]
@@ -151,7 +150,6 @@ namespace LeanCloud.Play.Test
             while (!f) {
                 yield return null;
             }
-            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest, Timeout(40000)]
@@ -175,7 +173,6 @@ namespace LeanCloud.Play.Test
                 yield return null;
             }
             c.Close();
-            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest, Timeout(40000)]
@@ -207,7 +204,6 @@ namespace LeanCloud.Play.Test
                 yield return null;
             }
             c.Close();
-            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]
@@ -227,8 +223,7 @@ namespace LeanCloud.Play.Test
             while (!f) {
                 yield return null;
             }
-            c.Close();
-            Logger.LogDelegate -= Utils.Log;
+            _ = c.Close();
         }
     }
 }

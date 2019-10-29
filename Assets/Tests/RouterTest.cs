@@ -10,10 +10,18 @@ namespace LeanCloud.Play.Test
 {
     public class RouterTest
     {
+        [SetUp]
+        public void SetUp() {
+            Logger.LogDelegate += Utils.Log;
+        }
+
+        [TearDown]
+        public void TearDown() {
+            Logger.LogDelegate -= Utils.Log;
+        }
+
         [UnityTest]
         public IEnumerator PlayServer() {
-            Logger.LogDelegate += Utils.Log;
-
             var f = false;
             var appId = "pyon3kvufmleg773ahop2i7zy0tz2rfjx5bh82n7h5jzuwjg";
             var appKey = "MJSm46Uu6LjF5eNmqfbuUmt6";
@@ -30,7 +38,6 @@ namespace LeanCloud.Play.Test
             while (!f) {
                 yield return null;
             }
-            Logger.LogDelegate -= Utils.Log;
         }
     }
 }

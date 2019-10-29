@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
@@ -79,7 +80,7 @@ namespace LeanCloud.Play {
 
         internal async Task<LobbyRoomResult> JoinRandomRoom(PlayObject matchProperties, List<string> expectedUserIds) {
             LobbyInfo lobbyInfo = await gameRouter.Authorize();
-            string path = $"/1/multiplayer/lobby/room/match";
+            string path = $"/1/multiplayer/lobby/match/room";
             string fullUrl = $"{lobbyInfo.Url}{path}";
             Dictionary<string, object> body = new Dictionary<string, object> {
                 { "gameVersion", "0.0.1" },
@@ -97,7 +98,7 @@ namespace LeanCloud.Play {
 
         internal async Task<LobbyRoomResult> MatchRandom(string piggybackUserId, PlayObject matchProperties, List<string> expectedUserIds) {
             LobbyInfo lobbyInfo = await gameRouter.Authorize();
-            string path = "/1/multiplayer/lobby/room/match";
+            string path = "/1/multiplayer/lobby/match/room";
             string fullUrl = $"{lobbyInfo.Url}{path}";
             Dictionary<string, object> body = new Dictionary<string, object> {
                 { "gameVersion", "0.0.1" },
@@ -128,9 +129,14 @@ namespace LeanCloud.Play {
                 AddHeaders(request.Content.Headers);
                 request.Content.Headers.Add(USER_SESSION_TOKEN_KEY, sessionToken);
                 response = await httpClient.SendAsync(request);
+                Logger.Debug($"code: {response.StatusCode}");
                 string content = await response.Content.ReadAsStringAsync();
                 Logger.Debug(content);
-                return JsonConvert.DeserializeObject<LobbyRoomResult>(content);
+                if (response.StatusCode >= HttpStatusCode.OK && response.StatusCode < HttpStatusCode.Ambiguous) {
+                    return JsonConvert.DeserializeObject<LobbyRoomResult>(content);
+                }
+                PlayException exception = JsonConvert.DeserializeObject<PlayException>(content);
+                throw exception;
             } finally {
                 if (httpClient != null) {
                     httpClient.Dispose();
