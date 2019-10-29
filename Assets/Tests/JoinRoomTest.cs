@@ -208,6 +208,7 @@ namespace LeanCloud.Play.Test
         }
 
         [UnityTest]
+        [Order(5)]
         public IEnumerator LeaveRoom() {
             var f0 = false;
             var f1 = false;
@@ -227,15 +228,17 @@ namespace LeanCloud.Play.Test
             }).Unwrap().OnSuccess(_ => {
                 Debug.Log($"{c1.UserId} joined room");
                 return c1.LeaveRoom();
-            }).Unwrap().OnSuccess(_ => {
+            }).Unwrap().OnSuccess(async _ => {
+                await c0.Close();
+                await c1.Close();
                 f1 = true;
+                Debug.Log("left");
             });
 
             while (!f0 || !f1) {
                 yield return null;
             }
-            c0.Close();
-            c1.Close();
+            
         }
 
         [UnityTest]

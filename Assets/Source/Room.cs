@@ -204,8 +204,7 @@ namespace LeanCloud.Play {
         internal async Task Leave() {
             Client.Room = null;
             await gameConn.LeaveRoom();
-            // TODO
-
+            await Close();
         }
 
         /// <summary>
