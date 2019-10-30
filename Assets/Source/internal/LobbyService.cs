@@ -49,7 +49,12 @@ namespace LeanCloud.Play {
             string path = "/1/multiplayer/lobby/room";
             string fullUrl = $"{lobbyInfo.Url}{path}";
             Logger.Debug(fullUrl);
-            Dictionary<string, object> body = new Dictionary<string, object>();
+            Dictionary<string, object> body = new Dictionary<string, object> {
+                { "gameVersion", client.GameVersion },
+                { "sdkVersion", Config.SDKVersion },
+                { "protocolVersion", Config.ProtocolVersion },
+                { "useInsecureAddr", !client.Ssl }
+            };
             if (!string.IsNullOrEmpty(roomName)) {
                 body.Add("cid", roomName);
             }
@@ -62,9 +67,10 @@ namespace LeanCloud.Play {
             string fullUrl = $"{lobbyInfo.Url}{path}";
             Dictionary<string, object> body = new Dictionary<string, object> {
                 { "cid", roomName },
-                { "gameVersion", "0.0.1" },
+                { "gameVersion", client.GameVersion },
                 { "sdkVersion", Config.SDKVersion },
-                { "protocolVersion", Config.ProtocolVersion }
+                { "protocolVersion", Config.ProtocolVersion },
+                { "useInsecureAddr", !client.Ssl }
             };
             if (expectedUserIds != null) {
                 body.Add("expectMembers", expectedUserIds);
@@ -83,9 +89,10 @@ namespace LeanCloud.Play {
             string path = $"/1/multiplayer/lobby/match/room";
             string fullUrl = $"{lobbyInfo.Url}{path}";
             Dictionary<string, object> body = new Dictionary<string, object> {
-                { "gameVersion", "0.0.1" },
+                { "gameVersion", client.GameVersion },
                 { "sdkVersion", Config.SDKVersion },
-                { "protocolVersion", Config.ProtocolVersion }
+                { "protocolVersion", Config.ProtocolVersion },
+                { "useInsecureAddr", !client.Ssl }
             };
             if (matchProperties != null) {
                 body.Add("expectAttr", matchProperties.Data);
@@ -101,7 +108,7 @@ namespace LeanCloud.Play {
             string path = "/1/multiplayer/lobby/match/room";
             string fullUrl = $"{lobbyInfo.Url}{path}";
             Dictionary<string, object> body = new Dictionary<string, object> {
-                { "gameVersion", "0.0.1" },
+                { "gameVersion", client.GameVersion },
                 { "sdkVersion", Config.SDKVersion },
                 { "protocolVersion", Config.ProtocolVersion },
                 { "piggybackPeerId", piggybackUserId }

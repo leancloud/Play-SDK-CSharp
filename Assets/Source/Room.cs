@@ -431,9 +431,9 @@ namespace LeanCloud.Play {
             ExpectedUserIds = room.ExpectedUserIds;
             playerDict = room.playerDict;
             foreach (Player player in playerDict.Values) {
+                player.Room = this;
                 if (player.UserId == Client.UserId) {
                     Player = player;
-                    break;
                 }
             }
             CustomProperties = room.CustomProperties;
@@ -493,7 +493,7 @@ namespace LeanCloud.Play {
 
         void HandlePlayerJoinedRoom(JoinRoomNotification joinRoomNotification) {
             var player = Utils.ConvertToPlayer(joinRoomNotification.Member);
-            player.Client = Client;
+            player.Room = this;
             AddPlayer(player);
             Client.OnPlayerRoomJoined?.Invoke(player);
         }
