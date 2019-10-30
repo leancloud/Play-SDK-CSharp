@@ -30,10 +30,10 @@ namespace LeanCloud.Play.Test
             var c = new Client(appId, appKey, userId, playServer: playServer);
             c.Connect().OnSuccess(_ => { 
                 return c.CreateRoom();
-            }).Unwrap().OnSuccess(_ => {
-                c.Close();
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(async _ => {
+                await c.Close();
                 f = true;
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f) {
                 yield return null;

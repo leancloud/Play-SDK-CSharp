@@ -29,17 +29,17 @@ namespace LeanCloud.Play.Test
 
             c0.Connect().OnSuccess(_ => {
                 return c0.CreateRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.JoinRoom(roomName);
-            }).Unwrap().OnSuccess(async _ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(async _ => {
                 var room = _.Result;
                 Assert.AreEqual(room.Name, roomName);
                 await c0.Close();
                 await c1.Close();
                 f = true;
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f) {
                 yield return null;
@@ -55,17 +55,17 @@ namespace LeanCloud.Play.Test
 
             c0.Connect().OnSuccess(_ => {
                 return c0.CreateRoom();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.JoinRandomRoom();
-            }).Unwrap().OnSuccess(async _ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(async _ => {
                 var room = _.Result;
                 Debug.Log($"join random: {room.Name}");
                 await c0.Close();
                 await c1.Close();
                 f = true;
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f) {
                 yield return null;
@@ -86,26 +86,26 @@ namespace LeanCloud.Play.Test
                     MaxPlayerCount = 2
                 };
                 return c0.CreateRoom(roomName, roomOptions, new List<string> { "jrt2_2" });
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.JoinRoom(roomName);
-            }).Unwrap().ContinueWith(t => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().ContinueWith(t => {
                 Assert.AreEqual(t.IsFaulted, true);
                 PlayException exception = t.Exception.InnerException as PlayException;
                 Assert.AreEqual(exception.Code, 4302);
                 Debug.Log(exception.Detail);
                 return c2.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c2.JoinRoom(roomName);
-            }).Unwrap().OnSuccess(async t => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(async t => {
                 Room room = t.Result;
                 Assert.AreEqual(room.Name, roomName);
                 await c0.Close();
                 await c1.Close();
                 await c2.Close();
                 f = true;
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f) {
                 yield return null;
@@ -127,25 +127,25 @@ namespace LeanCloud.Play.Test
                     MaxPlayerCount = 4
                 };
                 return c0.CreateRoom(roomName, roomOptions, new List<string> { "jr9_1" });
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.JoinRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c2.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c2.JoinRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c3.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c3.JoinRoom(roomName);
-            }).Unwrap().OnSuccess(async _ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(async _ => {
                 await c0.Close();
                 await c1.Close();
                 await c2.Close();
                 await c3.Close();
                 f = true;
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f) {
                 yield return null;
@@ -173,34 +173,34 @@ namespace LeanCloud.Play.Test
                     CustoRoomPropertyKeysForLobby = new List<string> { "lv" }
                 };
                 return c0.CreateRoom(roomName, roomOptions);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 Debug.Log("c1 connected");
                 return c1.MatchRandom("jr8_1", new PlayObject {
                     { "lv", 5 }
                 }, new List<string> { "jr8_xxx" });
-            }).Unwrap().OnSuccess(t => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(t => {
                 var roomId = t.Result;
                 Assert.AreEqual(roomId, roomName);
                 return c1.JoinRoom(roomId);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c2.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c2.JoinRandomRoom(props);
-            }).Unwrap().ContinueWith(async t => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().ContinueWith(async t => {
                 PlayException e = (PlayException)t.Exception.InnerException;
                 Assert.AreEqual(e.Code, 4301);
                 await c2.Close();
                 return c3.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c3.JoinRandomRoom(props);
-            }).Unwrap().OnSuccess(async _ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(async _ => {
                 await c0.Close();
                 await c1.Close();
                 await c3.Close();
                 f = true;
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f) {
                 yield return null;
@@ -218,22 +218,23 @@ namespace LeanCloud.Play.Test
 
             c0.Connect().OnSuccess(_ => {
                 return c0.CreateRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 c0.OnPlayerRoomLeft += leftPlayer => {
+                    Debug.Log("left");
                     f0 = true;
                 };
                 return c1.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.JoinRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 Debug.Log($"{c1.UserId} joined room");
                 return c1.LeaveRoom();
-            }).Unwrap().OnSuccess(async _ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(async _ => {
                 await c0.Close();
                 await c1.Close();
                 f1 = true;
                 Debug.Log("left");
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f0 || !f1) {
                 yield return null;
@@ -253,27 +254,27 @@ namespace LeanCloud.Play.Test
                     PlayerTtl = 600
                 };
                 return c0.CreateRoom(roomName, roomOptions);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.JoinRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 c1.OnDisconnected += () => {
                     Debug.Log("------------- disconnected");
                     c1.Connect().OnSuccess(__ => {
                         return c1.RejoinRoom(roomName);
-                    }).Unwrap().OnSuccess(__ => {
+                    }).Unwrap().OnSuccess(async __ => {
+                        await c0.Close();
+                        await c1.Close();
                         f = true;
                     });
                 };
-                c1._Disconnect();
-            });
+                c1.Room._Disconnect();
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f) {
                 yield return null;
             }
-            c0.Close();
-            c1.Close();
         }
 
         [UnityTest]
@@ -288,24 +289,24 @@ namespace LeanCloud.Play.Test
                     PlayerTtl = 600
                 };
                 return c0.CreateRoom(roomName, roomOptions);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.JoinRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 c1.OnDisconnected += () => {
-                    c1.ReconnectAndRejoin().OnSuccess(__ => {
+                    c1.ReconnectAndRejoin().OnSuccess(async __ => {
+                        await c0.Close();
+                        await c1.Close();
                         f = true;
                     });
                 };
-                c1._Disconnect();
-            });
+                c1.Room._Disconnect();
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f) {
                 yield return null;
             }
-            c0.Close();
-            c1.Close();
         }
 
         [UnityTest]
@@ -316,14 +317,14 @@ namespace LeanCloud.Play.Test
 
             c.Connect().OnSuccess(_ => {
                 return c.JoinRoom(roomName);
-            }).Unwrap().ContinueWith(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().ContinueWith(async _ => {
                 Assert.AreEqual(_.IsFaulted, true);
                 var e = _.Exception.InnerException as PlayException;
                 Assert.AreEqual(e.Code, 4301);
                 Debug.Log(e.Detail);
-                c.Close();
+                await c.Close();
                 f = true;
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f) {
                 yield return null;
@@ -350,36 +351,36 @@ namespace LeanCloud.Play.Test
                     CustoRoomPropertyKeysForLobby = new List<string> { "lv" }
                 };
                 return c0.CreateRoom(roomName, roomOptions);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.JoinRandomRoom(props, new List<string> { "jrt7_2" });
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c2.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c2.JoinRandomRoom(new PlayObject {
                     { "lv", 3 }
                 });
-            }).Unwrap().ContinueWith(t => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().ContinueWith(async t => {
                 PlayException e = (PlayException)t.Exception.InnerException;
                 Assert.AreEqual(e.Code, 4301);
-                c2.Close();
+                await c2.Close();
                 return c3.Connect();
-            }).Unwrap().OnSuccess(t => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(t => {
                 return c3.JoinRandomRoom(props);
-            }).Unwrap().ContinueWith(t => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().ContinueWith(async t => {
                 PlayException e = (PlayException)t.Exception.InnerException;
                 Assert.AreEqual(e.Code, 4301);
-                c3.Close();
+                await c3.Close();
                 return c4.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c4.JoinRandomRoom(props);
-            }).Unwrap().OnSuccess(_ => {
-                c0.Close();
-                c1.Close();
-                c4.Close();
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(async _ => {
+                await c0.Close();
+                await c1.Close();
+                await c4.Close();
                 f = true;
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f) {
                 yield return null;

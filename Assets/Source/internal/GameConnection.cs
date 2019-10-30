@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Net.WebSockets;
 using System.Linq;
 using LeanCloud.Play.Protocol;
 using Google.Protobuf;
@@ -11,16 +9,6 @@ namespace LeanCloud.Play {
     public class GameConnection : Connection {
         internal Room Room {
             get; private set;
-        }
-
-        public async Task Connect(string appId, string server, string gameVersion, string userId, string sessionToken) {
-            client = new ClientWebSocket();
-            client.Options.AddSubProtocol("protobuf.1");
-            client.Options.KeepAliveInterval = TimeSpan.FromSeconds(10);
-            string url = $"{server}session?appId={appId}&userId={userId}&gameVersion={gameVersion}&sdkVersion={Config.SDKVersion}&protocolVersion={Config.ProtocolVersion}&sessionToken={sessionToken}";
-            Logger.Debug(url);
-            await client.ConnectAsync(new Uri(url), CancellationToken.None);
-            _ = StartReceive();
         }
 
         internal async Task<Room> CreateRoom(string roomId, RoomOptions roomOptions, List<string> expectedUserIds) {
@@ -214,11 +202,11 @@ namespace LeanCloud.Play {
         }
 
         protected override string GetFastOpenUrl(string server, string appId, string gameVersion, string userId, string sessionToken) {
-            return $"{server}session?appId={appId}&sdkVersion={Config.SDKVersion}&protocolVersion={Config.ProtocolVersion}&gameVersion=${gameVersion}&userId=${userId}&sessionToken=${sessionToken}";
+            return $"{server}session?appId={appId}&sdkVersion={Config.SDKVersion}&protocolVersion={Config.ProtocolVersion}&gameVersion={gameVersion}&userId={userId}&sessionToken={sessionToken}";
         }
 
         protected override void HandleNotification(CommandType cmd, OpType op, Body body) {
-            throw new NotImplementedException();
+            OnMessage?.Invoke(cmd, op, body);
         }
     }
 }

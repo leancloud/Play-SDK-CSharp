@@ -28,7 +28,7 @@ namespace LeanCloud.Play.Test
 
             c0.Connect().OnSuccess(_ => {
                 return c0.CreateRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 c0.OnCustomEvent += (eventId, eventData, senderId) => {
                     Assert.AreEqual(eventId, 1);
                     Assert.AreEqual(eventData["name"], "aaa");
@@ -36,9 +36,9 @@ namespace LeanCloud.Play.Test
                     f = true;
                 };
                 return c1.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.JoinRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 var eventData = new PlayObject {
                     { "name", "aaa" },
                     { "count", 100 },
@@ -47,15 +47,15 @@ namespace LeanCloud.Play.Test
                     ReceiverGroup = ReceiverGroup.MasterClient
                 };
                 return c1.SendEvent(1, eventData, options);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 Debug.Log("send event done");
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f) {
                 yield return null;
             }
-            c0.Close();
-            c1.Close();
+            _ = c0.Close();
+            _ = c1.Close();
         }
 
         [UnityTest]
@@ -67,7 +67,7 @@ namespace LeanCloud.Play.Test
 
             c0.Connect().OnSuccess(_ => {
                 return c0.CreateRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 c0.OnCustomEvent += (eventId, eventData, senderId) => {
                     Assert.AreEqual(eventId, 2);
                     Assert.AreEqual(eventData["name"], "aaa");
@@ -75,9 +75,9 @@ namespace LeanCloud.Play.Test
                     f = true;
                 };
                 return c1.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.JoinRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 var eventData = new PlayObject {
                     { "name", "aaa" },
                     { "count", 100 },
@@ -86,15 +86,15 @@ namespace LeanCloud.Play.Test
                     TargetActorIds = new List<int> { 1, 2 }
                 };
                 return c1.SendEvent(2, eventData, options);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 Debug.Log("send event done");
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f) {
                 yield return null;
             }
-            c0.Close();
-            c1.Close();
+            _ = c0.Close();
+            _ = c1.Close();
         }
 
 
@@ -108,29 +108,29 @@ namespace LeanCloud.Play.Test
 
             c0.Connect().OnSuccess(_ => {
                 return c0.CreateRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 c0.OnCustomEvent += (eventId, eventData, senderId) => {
                     Assert.AreEqual(eventId, 3);
                     f0 = true;
                 };
                 return c1.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.JoinRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 c1.OnCustomEvent += (eventId, eventData, senderId) => {
                     Assert.AreEqual(eventId, 3);
                     f1 = true;
                 };
                 return c1.SendEvent(3);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 Debug.Log("send event done");
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f0 || !f1) {
                 yield return null;
             }
-            c0.Close();
-            c1.Close();
+            _ = c0.Close();
+            _ = c1.Close();
         }
     }
 }

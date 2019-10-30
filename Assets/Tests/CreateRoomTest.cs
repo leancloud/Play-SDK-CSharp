@@ -26,12 +26,12 @@ namespace LeanCloud.Play.Test
             var c = Utils.NewClient("crt0");
             c.Connect().OnSuccess(_ => {
                 return c.CreateRoom();
-            }).Unwrap().OnSuccess(async _ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(async _ => {
                 var room = _.Result;
                 Debug.Log(room.Name);
                 await c.Close();
                 f = true;
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f) {
                 yield return null;
@@ -47,14 +47,14 @@ namespace LeanCloud.Play.Test
             c.Connect().OnSuccess(_ => {
                 Debug.Log("connected");
                 return c.CreateRoom(roomName);
-            }).Unwrap().OnSuccess(async _ => {  
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(async _ => {  
                 var room = _.Result;
                 Assert.AreEqual(room.Name, roomName);
                 Debug.Log("close");
                 await c.Close();
                 f = true;
                 Debug.Log("created");
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f) {
                 yield return null;
@@ -82,7 +82,7 @@ namespace LeanCloud.Play.Test
                 };
                 var expectedUserIds = new List<string> { "world" };
                 return c.JoinOrCreateRoom(roomName, roomOptions, expectedUserIds);
-            }).Unwrap().OnSuccess(async _ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(async _ => {
                 var room = _.Result;
                 Assert.AreEqual(room.Name, roomName);
                 var props = room.CustomProperties;
@@ -92,7 +92,7 @@ namespace LeanCloud.Play.Test
                 Assert.AreEqual(props["level"], 2);
                 await c.Close();
                 f = true;
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f) {
                 yield return null;
@@ -108,7 +108,7 @@ namespace LeanCloud.Play.Test
             var c1 = Utils.NewClient("crt3_1");
             c0.Connect().OnSuccess(_ => {
                 return c0.CreateRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 c0.OnPlayerRoomJoined += (newPlayer) => {
                     Assert.AreEqual(c0.Player.IsMaster, true);
                     Assert.AreEqual(c0.Player.IsLocal, true);
@@ -116,13 +116,13 @@ namespace LeanCloud.Play.Test
                     flag = true;
                 };
                 return c1.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.JoinRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 Assert.AreEqual(c1.Player.IsLocal, true);
                 _ = c0.Close();
                 _ = c1.Close();
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!flag) {
                 yield return null;
@@ -137,13 +137,13 @@ namespace LeanCloud.Play.Test
             var c = Utils.NewClient("crt5");
             c.Connect().OnSuccess(_ => {
                 return c.CreateRoom(roomName);
-            }).Unwrap().ContinueWith(async _ => { 
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().ContinueWith(async _ => { 
                 Assert.AreEqual(_.IsFaulted, true);
                 var e = _.Exception.InnerException as PlayException;
                 Assert.AreEqual(e.Code, 4316);
                 await c.Close();
                 f = true;
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f) {
                 yield return null;

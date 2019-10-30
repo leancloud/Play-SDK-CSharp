@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
-using LeanCloud.Play.Protocol;
 
 namespace LeanCloud.Play {
     public class Client {
@@ -130,7 +129,9 @@ namespace LeanCloud.Play {
         /// </summary>
         /// <value>The player.</value>
         public Player Player {
-            get; internal set;
+            get {
+                return Room.Player;
+            }
         }
 
         /// <summary>
@@ -507,172 +508,6 @@ namespace LeanCloud.Play {
             }
             // TODO Clear
 
-        }
-
-        void OnLobbyConnMessage(CommandType cmd, OpType op, Body body) {
-            
-        }
-
-        
-
-        void OnLobbyConnClose(int code, string reason) {
-            context.Post(() => {
-                state = PlayState.DISCONNECT;
-                OnDisconnected?.Invoke();
-            });
-        }
-
-        void OnGameConnMessage(CommandType cmd, OpType op, Body body) {
-            switch (cmd) {
-                case CommandType.Conv:
-                    switch (op) {
-                        case OpType.MembersJoined:
-                            HandlePlayerJoinedRoom(body.RoomNotification.JoinRoom);
-                            break;
-                        case OpType.MembersLeft:
-                            HandlePlayerLeftRoom(body.RoomNotification.LeftRoom);
-                            break;
-                        case OpType.MasterClientChanged:
-                            HandleMasterChanged(body.RoomNotification.UpdateMasterClient);
-                            break;
-                        case OpType.SystemPropertyUpdatedNotify:
-                            HandleRoomSystemPropertiesChanged(body.RoomNotification.UpdateSysProperty);
-                            break;
-                        case OpType.UpdatedNotify:
-                            HandleRoomCustomPropertiesChanged(body.RoomNotification.UpdateProperty);
-                            break;
-                        case OpType.PlayerProps:
-                            HandlePlayerCustomPropertiesChanged(body.RoomNotification.UpdateProperty);
-                            break;
-                        case OpType.MembersOffline:
-                            HandlePlayerOffline(body.RoomNotification);
-                            break;
-                        case OpType.MembersOnline:
-                            HandlePlayerOnline(body.RoomNotification);
-                            break;
-                        case OpType.KickedNotice:
-                            HandleRoomKicked(body.RoomNotification);
-                            break;
-                        default:
-                            //HandleUnknownMsg(cmd, op, body);
-                            break;
-                    }
-                    break;
-                case CommandType.Events:
-                    break;
-                case CommandType.Direct:
-                    HandleSendEvent(body.Direct);
-                    break;
-                case CommandType.Error:
-                    //HandleErrorMsg(body);
-                    break;
-                default:
-                    //HandleUnknownMsg(cmd, op, body);
-                    break;
-            }
-        }
-
-        void OnGameConnClose(int code, string reason) {
-            context.Post(() => {
-                state = PlayState.DISCONNECT;
-                OnDisconnected?.Invoke();
-            });
-        }
-
-        void HandlePlayerJoinedRoom(JoinRoomNotification joinRoomNotification) {
-            var player = Utils.ConvertToPlayer(joinRoomNotification.Member);
-            player.Client = this;
-            Room.AddPlayer(player);
-            OnPlayerRoomJoined?.Invoke(player);
-        }
-
-        void HandlePlayerLeftRoom(LeftRoomNotification leftRoomNotification) {
-            var playerId = leftRoomNotification.ActorId;
-            var leftPlayer = Room.GetPlayer(playerId);
-            Room.RemovePlayer(playerId);
-            OnPlayerRoomLeft?.Invoke(leftPlayer);
-        }
-
-        void HandleMasterChanged(UpdateMasterClientNotification updateMasterClientNotification) {
-            var newMasterId = updateMasterClientNotification.MasterActorId;
-            Room.MasterActorId = newMasterId;
-            if (newMasterId == 0) {
-                OnMasterSwitched?.Invoke(null);
-            } else {
-                var newMaster = Room.GetPlayer(newMasterId);
-                OnMasterSwitched?.Invoke(newMaster);
-            }
-        }
-
-        void HandleRoomCustomPropertiesChanged(UpdatePropertyNotification updatePropertyNotification) {
-            var changedProps = CodecUtils.DeserializePlayObject(updatePropertyNotification.Attr);
-            // 房间属性变化
-            Room.MergeCustomProperties(changedProps);
-            OnRoomCustomPropertiesChanged?.Invoke(changedProps);
-        }
-
-        void HandlePlayerCustomPropertiesChanged(UpdatePropertyNotification updatePropertyNotification) {
-            var changedProps = CodecUtils.DeserializePlayObject(updatePropertyNotification.Attr);
-            // 玩家属性变化
-            var player = Room.GetPlayer(updatePropertyNotification.ActorId);
-            if (player == null) {
-                Logger.Error("No player id: {0} when player properties changed", updatePropertyNotification);
-                return;
-            }
-            player.MergeCustomProperties(changedProps);
-            OnPlayerCustomPropertiesChanged?.Invoke(player, changedProps);
-        }
-
-        void HandleRoomSystemPropertiesChanged(UpdateSysPropertyNotification updateSysPropertyNotification) {
-            var changedProps = Utils.ConvertToPlayObject(updateSysPropertyNotification.SysAttr);
-            Room.MergeSystemProperties(changedProps);
-            OnRoomSystemPropertiesChanged?.Invoke(changedProps);
-        }
-
-        void HandlePlayerOffline(RoomNotification roomNotification) {
-            var playerId = roomNotification.InitByActor;
-            var player = Room.GetPlayer(playerId);
-            if (player == null) {
-                Logger.Error("No player id: {0} when player is offline");
-                return;
-            }
-            player.IsActive = false;
-            OnPlayerActivityChanged?.Invoke(player);
-        }
-
-        void HandlePlayerOnline(RoomNotification roomNotification) {
-            var playerId = roomNotification.JoinRoom.Member.ActorId;
-            var player = Room.GetPlayer(playerId);
-            if (player == null) {
-                Logger.Error("No player id: {0} when player is offline");
-                return;
-            }
-            player.IsActive = true;
-            OnPlayerActivityChanged?.Invoke(player);
-        }
-
-        void HandleSendEvent(DirectCommand directCommand) {
-            var eventId = (byte)directCommand.EventId;
-            var eventData = CodecUtils.DeserializePlayObject(directCommand.Msg);
-            var senderId = directCommand.FromActorId;
-            OnCustomEvent?.Invoke(eventId, eventData, senderId);
-        }
-
-        void HandleRoomKicked(RoomNotification roomNotification) {
-            state = PlayState.GAME_TO_LOBBY;
-            var appInfo = roomNotification.AppInfo;
-            if (appInfo != null) {
-                var code = appInfo.AppCode;
-                var reason = appInfo.AppMsg;
-                OnRoomKicked?.Invoke(code, reason);
-            } else {
-                OnRoomKicked?.Invoke(null, null);
-            }
-        }
-
-        // 调试时模拟断线
-        public void _Disconnect() {
-            
         }
     }
 }

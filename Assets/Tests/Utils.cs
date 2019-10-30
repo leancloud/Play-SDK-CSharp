@@ -7,7 +7,7 @@ namespace LeanCloud.Play.Test {
             // 华东节点，开发版本
             var appId = "FQr8l8LLvdxIwhMHN77sNluX-9Nh9j0Va";
             var appKey = "MJSm46Uu6LjF5eNmqfbuUmt6";
-            return new Client(appId, appKey, userId);
+            return new Client(appId, appKey, userId, false);
         }
 
         internal static void Log(LogLevel level, string info) { 

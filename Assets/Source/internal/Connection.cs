@@ -17,18 +17,16 @@ namespace LeanCloud.Play {
         }
 
         const int RECV_BUFFER_SIZE = 1024;
-        static readonly string PING = "{}";
 
         protected WebSocket ws;
         protected ClientWebSocket client;
         readonly Dictionary<int, TaskCompletionSource<ResponseWrapper>> responses;
 
-        internal event Action<CommandType, OpType, Body> OnMessage;
-        internal event Action<int, string> OnClose;
-        internal event Action<int, string> OnError;
+        internal Action<CommandType, OpType, Body> OnMessage;
+        internal Action<int, string> OnClose;
+        internal Action<int, string> OnError;
         
         string userId;
-
 
         public bool IsOpen {
             get {
@@ -46,9 +44,9 @@ namespace LeanCloud.Play {
             }
         }
 
-        public void Disconnect() {
-            OnClose?.Invoke(0, string.Empty);
+        public void _Disconnect() {
             _ = Close();
+            OnClose?.Invoke(0, string.Empty);
         }
 
         protected async Task Connnect(string server, string userId) {
@@ -68,6 +66,7 @@ namespace LeanCloud.Play {
             client.Options.KeepAliveInterval = TimeSpan.FromSeconds(10);
             string newServer = server.Replace("https://", "wss://");
             string url = GetFastOpenUrl(newServer, appId, gameVersion, userId, sessionToken);
+            Logger.Debug($"Connect url: {url}");
             await client.ConnectAsync(new Uri(url), default);
             _ = StartReceive();
             responses.Add(0, tcs);
@@ -106,7 +105,7 @@ namespace LeanCloud.Play {
                 OnClose?.Invoke(-2, e.Message);
                 _ = Close();
             }
-        }
+        }   
 
         protected async Task StartReceive() {
             byte[] buffer = new byte[RECV_BUFFER_SIZE];
@@ -120,7 +119,7 @@ namespace LeanCloud.Play {
                             OnClose?.Invoke((int)result.CloseStatus, result.CloseStatusDescription);
                             return;
                         }
-                        data = await MergeData(data, buffer, result.Count);
+                        data = await MergeDataAsync(data, buffer, result.Count);
                     } while (!result.EndOfMessage);
                     try {
                         Command command = Command.Parser.ParseFrom(data);
@@ -131,6 +130,7 @@ namespace LeanCloud.Play {
                         HandleCommand(cmd, op, body);
                     } catch (Exception e) {
                         Logger.Error(e.Message);
+                        Logger.Error(e.StackTrace);
                         throw e;
                     }
                 }
@@ -139,7 +139,14 @@ namespace LeanCloud.Play {
             }
         }
 
-        static async Task<byte[]> MergeData(byte[] oldData, byte[] newData, int newDataLength) {
+        static byte[] MergeData(byte[] oldData, byte[] newData, int newDataLength) {
+            var data = new byte[oldData.Length + newDataLength];
+            Array.Copy(oldData, data, oldData.Length);
+            Array.Copy(newData, 0, data, oldData.Length, newDataLength);
+            return data;
+        }
+
+        static async Task<byte[]> MergeDataAsync(byte[] oldData, byte[] newData, int newDataLength) {
             return await Task.Run(() => {
                 var data = new byte[oldData.Length + newDataLength];
                 Array.Copy(oldData, data, oldData.Length);
@@ -173,6 +180,7 @@ namespace LeanCloud.Play {
         void HandleCommand(CommandType cmd, OpType op, Body body) {
             if (body.Response != null) {
                 var res = body.Response;
+                
                 if (responses.TryGetValue(res.I, out var tcs)) {
                     if (res.ErrorInfo != null) {
                         var errorInfo = res.ErrorInfo;
@@ -184,6 +192,7 @@ namespace LeanCloud.Play {
                             Response = res
                         });
                     }
+                    responses.Remove(res.I);
                 }
             } else {
                 HandleNotification(cmd, op, body);
@@ -196,10 +205,10 @@ namespace LeanCloud.Play {
 
         protected abstract void HandleNotification(CommandType cmd, OpType op, Body body);
 
-        static volatile int requestI = 1;
-        static readonly object requestILock = new object();
+        volatile int requestI = 1;
+        readonly object requestILock = new object();
 
-        static int RequestI {
+        int RequestI {
             get {
                 lock (requestILock) {
                     return requestI++;
@@ -207,8 +216,8 @@ namespace LeanCloud.Play {
             }
         }
 
-        protected static RequestMessage NewRequest() {
-            var request = new RequestMessage {
+        protected RequestMessage NewRequest() {
+            var request = new RequestMessage {  
                 I = RequestI
             };
             return request;

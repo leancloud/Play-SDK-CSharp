@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using LeanCloud.Play.Protocol;
 
 namespace LeanCloud.Play {
     /// <summary>
@@ -108,6 +108,10 @@ namespace LeanCloud.Play {
                     return playerDict.Values.ToList();
                 }
             }
+        }
+
+        public Player Player {
+            get; private set;
         }
 
         internal Room(Client client) {
@@ -344,7 +348,7 @@ namespace LeanCloud.Play {
            return gameConn.SendEvent(eventId, eventData, opts);
         }
 
-        internal async Task Close() {
+        public async Task Close() {
             try {
                 await gameConn.Close();
             } catch (Exception e) {
@@ -352,6 +356,10 @@ namespace LeanCloud.Play {
             } finally {
                 Logger.Debug("Room closed.");
             }
+        }
+
+        public void _Disconnect() {
+            gameConn._Disconnect();
         }
 
         internal void AddPlayer(Player player) {
@@ -422,7 +430,155 @@ namespace LeanCloud.Play {
             MasterActorId = room.MasterActorId;
             ExpectedUserIds = room.ExpectedUserIds;
             playerDict = room.playerDict;
+            foreach (Player player in playerDict.Values) {
+                if (player.UserId == Client.UserId) {
+                    Player = player;
+                    break;
+                }
+            }
             CustomProperties = room.CustomProperties;
+            gameConn.OnMessage += (cmd, op, body) => {
+                switch (cmd) {
+                    case CommandType.Conv:
+                        switch (op) {
+                            case OpType.MembersJoined:
+                                HandlePlayerJoinedRoom(body.RoomNotification.JoinRoom);
+                                break;
+                            case OpType.MembersLeft:
+                                HandlePlayerLeftRoom(body.RoomNotification.LeftRoom);
+                                break;
+                            case OpType.MasterClientChanged:
+                                HandleMasterChanged(body.RoomNotification.UpdateMasterClient);
+                                break;
+                            case OpType.SystemPropertyUpdatedNotify:
+                                HandleRoomSystemPropertiesChanged(body.RoomNotification.UpdateSysProperty);
+                                break;
+                            case OpType.UpdatedNotify:
+                                HandleRoomCustomPropertiesChanged(body.RoomNotification.UpdateProperty);
+                                break;
+                            case OpType.PlayerProps:
+                                HandlePlayerCustomPropertiesChanged(body.RoomNotification.UpdateProperty);
+                                break;
+                            case OpType.MembersOffline:
+                                HandlePlayerOffline(body.RoomNotification);
+                                break;
+                            case OpType.MembersOnline:
+                                HandlePlayerOnline(body.RoomNotification);
+                                break;
+                            case OpType.KickedNotice:
+                                HandleRoomKicked(body.RoomNotification);
+                                break;
+                            default:
+                                //HandleUnknownMsg(cmd, op, body);
+                                break;
+                        }
+                        break;
+                    case CommandType.Events:
+                        break;
+                    case CommandType.Direct:
+                        HandleSendEvent(body.Direct);
+                        break;
+                    case CommandType.Error:
+                        //HandleErrorMsg(body);
+                        break;
+                    default:
+                        //HandleUnknownMsg(cmd, op, body);
+                        break;
+                }
+            };
+            gameConn.OnClose += (code, message) => {
+                Client.OnDisconnected?.Invoke();
+            };
+        }
+
+        void HandlePlayerJoinedRoom(JoinRoomNotification joinRoomNotification) {
+            var player = Utils.ConvertToPlayer(joinRoomNotification.Member);
+            player.Client = Client;
+            AddPlayer(player);
+            Client.OnPlayerRoomJoined?.Invoke(player);
+        }
+
+        void HandlePlayerLeftRoom(LeftRoomNotification leftRoomNotification) {
+            var playerId = leftRoomNotification.ActorId;
+            var leftPlayer = GetPlayer(playerId);
+            RemovePlayer(playerId);
+            Client.OnPlayerRoomLeft?.Invoke(leftPlayer);
+        }
+
+        void HandleMasterChanged(UpdateMasterClientNotification updateMasterClientNotification) {
+            var newMasterId = updateMasterClientNotification.MasterActorId;
+            MasterActorId = newMasterId;
+            if (newMasterId == 0) {
+                Client.OnMasterSwitched?.Invoke(null);
+            } else {
+                var newMaster = GetPlayer(newMasterId);
+                Client.OnMasterSwitched?.Invoke(newMaster);
+            }
+        }
+
+        void HandleRoomCustomPropertiesChanged(UpdatePropertyNotification updatePropertyNotification) {
+            var changedProps = CodecUtils.DeserializePlayObject(updatePropertyNotification.Attr);
+            // 房间属性变化
+            MergeCustomProperties(changedProps);
+            Client.OnRoomCustomPropertiesChanged?.Invoke(changedProps);
+        }
+
+        void HandlePlayerCustomPropertiesChanged(UpdatePropertyNotification updatePropertyNotification) {
+            var changedProps = CodecUtils.DeserializePlayObject(updatePropertyNotification.Attr);
+            // 玩家属性变化
+            var player = GetPlayer(updatePropertyNotification.ActorId);
+            if (player == null) {
+                Logger.Error("No player id: {0} when player properties changed", updatePropertyNotification);
+                return;
+            }
+            player.MergeCustomProperties(changedProps);
+            Client.OnPlayerCustomPropertiesChanged?.Invoke(player, changedProps);
+        }
+
+        void HandleRoomSystemPropertiesChanged(UpdateSysPropertyNotification updateSysPropertyNotification) {
+            var changedProps = Utils.ConvertToPlayObject(updateSysPropertyNotification.SysAttr);
+            MergeSystemProperties(changedProps);
+            Client.OnRoomSystemPropertiesChanged?.Invoke(changedProps);
+        }
+
+        void HandlePlayerOffline(RoomNotification roomNotification) {
+            var playerId = roomNotification.InitByActor;
+            var player = GetPlayer(playerId);
+            if (player == null) {
+                Logger.Error("No player id: {0} when player is offline");
+                return;
+            }
+            player.IsActive = false;
+            Client.OnPlayerActivityChanged?.Invoke(player);
+        }
+
+        void HandlePlayerOnline(RoomNotification roomNotification) {
+            var playerId = roomNotification.JoinRoom.Member.ActorId;
+            var player = GetPlayer(playerId);
+            if (player == null) {
+                Logger.Error("No player id: {0} when player is offline");
+                return;
+            }
+            player.IsActive = true;
+            Client.OnPlayerActivityChanged?.Invoke(player);
+        }
+
+        void HandleSendEvent(DirectCommand directCommand) {
+            var eventId = (byte)directCommand.EventId;
+            var eventData = CodecUtils.DeserializePlayObject(directCommand.Msg);
+            var senderId = directCommand.FromActorId;
+            Client.OnCustomEvent?.Invoke(eventId, eventData, senderId);
+        }
+
+        void HandleRoomKicked(RoomNotification roomNotification) {
+            var appInfo = roomNotification.AppInfo;
+            if (appInfo != null) {
+                var code = appInfo.AppCode;
+                var reason = appInfo.AppMsg;
+                Client.OnRoomKicked?.Invoke(code, reason);
+            } else {
+                Client.OnRoomKicked?.Invoke(null, null);
+            }
         }
     }
 }

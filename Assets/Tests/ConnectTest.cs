@@ -20,38 +20,14 @@ namespace LeanCloud.Play.Test
         }
 
         [UnityTest]
-        public IEnumerator FastOpen() {
-            bool f = false;
-
-            GameConnection gameConn = new GameConnection();
-            string appId = "FQr8l8LLvdxIwhMHN77sNluX-9Nh9j0Va";
-            string server = "wss://cn-e1-cell2.leancloud.cn:5769/";
-            string gameVersion = "0.0.1";
-            string userId = "lean";
-            string sessionToken = "be5090bd3d471ecb41ac71bcede88a2d";
-            gameConn.Connect(appId, server, gameVersion, userId, sessionToken).ContinueWith(t => {
-                if (t.IsFaulted) {
-                    Debug.Log($"failed: {t.Exception.InnerException.Message}");
-                } else {
-                    Debug.Log("success");
-                    f = true;
-                }
-            });
-
-            while (!f) {
-                yield return null;
-            }
-        }
-
-        [UnityTest]
         public IEnumerator Connect() {
             var f = false;
             var c = Utils.NewClient("ct0");
-            c.Connect().OnSuccess(_ => {
+            c.Connect().OnSuccess(async _ => {
                 Debug.Log($"{c.UserId} connected.");
-                c.Close();
+                await c.Close();
                 f = true;
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f) {
                 yield return null;
@@ -77,9 +53,9 @@ namespace LeanCloud.Play.Test
             };
             c0.Connect().OnSuccess(_ => {
                 return c1.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(async _ => {
                 Debug.Log($"{c1.UserId} connected at {Thread.CurrentThread.ManagedThreadId}");
-                c1.Close();
+                await c1.Close();
                 f1 = true;
             });
 
@@ -94,15 +70,15 @@ namespace LeanCloud.Play.Test
 
             var f = false;
             var c = Utils.NewClient("ct2");
-            c.Connect().ContinueWith(_ => {
+            c.Connect().ContinueWith(async _ => {
                 Assert.AreEqual(_.IsFaulted, false);
-                c.Close();
+                await c.Close();
                 c = Utils.NewClient("ct2");
                 return c.Connect();
-            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
-                c.Close();
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(async _ => {
+                await c.Close();
                 f = true;
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f) {
                 yield return null;
@@ -117,17 +93,17 @@ namespace LeanCloud.Play.Test
             var c = Utils.NewClient("ct3");
             c.Connect().OnSuccess(_ => {
                 return c.CreateRoom();
-            }).ContinueWith(_ => {
-                c.Close();
+            }, TaskScheduler.FromCurrentSynchronizationContext()).ContinueWith(async _ => {
+                await c.Close();
                 Assert.AreEqual(_.IsFaulted, false);
                 c = Utils.NewClient("ct3");
                 return c.Connect();
             }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c.CreateRoom();
-            }).Unwrap().OnSuccess(_ => {
-                c.Close();
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(async _ => {
+                await c.Close();
                 f = true;
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f) {
                 yield return null;
@@ -145,7 +121,7 @@ namespace LeanCloud.Play.Test
                 var e = _.Exception.InnerException as PlayException;
                 Assert.AreEqual(e.Code, 4104);
                 f = true;
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f) {
                 yield return null;
@@ -162,17 +138,18 @@ namespace LeanCloud.Play.Test
 
             c.Connect().OnSuccess(_ => {
                 return c.CreateRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
-                Task.Delay(30000).OnSuccess(__ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
+                Task.Delay(30000).OnSuccess(async __ => {
                     Debug.Log("delay 30s done");
+                    await c.Close();
                     f = true;
                 });
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f) {
                 yield return null;
             }
-            c.Close();
+            
         }
 
         [UnityTest, Timeout(40000)]
@@ -183,7 +160,7 @@ namespace LeanCloud.Play.Test
             var c = Utils.NewClient("ct6");
             c.Connect().OnSuccess(_ => {
                 return c.CreateRoom();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 Task.Run(async () => {
                     var count = 6;
                     while (count > 0 && !f) {
@@ -194,16 +171,17 @@ namespace LeanCloud.Play.Test
                         Thread.Sleep(5000);
                     }
                 });
-                Task.Delay(30000).OnSuccess(__ => {
+                Task.Delay(30000).OnSuccess(async __ => {
                     Debug.Log("delay 30s done");
+                    await c.Close();
                     f = true;
                 });
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f) {
                 yield return null;
             }
-            c.Close();
+            
         }
 
         [UnityTest]
@@ -215,10 +193,8 @@ namespace LeanCloud.Play.Test
 
             c.Connect().OnSuccess(_ => {
                 f = true;
-            });
-            c.Connect().ContinueWith(t => { 
-                
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+            _ = c.Connect();
 
             while (!f) {
                 yield return null;

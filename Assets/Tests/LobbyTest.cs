@@ -30,29 +30,29 @@ namespace LeanCloud.Play.Test {
                     f = roomList.Count >= 3;
                 };
                 return c0.JoinLobby();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.CreateRoom();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c2.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c2.CreateRoom();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c3.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c3.CreateRoom();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 Debug.Log("create dones");
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
                 
             while (!f) {
                 yield return null;
             }
-            c0.Close();
-            c1.Close();
-            c2.Close();
-            c3.Close();
+            _ = c0.Close();
+            _ = c1.Close();
+            _ = c2.Close();
+            _ = c3.Close();
         }
     }
 }
