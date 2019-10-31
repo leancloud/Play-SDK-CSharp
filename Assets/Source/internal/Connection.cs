@@ -64,12 +64,14 @@ namespace LeanCloud.Play {
             client = new ClientWebSocket();
             client.Options.AddSubProtocol("protobuf.1");
             client.Options.KeepAliveInterval = TimeSpan.FromSeconds(10);
-            string newServer = server.Replace("https://", "wss://");
+            string newServer = server.Replace("https://", "wss://").Replace("http://", "ws://");
+            int i = RequestI;
             string url = GetFastOpenUrl(newServer, appId, gameVersion, userId, sessionToken);
+            url = $"{url}&i={i}";
             Logger.Debug($"Connect url: {url}");
             await client.ConnectAsync(new Uri(url), default);
             _ = StartReceive();
-            responses.Add(0, tcs);
+            responses.Add(i, tcs);
             return tcs.Task;
         }
 
@@ -173,10 +175,6 @@ namespace LeanCloud.Play {
             return SendRequest(CommandType.Session, OpType.Open, request);
         }
 
-        protected Task<Message> Send(Message msg) {
-            return Task.FromResult<Message>(null);
-        }
-
         void HandleCommand(CommandType cmd, OpType op, Body body) {
             if (body.Response != null) {
                 var res = body.Response;
@@ -208,7 +206,7 @@ namespace LeanCloud.Play {
         volatile int requestI = 1;
         readonly object requestILock = new object();
 
-        int RequestI {
+        protected int RequestI {
             get {
                 lock (requestILock) {
                     return requestI++;

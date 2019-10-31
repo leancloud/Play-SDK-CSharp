@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using LeanCloud.Play.Protocol;
+using Newtonsoft.Json;
 using Google.Protobuf;
 
 namespace LeanCloud.Play {
@@ -81,7 +82,7 @@ namespace LeanCloud.Play {
             };
             request.UpdateSysProperty = new UpdateSysPropertyRequest {
                 SysAttr = new RoomSystemProperty { 
-                    ExpectMembers = Json.Encode(args)
+                    ExpectMembers = JsonConvert.SerializeObject(args)
                 }
             };
             var res = await SendRequest(CommandType.Conv, OpType.UpdateSystemProperty, request);
@@ -95,7 +96,7 @@ namespace LeanCloud.Play {
             };
             request.UpdateSysProperty = new UpdateSysPropertyRequest {
                 SysAttr = new RoomSystemProperty { 
-                    ExpectMembers = Json.Encode(args)
+                    ExpectMembers = JsonConvert.SerializeObject(args)
                 }
             };
             var res = await SendRequest(CommandType.Conv, OpType.UpdateSystemProperty, request);
@@ -109,7 +110,7 @@ namespace LeanCloud.Play {
             };
             request.UpdateSysProperty = new UpdateSysPropertyRequest {
                 SysAttr = new RoomSystemProperty {
-                    ExpectMembers = Json.Encode(args)
+                    ExpectMembers = JsonConvert.SerializeObject(args)
                 }
             };
             var res = await SendRequest(CommandType.Conv, OpType.UpdateSystemProperty, request);
@@ -123,7 +124,7 @@ namespace LeanCloud.Play {
             };
             request.UpdateSysProperty = new UpdateSysPropertyRequest {
                 SysAttr = new RoomSystemProperty { 
-                    ExpectMembers = Json.Encode(args)
+                    ExpectMembers = JsonConvert.SerializeObject(args)
                 }
             };
             var res = await SendRequest(CommandType.Conv, OpType.UpdateSystemProperty, request);

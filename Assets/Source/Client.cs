@@ -162,15 +162,6 @@ namespace LeanCloud.Play {
         /// </summary>
         /// <returns>The connect.</returns>
         public async Task<Client> Connect() {
-            if (state == PlayState.CONNECTING) {
-                // 
-                Logger.Debug("it is connecting...");
-                return null;
-            }
-            if (state != PlayState.INIT && state != PlayState.DISCONNECT) {
-                throw new PlayException(PlayExceptionCode.StateError,
-                    string.Format("You cannot call Connect() on {0} state", state.ToString()));
-            }
             lobbyService = new LobbyService(this);
             await lobbyService.Authorize();
             Logger.Debug("connected at: {0}", Thread.CurrentThread.ManagedThreadId);

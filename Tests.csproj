@@ -74,7 +74,6 @@
     <Compile Include="Assets\Tests\MasterTest.cs" />
     <Compile Include="Assets\Tests\MessageQueueTest.cs" />
     <Compile Include="Assets\Tests\RoomSysPropsTest.cs" />
-    <Compile Include="Assets\Tests\RouterTest.cs" />
     <Compile Include="Assets\Tests\Utils.cs" />
     <Reference Include="UnityEngine.AIModule">
       <HintPath>/Applications/Unity/Hub/Editor/2019.1.0f2/Unity.app/Contents/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>

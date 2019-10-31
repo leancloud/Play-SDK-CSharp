@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Text;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Net;
@@ -128,17 +130,18 @@ namespace LeanCloud.Play {
             HttpResponseMessage response = null;
             try {
                 httpClient = new HttpClient();
+                string data = JsonConvert.SerializeObject(body);
                 request = new HttpRequestMessage {
                     RequestUri = new Uri(url),
                     Method = HttpMethod.Post,
-                    Content = new StringContent(JsonConvert.SerializeObject(body))
+                    Content = new StringContent(data)
                 };
                 AddHeaders(request.Content.Headers);
                 request.Content.Headers.Add(USER_SESSION_TOKEN_KEY, sessionToken);
+                Utils.PrintRequest(httpClient, request, data);
                 response = await httpClient.SendAsync(request);
-                Logger.Debug($"code: {response.StatusCode}");
                 string content = await response.Content.ReadAsStringAsync();
-                Logger.Debug(content);
+                Utils.PrintResponse(response, content);
                 if (response.StatusCode >= HttpStatusCode.OK && response.StatusCode < HttpStatusCode.Ambiguous) {
                     return JsonConvert.DeserializeObject<LobbyRoomResult>(content);
                 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Collections.Generic;
@@ -71,28 +72,37 @@ namespace LeanCloud.Play {
 
         async Task<LobbyInfo> AuthorizeFromServer() {
             string url = await appRouter.Fetch();
-            Logger.Debug(url);
-            Dictionary<string, object> data = new Dictionary<string, object>();
-            if (!string.IsNullOrEmpty(feature)) {
-                data.Add("feature", feature);
-            }
-            HttpRequestMessage request = new HttpRequestMessage {
-                RequestUri = new Uri(url),
-                Method = HttpMethod.Post,
-                Content = new StringContent(JsonConvert.SerializeObject(data))
-            };
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            HttpRequestMessage request = null;
+            HttpResponseMessage response = null;
             try {
-                HttpResponseMessage response = await client.SendAsync(request);
+                Dictionary<string, object> data = new Dictionary<string, object>();
+                if (!string.IsNullOrEmpty(feature)) {
+                    data.Add("feature", feature);
+                }
+                string dataContent = JsonConvert.SerializeObject(data);
+                request = new HttpRequestMessage {
+                    RequestUri = new Uri(url),
+                    Method = HttpMethod.Post,
+                    Content = new StringContent(dataContent)
+                };
+                request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                Utils.PrintRequest(client, request, dataContent);
+                response = await client.SendAsync(request);
                 
                 string content = await response.Content.ReadAsStringAsync();
-                response.Dispose();
-
-                lobbyInfo = JsonConvert.DeserializeObject<LobbyInfo>(content);
-                return lobbyInfo;
+                Utils.PrintResponse(response, content);
+                if (response.StatusCode >= HttpStatusCode.OK && response.StatusCode < HttpStatusCode.Ambiguous) {
+                    return JsonConvert.DeserializeObject<LobbyInfo>(content);
+                }
+                PlayException exception = JsonConvert.DeserializeObject<PlayException>(content);
+                throw exception;
             } finally {
-                client.Dispose();
-                request.Dispose();
+                if (request != null) {
+                    request.Dispose();
+                }
+                if (response != null) {
+                    response.Dispose();
+                }
             }
         }
     }

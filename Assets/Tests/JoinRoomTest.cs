@@ -188,10 +188,10 @@ namespace LeanCloud.Play.Test
                 return c2.Connect();
             }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c2.JoinRandomRoom(props);
-            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().ContinueWith(async t => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().ContinueWith(t => {
                 PlayException e = (PlayException)t.Exception.InnerException;
                 Assert.AreEqual(e.Code, 4301);
-                await c2.Close();
+                _ = c2.Close();
                 return c3.Connect();
             }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c3.JoinRandomRoom(props);

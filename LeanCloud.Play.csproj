@@ -74,7 +74,6 @@
     <Compile Include="Assets\Source\internal\GameRouter.cs" />
     <Compile Include="Assets\Source\internal\LobbyConnection.cs" />
     <Compile Include="Assets\Source\internal\LobbyService.cs" />
-    <Compile Include="Assets\Source\internal\Message.cs" />
     <Compile Include="Assets\Source\internal\PlayContext.cs" />
     <Compile Include="Assets\Source\internal\ResponseWrapper.cs" />
     <Compile Include="Assets\Source\Lobby.cs" />
@@ -92,7 +91,6 @@
     <Compile Include="Assets\Source\SendEventOptions.cs" />
     <Compile Include="Assets\Source\utilities\DateTimeUtils.cs" />
     <Compile Include="Assets\Source\utilities\InternalExtensions.cs" />
-    <Compile Include="Assets\Source\utilities\Json.cs" />
     <Compile Include="Assets\Source\utilities\Logger.cs" />
     <Compile Include="Assets\Source\utilities\Utils.cs" />
     <Reference Include="UnityEngine.AIModule">

@@ -35,39 +35,7 @@ namespace LeanCloud.Play.Test
         }
 
         [UnityTest]
-        public IEnumerator ConnectWithSameId() {
-            Logger.LogDelegate += Utils.Log;
-
-            var f0 = false;
-            var f1 = false;
-            var c0 = Utils.NewClient("ct1");
-            var c1 = Utils.NewClient("ct1");
-            c0.OnError += (code, detail) => {
-                Debug.Log($"on error at {Thread.CurrentThread.ManagedThreadId}");
-                Assert.AreEqual(code, 4102);
-                Debug.Log(detail);
-            };
-            c0.OnDisconnected += () => {
-                Debug.Log("c0 is disconnected.");
-                f0 = true;
-            };
-            c0.Connect().OnSuccess(_ => {
-                return c1.Connect();
-            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(async _ => {
-                Debug.Log($"{c1.UserId} connected at {Thread.CurrentThread.ManagedThreadId}");
-                await c1.Close();
-                f1 = true;
-            });
-
-            while (!f0 || !f1) {
-                yield return null;
-            }
-        }
-
-        [UnityTest]
         public IEnumerator CloseFromLobby() {
-            Logger.LogDelegate += Utils.Log;
-
             var f = false;
             var c = Utils.NewClient("ct2");
             c.Connect().ContinueWith(async _ => {
@@ -87,21 +55,19 @@ namespace LeanCloud.Play.Test
 
         [UnityTest]
         public IEnumerator CloseFromGame() {
-            Logger.LogDelegate += Utils.Log;
-
             var f = false;
             var c = Utils.NewClient("ct3");
             c.Connect().OnSuccess(_ => {
                 return c.CreateRoom();
-            }, TaskScheduler.FromCurrentSynchronizationContext()).ContinueWith(async _ => {
-                await c.Close();
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().ContinueWith(async _ => {
+                _ = c.Close();
                 Assert.AreEqual(_.IsFaulted, false);
                 c = Utils.NewClient("ct3");
                 return c.Connect();
             }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c.CreateRoom();
-            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(async _ => {
-                await c.Close();
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
+                _ = c.Close();
                 f = true;
             }, TaskScheduler.FromCurrentSynchronizationContext());
 
@@ -112,10 +78,8 @@ namespace LeanCloud.Play.Test
 
         [UnityTest]
         public IEnumerator ConnectFailed() {
-            Logger.LogDelegate += Utils.Log;
-
             var f = false;
-            var c = Utils.NewClient("ct4 ");
+            var c = Utils.NewClient("ct 4");
             c.Connect().ContinueWith(_ => { 
                 Assert.AreEqual(_.IsFaulted, true);
                 var e = _.Exception.InnerException as PlayException;
@@ -130,8 +94,6 @@ namespace LeanCloud.Play.Test
 
         [UnityTest, Timeout(40000)]
         public IEnumerator KeepAlive() {
-            Logger.LogDelegate += Utils.Log;
-
             var f = false;
             var roomName = "ct5_r";
             var c = Utils.NewClient("ct5");
@@ -154,8 +116,6 @@ namespace LeanCloud.Play.Test
 
         [UnityTest, Timeout(40000)]
         public IEnumerator SendOnly() {
-            Logger.LogDelegate += Utils.Log;
-
             var f = false;
             var c = Utils.NewClient("ct6");
             c.Connect().OnSuccess(_ => {
@@ -186,8 +146,6 @@ namespace LeanCloud.Play.Test
 
         [UnityTest]
         public IEnumerator ConnectRepeatedly() {
-            Logger.LogDelegate += Utils.Log;
-
             var f = false;
             var c = Utils.NewClient("ct7");
 
