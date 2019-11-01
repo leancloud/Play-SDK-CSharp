@@ -56,8 +56,6 @@ namespace LeanCloud.Play {
         /// </summary>
         public Action<int, string> OnError;
 
-        readonly PlayContext context;
-
         internal LobbyService lobbyService;
 
         /// <summary>
@@ -99,8 +97,6 @@ namespace LeanCloud.Play {
         public string GameVersion {
             get; private set;
         }   
-
-        PlayState state;
 
         /// <summary>
         /// 大厅房间列表
@@ -149,12 +145,6 @@ namespace LeanCloud.Play {
             UserId = userId;
             Ssl = ssl;
             GameVersion = gameVersion;
-
-            state = PlayState.INIT;
-          
-            var playGO = new GameObject("LeanCloud.Play");
-            UnityEngine.Object.DontDestroyOnLoad(playGO);
-            context = playGO.AddComponent<PlayContext>();
         }
 
         /// <summary>
@@ -477,14 +467,20 @@ namespace LeanCloud.Play {
         /// 暂停消息队列
         /// </summary>
         public void PauseMessageQueue() {
-            context.IsMessageQueueRunning = false;
+            if (Room == null) {
+                throw new Exception("You are not in room yet.");
+            }
+            Room.PauseMessageQueue();
         }
 
         /// <summary>
         /// 恢复消息队列
         /// </summary>
         public void ResumeMessageQueue() {
-            context.IsMessageQueueRunning = true;
+            if (Room == null) {
+                throw new Exception("You are not in room yet.");
+            }
+            Room.ResumeMessageQueue();
         }
 
         /// <summary>

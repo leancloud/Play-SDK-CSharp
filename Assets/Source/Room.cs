@@ -358,6 +358,14 @@ namespace LeanCloud.Play {
             }
         }
 
+        internal void PauseMessageQueue() {
+            gameConn.PauseMessageQueue();
+        }
+
+        internal void ResumeMessageQueue() {
+            gameConn.ResumeMessageQueue();
+        }
+
         public void _Disconnect() {
             gameConn._Disconnect();
         }

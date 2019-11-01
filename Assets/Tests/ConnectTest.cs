@@ -59,7 +59,7 @@ namespace LeanCloud.Play.Test
             var c = Utils.NewClient("ct3");
             c.Connect().OnSuccess(_ => {
                 return c.CreateRoom();
-            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().ContinueWith(async _ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().ContinueWith(_ => {
                 _ = c.Close();
                 Assert.AreEqual(_.IsFaulted, false);
                 c = Utils.NewClient("ct3");
@@ -105,7 +105,7 @@ namespace LeanCloud.Play.Test
                     Debug.Log("delay 30s done");
                     await c.Close();
                     f = true;
-                });
+                }, TaskScheduler.FromCurrentSynchronizationContext());
             }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f) {

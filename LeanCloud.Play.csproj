@@ -74,7 +74,6 @@
     <Compile Include="Assets\Source\internal\GameRouter.cs" />
     <Compile Include="Assets\Source\internal\LobbyConnection.cs" />
     <Compile Include="Assets\Source\internal\LobbyService.cs" />
-    <Compile Include="Assets\Source\internal\PlayContext.cs" />
     <Compile Include="Assets\Source\internal\ResponseWrapper.cs" />
     <Compile Include="Assets\Source\Lobby.cs" />
     <Compile Include="Assets\Source\LobbyRoom.cs" />
@@ -83,7 +82,6 @@
     <Compile Include="Assets\Source\PlayException.cs" />
     <Compile Include="Assets\Source\PlayExceptionCode.cs" />
     <Compile Include="Assets\Source\PlayObject.cs" />
-    <Compile Include="Assets\Source\PlayState.cs" />
     <Compile Include="Assets\Source\protocol\GenericCollection.cs" />
     <Compile Include="Assets\Source\protocol\Messages.cs" />
     <Compile Include="Assets\Source\Room.cs" />

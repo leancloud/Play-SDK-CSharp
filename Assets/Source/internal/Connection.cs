@@ -28,6 +28,9 @@ namespace LeanCloud.Play {
         
         string userId;
 
+        bool isMessageQueueRunning;
+        Queue<CommandWrapper> messageQueue;
+
         public bool IsOpen {
             get {
                 return client != null && client.State == WebSocketState.Open;
@@ -49,15 +52,6 @@ namespace LeanCloud.Play {
             OnClose?.Invoke(0, string.Empty);
         }
 
-        protected async Task Connnect(string server, string userId) {
-            this.userId = userId;
-            client = new ClientWebSocket();
-            client.Options.AddSubProtocol("protobuf.1");
-            client.Options.KeepAliveInterval = TimeSpan.FromSeconds(10);
-            await client.ConnectAsync(new Uri(server), default);
-            _ = StartReceive();
-        }
-
         internal async Task<Task<ResponseWrapper>> Connect(string appId, string server, string gameVersion, string userId, string sessionToken) {
             this.userId = userId;
             TaskCompletionSource<ResponseWrapper> tcs = new TaskCompletionSource<ResponseWrapper>();
@@ -70,6 +64,8 @@ namespace LeanCloud.Play {
             url = $"{url}&i={i}";
             Logger.Debug($"Connect url: {url}");
             await client.ConnectAsync(new Uri(url), default);
+            isMessageQueueRunning = true;
+            messageQueue = new Queue<CommandWrapper>();
             _ = StartReceive();
             responses.Add(i, tcs);
             return tcs.Task;
@@ -129,7 +125,15 @@ namespace LeanCloud.Play {
                         OpType op = command.Op;
                         Body body = Body.Parser.ParseFrom(command.Body);
                         Logger.Debug("{0} <= {1}/{2}: {3}", userId, cmd, op, body);
-                        HandleCommand(cmd, op, body);
+                        if (isMessageQueueRunning) {
+                            HandleCommand(cmd, op, body);
+                        } else {
+                            messageQueue.Enqueue(new CommandWrapper {
+                                Cmd = cmd,
+                                Op = op,
+                                Body = body
+                            });
+                        }
                     } catch (Exception e) {
                         Logger.Error(e.Message);
                         Logger.Error(e.StackTrace);
@@ -141,13 +145,6 @@ namespace LeanCloud.Play {
             }
         }
 
-        static byte[] MergeData(byte[] oldData, byte[] newData, int newDataLength) {
-            var data = new byte[oldData.Length + newDataLength];
-            Array.Copy(oldData, data, oldData.Length);
-            Array.Copy(newData, 0, data, oldData.Length, newDataLength);
-            return data;
-        }
-
         static async Task<byte[]> MergeDataAsync(byte[] oldData, byte[] newData, int newDataLength) {
             return await Task.Run(() => {
                 var data = new byte[oldData.Length + newDataLength];
@@ -157,7 +154,18 @@ namespace LeanCloud.Play {
             });
         }
 
+        internal void PauseMessageQueue() {
+            isMessageQueueRunning = false;
+        }
 
+        internal void ResumeMessageQueue() {
+            while (messageQueue.Count > 0) {
+                CommandWrapper command = messageQueue.Dequeue();
+                HandleCommand(command.Cmd, command.Op, command.Body);
+                Logger.Debug("Delay Handle {0} <= {1}/{2}: {3}", userId, command.Cmd, command.Op, command.Body);
+            }
+            isMessageQueueRunning = true;
+        }
 
 
         public Connection() {
