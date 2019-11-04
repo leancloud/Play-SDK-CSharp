@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Text;
-using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
+using LeanCloud.Common;
 
 namespace LeanCloud.Play {
     /// <summary>
@@ -42,7 +41,7 @@ namespace LeanCloud.Play {
         }
 
         internal async Task<LobbyInfo> Authorize() {
-            gameRouter = new GameRouter(client.AppId, client.AppKey, client.UserId, !client.Ssl, null);
+            gameRouter = new GameRouter(client.PlayServer, client.AppId, client.AppKey, client.UserId, !client.Ssl, null);
             return await gameRouter.Authorize();
         }
 
@@ -138,10 +137,10 @@ namespace LeanCloud.Play {
                 };
                 AddHeaders(request.Content.Headers);
                 request.Content.Headers.Add(USER_SESSION_TOKEN_KEY, sessionToken);
-                Utils.PrintRequest(httpClient, request, data);
+                HttpUtils.PrintRequest(httpClient, request, data);
                 response = await httpClient.SendAsync(request);
                 string content = await response.Content.ReadAsStringAsync();
-                Utils.PrintResponse(response, content);
+                HttpUtils.PrintResponse(response, content);
                 if (response.StatusCode >= HttpStatusCode.OK && response.StatusCode < HttpStatusCode.Ambiguous) {
                     return JsonConvert.DeserializeObject<LobbyRoomResult>(content);
                 }

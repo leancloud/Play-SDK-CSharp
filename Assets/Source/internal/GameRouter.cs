@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using LeanCloud.Common;
 
 namespace LeanCloud.Play {
     internal class LobbyInfo {
@@ -43,19 +44,19 @@ namespace LeanCloud.Play {
         readonly bool insecure;
         readonly string feature;
 
-        AppRouter appRouter;
+        AppRouterController appRouterController;
         LobbyInfo lobbyInfo;
 
         readonly HttpClient client;
 
-        internal GameRouter(string appId, string appKey, string userId, bool insecure, string feature) {
+        internal GameRouter(string server, string appId, string appKey, string userId, bool insecure, string feature) {
             this.appId = appId;
             this.appKey = appKey;
             this.userId = userId;
             this.insecure = insecure;
             this.feature = feature;
 
-            appRouter = new AppRouter(appId, null);
+            appRouterController = new AppRouterController(appId, server);
 
             client = new HttpClient();
             client.DefaultRequestHeaders.Add("X-LC-ID", appId);
@@ -71,7 +72,7 @@ namespace LeanCloud.Play {
         }
 
         async Task<LobbyInfo> AuthorizeFromServer() {
-            string url = await appRouter.Fetch();
+            AppRouter appRouter = await appRouterController.Get();
             HttpRequestMessage request = null;
             HttpResponseMessage response = null;
             try {
@@ -80,17 +81,18 @@ namespace LeanCloud.Play {
                     data.Add("feature", feature);
                 }
                 string dataContent = JsonConvert.SerializeObject(data);
+                string url = $"{appRouter.PlayServer}/1/multiplayer/router/authorize";
                 request = new HttpRequestMessage {
                     RequestUri = new Uri(url),
                     Method = HttpMethod.Post,
                     Content = new StringContent(dataContent)
                 };
                 request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-                Utils.PrintRequest(client, request, dataContent);
+                HttpUtils.PrintRequest(client, request, dataContent);
                 response = await client.SendAsync(request);
                 
                 string content = await response.Content.ReadAsStringAsync();
-                Utils.PrintResponse(response, content);
+                HttpUtils.PrintResponse(response, content);
                 if (response.StatusCode >= HttpStatusCode.OK && response.StatusCode < HttpStatusCode.Ambiguous) {
                     return JsonConvert.DeserializeObject<LobbyInfo>(content);
                 }

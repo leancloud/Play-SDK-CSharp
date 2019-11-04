@@ -1,5 +1,5 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
+using LeanCloud.Common;
 
 namespace LeanCloud.Play.Test {
     internal static class Utils {
@@ -7,7 +7,8 @@ namespace LeanCloud.Play.Test {
             // 华东节点，开发版本
             var appId = "FQr8l8LLvdxIwhMHN77sNluX-9Nh9j0Va";
             var appKey = "MJSm46Uu6LjF5eNmqfbuUmt6";
-            return new Client(appId, appKey, userId);
+            var playServer = "https://fqr8l8ll.lc-cn-e1-shared.com";
+            return new Client(appId, appKey, userId, playServer: playServer);
         }
 
         internal static void Log(LogLevel level, string info) { 

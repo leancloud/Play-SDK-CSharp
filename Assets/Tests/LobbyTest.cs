@@ -8,12 +8,12 @@ namespace LeanCloud.Play.Test {
     public class LobbyTest {
         [SetUp]
         public void SetUp() {
-            Logger.LogDelegate += Utils.Log;
+            Common.Logger.LogDelegate += Utils.Log;
         }
 
         [TearDown]
         public void TearDown() {
-            Logger.LogDelegate -= Utils.Log;
+            Common.Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest, Timeout(100000)]

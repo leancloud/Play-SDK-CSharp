@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using UnityEngine;
+using LeanCloud.Common;
 
 namespace LeanCloud.Play {
     public class Client {
@@ -57,6 +57,10 @@ namespace LeanCloud.Play {
         public Action<int, string> OnError;
 
         internal LobbyService lobbyService;
+
+        public string PlayServer {
+            get; private set;
+        }
 
         /// <summary>
         /// LeanCloud App Id
@@ -145,6 +149,7 @@ namespace LeanCloud.Play {
             UserId = userId;
             Ssl = ssl;
             GameVersion = gameVersion;
+            PlayServer = playServer;
         }
 
         /// <summary>

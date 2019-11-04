@@ -9,12 +9,12 @@ namespace LeanCloud.Play.Test
     public class MasterTest {
         [SetUp]
         public void SetUp() {
-            Logger.LogDelegate += Utils.Log;
+            Common.Logger.LogDelegate += Utils.Log;
         }
 
         [TearDown]
         public void TearDown() {
-            Logger.LogDelegate -= Utils.Log;
+            Common.Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]

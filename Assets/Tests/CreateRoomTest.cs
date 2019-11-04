@@ -5,18 +5,19 @@ using UnityEngine;
 using UnityEngine.TestTools;
 using System.Threading;
 using System.Threading.Tasks;
+using LeanCloud.Common;
 
 namespace LeanCloud.Play.Test
 {
     public class CreateRoomTest {
         [SetUp]
         public void SetUp() {
-            Logger.LogDelegate += Utils.Log;
+            LeanCloud.Common.Logger.LogDelegate += Utils.Log;
         }
 
         [TearDown]
         public void TearDown() {
-            Logger.LogDelegate -= Utils.Log;
+            LeanCloud.Common.Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]

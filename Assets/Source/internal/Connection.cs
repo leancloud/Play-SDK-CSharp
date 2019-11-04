@@ -5,6 +5,7 @@ using System.Net.WebSockets;
 using System.Collections.Generic;
 using LeanCloud.Play.Protocol;
 using Google.Protobuf;
+using LeanCloud.Common;
 
 namespace LeanCloud.Play {
     public abstract class Connection {

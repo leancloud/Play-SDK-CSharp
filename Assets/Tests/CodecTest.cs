@@ -5,6 +5,7 @@ using LeanCloud.Play.Protocol;
 using System.Collections.Generic;
 using System.Collections;
 using System;
+using LeanCloud.Common;
 
 namespace LeanCloud.Play.Test
 {
@@ -86,12 +87,12 @@ namespace LeanCloud.Play.Test
 
         [SetUp]
         public void SetUp() {
-            Logger.LogDelegate += Utils.Log;
+            LeanCloud.Common.Logger.LogDelegate += Utils.Log;
         }
 
         [TearDown]
         public void TearDown() {
-            Logger.LogDelegate -= Utils.Log;
+            LeanCloud.Common.Logger.LogDelegate -= Utils.Log;
         }
 
         [Test]

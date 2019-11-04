@@ -66,7 +66,6 @@
     <Compile Include="Assets\Source\Client.cs" />
     <Compile Include="Assets\Source\CodecUtils.cs" />
     <Compile Include="Assets\Source\Config.cs" />
-    <Compile Include="Assets\Source\internal\AppRouter.cs" />
     <Compile Include="Assets\Source\internal\CommandWrapper.cs" />
     <Compile Include="Assets\Source\internal\Connection.cs" />
     <Compile Include="Assets\Source\internal\CustomType.cs" />
@@ -89,7 +88,6 @@
     <Compile Include="Assets\Source\SendEventOptions.cs" />
     <Compile Include="Assets\Source\utilities\DateTimeUtils.cs" />
     <Compile Include="Assets\Source\utilities\InternalExtensions.cs" />
-    <Compile Include="Assets\Source\utilities\Logger.cs" />
     <Compile Include="Assets\Source\utilities\Utils.cs" />
     <Reference Include="UnityEngine.AIModule">
       <HintPath>/Applications/Unity/Hub/Editor/2019.1.0f2/Unity.app/Contents/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
@@ -324,6 +322,9 @@
     </Reference>
     <Reference Include="UnityEditor.Purchasing">
       <HintPath>/Users/onerainyu/LeanCloud/Play-SDK-CSharp/Library/PackageCache/com.unity.purchasing@2.0.6/Editor/UnityEditor.Purchasing.dll</HintPath>
+    </Reference>
+    <Reference Include="LeanCloud.Common">
+      <HintPath>/Users/onerainyu/LeanCloud/Play-SDK-CSharp/Assets/Plugins/LeanCloud.Common.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>/Applications/Unity/Hub/Editor/2019.1.0f2/Unity.app/Contents/NetStandard/ref/2.0.0/netstandard.dll</HintPath>

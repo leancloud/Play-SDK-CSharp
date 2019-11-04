@@ -1,9 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
-using UnityEngine;
 using UnityEngine.TestTools;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace LeanCloud.Play.Test
 {
@@ -11,12 +11,12 @@ namespace LeanCloud.Play.Test
     {
         [SetUp]
         public void SetUp() {
-            Logger.LogDelegate += Utils.Log;
+            Common.Logger.LogDelegate += Utils.Log;
         }
 
         [TearDown]
         public void TearDown() {
-            Logger.LogDelegate -= Utils.Log;
+            Common.Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]
