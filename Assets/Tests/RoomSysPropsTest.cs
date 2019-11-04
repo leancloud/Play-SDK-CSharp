@@ -2,20 +2,20 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using UnityEngine;
 using UnityEngine.TestTools;
+using LeanCloud.Common;
 
 namespace LeanCloud.Play.Test {
     public class RoomSysPropsTest
     {
         [SetUp]
         public void SetUp() {
-            Common.Logger.LogDelegate += Utils.Log;
+            Logger.LogDelegate += Utils.Log;
         }
 
         [TearDown]
         public void TearDown() {
-            Common.Logger.LogDelegate -= Utils.Log;
+            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]
@@ -33,7 +33,7 @@ namespace LeanCloud.Play.Test {
                     Assert.AreEqual(open, false);
                     Assert.AreEqual(room.Open, false);
                     flag = true;
-                };
+                };  
                 _ = room.SetOpen(false);
             }, TaskScheduler.FromCurrentSynchronizationContext());
 
@@ -105,12 +105,8 @@ namespace LeanCloud.Play.Test {
                 room = t.Result;
                 c.OnRoomSystemPropertiesChanged += changedProps => {
                     var expectedUserIds = changedProps["expectedUserIds"] as List<string>;
-                    if (expectedUserIds.Count == 2 && room.ExpectedUserIds.Count == 2) {
-                        f1 = true;
-                    }
-                    if (expectedUserIds.Count == 0 && room.ExpectedUserIds.Count == 0) {
-                        f2 = true;
-                    }
+                    f1 |= expectedUserIds.Count == 2 && room.ExpectedUserIds.Count == 2;
+                    f2 |= expectedUserIds.Count == 0 && room.ExpectedUserIds.Count == 0;
                 };
                 return room.SetExpectedUserIds(new List<string> { "hello", "world" });
             }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {

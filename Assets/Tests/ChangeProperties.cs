@@ -3,6 +3,7 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 using System.Threading.Tasks;
+using LeanCloud.Common;
 
 namespace LeanCloud.Play.Test
 {
@@ -51,8 +52,8 @@ namespace LeanCloud.Play.Test
                 };
                 return c0.SetRoomCustomProperties(newProps);
             }).Unwrap().OnSuccess(_ => {
-                c0.Close();
-                c1.Close();
+                _ = c0.Close();
+                _ = c1.Close();
             });
 
             while (!f0 || !f1) {
@@ -84,7 +85,7 @@ namespace LeanCloud.Play.Test
                 return c.SetRoomCustomProperties(newProps, expectedValues);
             }).Unwrap().OnSuccess(_ => {
                 Assert.AreEqual(c.Room.CustomProperties["gold"], 100);
-                c.Close();
+                _ = c.Close();
                 f = true;
             });
 
@@ -143,8 +144,8 @@ namespace LeanCloud.Play.Test
             while (!f0 || !f1) {
                 yield return null;
             }
-            c0.Close();
-            c1.Close();
+            _ = c0.Close();
+            _ = c1.Close();
         }
 
         [UnityTest]
@@ -170,7 +171,7 @@ namespace LeanCloud.Play.Test
                 return c.Player.SetCustomProperties(newProps, expectedValues);
             }).Unwrap().OnSuccess(_ => {
                 Assert.AreEqual(c.Player.CustomProperties["nickname"], "lean");
-                c.Close();
+                _ = c.Close();
                 f = true;
             });
 
@@ -200,8 +201,8 @@ namespace LeanCloud.Play.Test
             }).Unwrap().OnSuccess(_ => {
                 var master = c1.Room.Master;
                 Assert.AreEqual(master.CustomProperties.GetBool("ready"), true);
-                c0.Close();
-                c1.Close();
+                _ = c0.Close();
+                _ = c1.Close();
                 f = true;
             });
 
@@ -229,7 +230,7 @@ namespace LeanCloud.Play.Test
                 return c.Player.SetCustomProperties(props);
             }).Unwrap().OnSuccess(_ => {
                 c.Player.SetCustomProperties(props);
-                c.Close();
+                _ = c.Close();
                 f = true;
             });
 
@@ -273,7 +274,7 @@ namespace LeanCloud.Play.Test
                 yield return null;
             }
 
-            c.Close();
+            _ = c.Close();
         }
     }
 }

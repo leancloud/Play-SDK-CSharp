@@ -3,6 +3,7 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 using System.Threading.Tasks;
+using LeanCloud.Common;
 
 namespace LeanCloud.Play.Test {
     public class LobbyTest {

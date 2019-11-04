@@ -4,6 +4,7 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 using System.Threading.Tasks;
+using LeanCloud.Common;
 
 namespace LeanCloud.Play.Test
 {
@@ -11,12 +12,12 @@ namespace LeanCloud.Play.Test
     {
         [SetUp]
         public void SetUp() {
-            LeanCloud.Common.Logger.LogDelegate += Utils.Log;
+            Common.Logger.LogDelegate += Utils.Log;
         }
 
         [TearDown]
         public void TearDown() {
-            LeanCloud.Common.Logger.LogDelegate -= Utils.Log;
+            Common.Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.TestTools;
 using System.Threading.Tasks;
 using System.Threading;
+using LeanCloud.Common;
 
 namespace LeanCloud.Play.Test
 {

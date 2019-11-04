@@ -12,12 +12,12 @@ namespace LeanCloud.Play.Test
     public class CreateRoomTest {
         [SetUp]
         public void SetUp() {
-            LeanCloud.Common.Logger.LogDelegate += Utils.Log;
+            Common.Logger.LogDelegate += Utils.Log;
         }
 
         [TearDown]
         public void TearDown() {
-            LeanCloud.Common.Logger.LogDelegate -= Utils.Log;
+            Common.Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]

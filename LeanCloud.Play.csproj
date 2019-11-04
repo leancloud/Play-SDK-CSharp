@@ -86,9 +86,7 @@
     <Compile Include="Assets\Source\Room.cs" />
     <Compile Include="Assets\Source\RoomOptions.cs" />
     <Compile Include="Assets\Source\SendEventOptions.cs" />
-    <Compile Include="Assets\Source\utilities\DateTimeUtils.cs" />
-    <Compile Include="Assets\Source\utilities\InternalExtensions.cs" />
-    <Compile Include="Assets\Source\utilities\Utils.cs" />
+    <Compile Include="Assets\Source\Utils.cs" />
     <Reference Include="UnityEngine.AIModule">
       <HintPath>/Applications/Unity/Hub/Editor/2019.1.0f2/Unity.app/Contents/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
     </Reference>
