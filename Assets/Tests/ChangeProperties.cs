@@ -29,7 +29,7 @@ namespace LeanCloud.Play.Test
 
             c0.Connect().OnSuccess(_ => {
                 return c0.CreateRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 c0.OnRoomCustomPropertiesChanged += changedProps => {
                     var props = c0.Room.CustomProperties;
                     Assert.AreEqual(props.GetString("name"), "leancloud");
@@ -37,9 +37,9 @@ namespace LeanCloud.Play.Test
                     f0 = true;
                 };
                 return c1.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.JoinRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 c1.OnRoomCustomPropertiesChanged += changedProps => {
                     var props = c1.Room.CustomProperties;
                     Assert.AreEqual(props.GetString("name"), "leancloud");
@@ -51,14 +51,14 @@ namespace LeanCloud.Play.Test
                     { "gold", 1000 },
                 };
                 return c0.SetRoomCustomProperties(newProps);
-            }).Unwrap().OnSuccess(_ => {
-                _ = c0.Close();
-                _ = c1.Close();
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f0 || !f1) {
                 yield return null;
             }
+
+            _ = c0.Close();
+            _ = c1.Close();
         }
 
         [UnityTest]
@@ -70,12 +70,12 @@ namespace LeanCloud.Play.Test
             c.Connect().OnSuccess(_ => {
                 var options = new RoomOptions {
                     CustomRoomProperties = new PlayObject {
-                    { "id", 1 },
-                    { "gold", 100 }
-                }
+                        { "id", 1 },
+                        { "gold", 100 }
+                    }
                 };
                 return c.CreateRoom(roomName, options);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 var newProps = new PlayObject {
                     { "gold", 200 },
                 };
@@ -83,15 +83,15 @@ namespace LeanCloud.Play.Test
                     { "id", 2 }
                 };
                 return c.SetRoomCustomProperties(newProps, expectedValues);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 Assert.AreEqual(c.Room.CustomProperties["gold"], 100);
-                _ = c.Close();
                 f = true;
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f) {
                 yield return null;
             }
+            _ = c.Close();
         }
 
         [UnityTest]
@@ -103,7 +103,7 @@ namespace LeanCloud.Play.Test
             var c1 = Utils.NewClient("cp2_1");
             c0.Connect().OnSuccess(_ => {
                 return c0.CreateRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 c0.OnPlayerCustomPropertiesChanged += (player, changedProps) => {
                     var props = player.CustomProperties;
                     Assert.AreEqual(props.GetString("nickname"), "LeanCloud");
@@ -115,9 +115,9 @@ namespace LeanCloud.Play.Test
                     f0 = true;
                 };
                 return c1.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.JoinRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 c1.OnPlayerCustomPropertiesChanged += (player, changedProps) => {
                     var p = player.CustomProperties;
                     Assert.AreEqual(p.GetString("nickname"), "LeanCloud");
@@ -139,7 +139,7 @@ namespace LeanCloud.Play.Test
                 };
                 return c1.Player.SetCustomProperties(props);
                 //return c0.SetPlayerCustomProperties(c1.Player.ActorId, props);
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f0 || !f1) {
                 yield return null;
@@ -155,13 +155,13 @@ namespace LeanCloud.Play.Test
             var c = Utils.NewClient("cp3");
             c.Connect().OnSuccess(_ => {
                 return c.CreateRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 var props = new PlayObject {
                     { "id", 1 },
                     { "nickname", "lean" }
                 };
                 return c.Player.SetCustomProperties(props);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 var newProps = new PlayObject {
                     { "nickname", "cloud" }
                 };
@@ -169,15 +169,15 @@ namespace LeanCloud.Play.Test
                     { "id", 2 }
                 };
                 return c.Player.SetCustomProperties(newProps, expectedValues);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 Assert.AreEqual(c.Player.CustomProperties["nickname"], "lean");
-                _ = c.Close();
                 f = true;
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f) {
                 yield return null;
             }
+            _ = c.Close();
         }
 
         [UnityTest]
@@ -189,26 +189,26 @@ namespace LeanCloud.Play.Test
 
             c0.Connect().OnSuccess(_ => {
                 return c0.CreateRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 var props = new PlayObject {
                     { "ready", true }
                 };
                 return c0.Player.SetCustomProperties(props);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.Connect();
-            }).Unwrap().OnSuccess(_ => { 
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => { 
                 return c1.JoinRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 var master = c1.Room.Master;
                 Assert.AreEqual(master.CustomProperties.GetBool("ready"), true);
-                _ = c0.Close();
-                _ = c1.Close();
                 f = true;
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f) {
                 yield return null;
             }
+            _ = c0.Close();
+            _ = c1.Close();
         }
 
         [UnityTest]
@@ -222,17 +222,17 @@ namespace LeanCloud.Play.Test
 
             c.Connect().OnSuccess(_ => {
                 return c.CreateRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c.Room.SetCustomProperties(props);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c.Room.SetCustomProperties(props);
-            }).Unwrap().OnSuccess(_ => { 
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => { 
                 return c.Player.SetCustomProperties(props);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 c.Player.SetCustomProperties(props);
                 _ = c.Close();
                 f = true;
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f) {
                 yield return null;
@@ -248,7 +248,7 @@ namespace LeanCloud.Play.Test
 
             c.Connect().OnSuccess(_ => {
                 return c.CreateRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 c.OnRoomCustomPropertiesChanged += (__) => { 
                     if (c.Room.CustomProperties.GetString("name") == "leancloud") {
                         f0 = true;
@@ -263,12 +263,12 @@ namespace LeanCloud.Play.Test
                     { "name", "leancloud" }
                 };
                 return c.Room.SetCustomProperties(props);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 var props = new PlayObject {
                     { "name", null }
                 };
                 return c.Room.SetCustomProperties(props);
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f0 || !f1) {
                 yield return null;

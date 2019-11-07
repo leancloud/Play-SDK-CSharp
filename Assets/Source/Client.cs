@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using LeanCloud.Common;
 
 namespace LeanCloud.Play {
+    /// <summary>
+    /// 客户端类
+    /// </summary>
     public class Client {
         // 事件
         /// <summary>
@@ -65,7 +68,7 @@ namespace LeanCloud.Play {
         /// <summary>
         /// LeanCloud App Id
         /// </summary>
-        /// <value>The app identifier.</value>
+        /// <value>App Id</value>
         public string AppId {
             get; private set;
         }
@@ -73,7 +76,7 @@ namespace LeanCloud.Play {
         /// <summary>
         /// LeanCloud App Key
         /// </summary>
-        /// <value>The app key.</value>
+        /// <value>App Key</value>
         public string AppKey {
             get; private set;
         }
@@ -81,7 +84,7 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 用户唯一 Id
         /// </summary>
-        /// <value>The user identifier.</value>
+        /// <value>玩家唯一 Id</value>
         public string UserId {
             get; private set;
         }
@@ -89,7 +92,7 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 是否启用 SSL
         /// </summary>
-        /// <value><c>true</c> if ssl; otherwise, <c>false</c>.</value>
+        /// <value>如果开启 SSL，则设为 true；否则设为 false。默认是 true</value>
         public bool Ssl {
             get; private set;
         }
@@ -97,7 +100,7 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 客户端版本号，不同的版本号的玩家不会匹配到相同的房间
         /// </summary>
-        /// <value>The game version.</value>
+        /// <value>游戏版本号</value>
         public string GameVersion {
             get; private set;
         }   
@@ -105,6 +108,7 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 大厅房间列表
         /// </summary>
+        /// <value>可加入的房间列表</value>
         public List<LobbyRoom> LobbyRoomList {
             get {
                 if (lobby == null) {
@@ -119,7 +123,7 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 当前房间对象
         /// </summary>
-        /// <value>The room.</value>
+        /// <value>当前房间</value>
         public Room Room {
             get; internal set;
         }
@@ -127,7 +131,7 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 当前玩家对象
         /// </summary>
-        /// <value>The player.</value>
+        /// <value>当前玩家</value>
         public Player Player {
             get {
                 return Room.Player;
@@ -155,7 +159,7 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 连接
         /// </summary>
-        /// <returns>The connect.</returns>
+        /// <returns>客户端</returns>
         public async Task<Client> Connect() {
             lobbyService = new LobbyService(this);
             await lobbyService.Authorize();
@@ -166,7 +170,6 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 加入大厅，会接收到大厅房间列表更新的事件
         /// </summary>
-        /// <returns>The lobby.</returns>
         public async Task JoinLobby() {
             try {
                 if (lobby != null) {
@@ -182,7 +185,6 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 离开大厅
         /// </summary>
-        /// <returns></returns>
         public async Task LeaveLobby() {
             if (lobby == null) {
                 throw new Exception("You are not in lobby yet.");
@@ -193,10 +195,10 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 创建房间
         /// </summary>
-        /// <returns>The room.</returns>
         /// <param name="roomName">房间唯一 Id</param>
         /// <param name="roomOptions">创建房间选项</param>
         /// <param name="expectedUserIds">期望用户 Id 列表</param>
+        /// <returns>房间</returns>
         public async Task<Room> CreateRoom(string roomName = null, RoomOptions roomOptions = null, List<string> expectedUserIds = null) {
             if (Room != null) {
                 throw new Exception("You are already in room.");
@@ -213,9 +215,9 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 加入房间
         /// </summary>
-        /// <returns>The room.</returns>
         /// <param name="roomName">房间 Id</param>
         /// <param name="expectedUserIds">期望用户 Id 列表</param>
+        /// <returns>房间</returns>
         public async Task<Room> JoinRoom(string roomName, List<string> expectedUserIds = null) {
             if (Room != null) {
                 throw new Exception("You are already in room.");
@@ -232,8 +234,8 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 返回房间
         /// </summary>
-        /// <returns>The room.</returns>
         /// <param name="roomName">房间 Id</param>
+        /// <returns>房间</returns>
         public async Task<Room> RejoinRoom(string roomName) {
             // 关闭 Lobby
             if (lobby != null) {
@@ -247,10 +249,10 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 加入或创建房间，如果房间 Id 存在，则加入；否则根据 roomOptions 和 expectedUserIds 创建新的房间
         /// </summary>
-        /// <returns>The or create room.</returns>
         /// <param name="roomName">房间 Id</param>
         /// <param name="roomOptions">创建房间选项</param>
         /// <param name="expectedUserIds">期望用户 Id 列表</param>
+        /// <returns>房间</returns>
         public async Task<Room> JoinOrCreateRoom(string roomName, RoomOptions roomOptions = null, List<string> expectedUserIds = null) {
             if (Room != null) {
                 throw new Exception("You are already in room.");
@@ -267,9 +269,9 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 随机加入房间
         /// </summary>
-        /// <returns>The random room.</returns>
         /// <param name="matchProperties">匹配属性</param>
         /// <param name="expectedUserIds">期望用户 Id 列表</param>
+        /// <returns>房间</returns>
         public async Task<Room> JoinRandomRoom(PlayObject matchProperties = null, List<string> expectedUserIds = null) {
             if (Room != null) {
                 throw new Exception("You are already in room.");
@@ -286,7 +288,7 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 重连并返回上一个加入的房间
         /// </summary>
-        /// <returns>The and rejoin.</returns>
+        /// <returns>房间</returns>
         public async Task<Room> ReconnectAndRejoin() {
             if (Room == null) {
                 throw new ArgumentNullException(nameof(Room));
@@ -299,9 +301,9 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 匹配房间（不加入）
         /// </summary>
-        /// <returns>The random.</returns>
         /// <param name="piggybackUserId">占位用户 Id</param>
         /// <param name="matchProperties">匹配属性</param>
+        /// <returns>房间 Id</returns>
         public async Task<string> MatchRandom(string piggybackUserId, PlayObject matchProperties = null, List<string> expectedUserIds = null) {
             var lobbyRoom = await lobbyService.MatchRandom(piggybackUserId, matchProperties, expectedUserIds);
             return lobbyRoom.RoomId;
@@ -310,7 +312,6 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 离开房间
         /// </summary>
-        /// <returns>The room.</returns>
         public async Task LeaveRoom() {
             if (Room == null) {
                 throw new Exception("You are not in room yet.");
@@ -321,7 +322,7 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 设置房间开启 / 关闭
         /// </summary>
-        /// <returns>The room open.</returns>
+        /// <returns>房间是否开启</returns>
         /// <param name="open">是否开启</param>
         public async Task<bool> SetRoomOpen(bool open) {
             if (Room == null) {
@@ -333,7 +334,7 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 设置房间可见性
         /// </summary>
-        /// <returns>The room visible.</returns>
+        /// <returns>房间是否可见</returns>
         /// <param name="visible">是否可见</param>
         public async Task<bool> SetRoomVisible(bool visible) {
             if (Room == null) {
@@ -345,7 +346,7 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 设置房间最大玩家数量
         /// </summary>
-        /// <returns>The room max player count.</returns>
+        /// <returns>房间可容纳的最大人数</returns>
         /// <param name="count">数量</param>
         public async Task<int> SetRoomMaxPlayerCount(int count) {
             if (Room == null) {
@@ -357,7 +358,7 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 设置期望用户
         /// </summary>
-        /// <returns>The room expected user identifiers.</returns>
+        /// <returns>房间当前期望加入玩家列表</returns>
         /// <param name="expectedUserIds">期望用户 Id 列表</param>
         public async Task<List<string>> SetRoomExpectedUserIds(List<string> expectedUserIds) {
             if (Room == null) {
@@ -369,7 +370,6 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 清空期望用户 Id 列表
         /// </summary>
-        /// <returns>The room expected user identifiers.</returns>
         public async Task ClearRoomExpectedUserIds() {
             if (Room == null) {
                 throw new Exception("You are not in room yet.");
@@ -380,7 +380,7 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 增加期望用户
         /// </summary>
-        /// <returns>The room expected user identifiers.</returns>
+        /// <returns>房间当前期望加入玩家列表</returns>
         /// <param name="expectedUserIds">增加的期望用户 Id 列表</param>
         public async Task<List<string>> AddRoomExpectedUserIds(List<string> expectedUserIds) {
             if (Room == null) {
@@ -392,7 +392,7 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 删除期望用户
         /// </summary>
-        /// <returns>The room expected user identifiers.</returns>
+        /// <returns>房间当前期望加入玩家列表</returns>
         /// <param name="expectedUserIds">删除的期望用户 Id 列表</param>
         public async Task<List<string>> RemoveRoomExpectedUserIds(List<string> expectedUserIds) {
             if (Room == null) {
@@ -404,7 +404,7 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 设置房主
         /// </summary>
-        /// <returns>The master.</returns>
+        /// <returns>房主</returns>
         /// <param name="newMasterId">新房主的 Actor Id</param>
         public async Task<Player> SetMaster(int newMasterId) {
             if (Room == null) {
@@ -416,7 +416,6 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 将玩家踢出房间
         /// </summary>
-        /// <returns>The player.</returns>
         /// <param name="actorId">玩家的 Actor Id</param>
         /// <param name="code">附加码</param>
         /// <param name="reason">附加消息</param>
@@ -430,7 +429,6 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 发送自定义事件
         /// </summary>
-        /// <returns>The event.</returns>
         /// <param name="eventId">事件 Id</param>
         /// <param name="eventData">事件参数</param>
         /// <param name="options">事件选项</param>
@@ -444,7 +442,6 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 设置房间自定义属性
         /// </summary>
-        /// <returns>The room custom properties.</returns>
         /// <param name="properties">自定义属性</param>
         /// <param name="expectedValues">用于 CAS 的期望属性</param>
         public async Task SetRoomCustomProperties(PlayObject properties, PlayObject expectedValues = null) {
@@ -457,7 +454,6 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 设置玩家自定义属性
         /// </summary>
-        /// <returns>The player custom properties.</returns>
         /// <param name="actorId">玩家 Actor Id</param>
         /// <param name="properties">自定义属性</param>
         /// <param name="expectedValues">用于 CAS 的期望属性</param>
@@ -492,14 +488,36 @@ namespace LeanCloud.Play {
         /// 关闭服务
         /// </summary>
         public async Task Close() {
+            // Clear
+            AppId = null;
+            AppKey = null;
+            UserId = null;
+            GameVersion = null;
+            lobbyService = null;
+
+            Room = null;
+            lobby = null;
+
+            // 事件解注册
+            OnLobbyRoomListUpdated = null;
+            OnPlayerRoomJoined = null;
+            OnPlayerRoomLeft = null;
+            OnMasterSwitched = null;
+            OnRoomCustomPropertiesChanged = null;
+            OnRoomSystemPropertiesChanged = null;
+            OnPlayerCustomPropertiesChanged = null;
+            OnPlayerActivityChanged = null;
+            OnCustomEvent = null;
+            OnRoomKicked = null;
+            OnDisconnected = null;
+            OnError = null;
+
             if (lobby != null) {
                 await lobby.Close();
             }
             if (Room != null) {
                 await Room.Close();
             }
-            // TODO Clear
-
         }
     }
 }
