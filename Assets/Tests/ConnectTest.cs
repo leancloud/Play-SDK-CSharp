@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 using System.Threading;
 using LeanCloud.Common;
 
-namespace LeanCloud.Play.Test
-{
-    public class ConnectTest
-    {
+namespace LeanCloud.Play {
+    public class ConnectTest {
         [SetUp]
         public void SetUp() {
             Common.Logger.LogDelegate += Utils.Log;

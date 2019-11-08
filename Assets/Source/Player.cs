@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using LeanCloud.Play.Protocol;
 
 namespace LeanCloud.Play {
 	/// <summary>
@@ -78,6 +75,16 @@ namespace LeanCloud.Play {
             ActorId = -1;
             UserId = null;
 		}
+
+        internal void Init(Room room, RoomMember playerData) {
+            Room = room;
+            UserId = playerData.Pid;
+            ActorId = playerData.ActorId;
+            IsActive = !playerData.Inactive;
+            if (playerData.Attr != null) {
+                CustomProperties = CodecUtils.DeserializePlayObject(playerData.Attr);
+            }
+        }
 
         internal void MergeCustomProperties(PlayObject changedProps) {
             if (changedProps == null)

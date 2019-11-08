@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 
-namespace LeanCloud.Play 
-{
+namespace LeanCloud.Play {
     /// <summary>
     /// 大厅房间数据类
     /// </summary>
-    public class LobbyRoom
-    {
+    public class LobbyRoom {
         /// <summary>
         /// 房间名称
         /// </summary>

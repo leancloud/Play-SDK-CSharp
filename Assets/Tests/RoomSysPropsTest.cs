@@ -5,9 +5,8 @@ using NUnit.Framework;
 using UnityEngine.TestTools;
 using LeanCloud.Common;
 
-namespace LeanCloud.Play.Test {
-    public class RoomSysPropsTest
-    {
+namespace LeanCloud.Play {
+    public class RoomSysPropsTest {
         [SetUp]
         public void SetUp() {
             Logger.LogDelegate += Utils.Log;

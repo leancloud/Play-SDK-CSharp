@@ -5,10 +5,8 @@ using UnityEngine.TestTools;
 using System.Threading.Tasks;
 using LeanCloud.Common;
 
-namespace LeanCloud.Play.Test
-{
-    public class ChangeProperties
-    {
+namespace LeanCloud.Play {
+    public class ChangeProperties {
         [SetUp]
         public void SetUp() {
             Common.Logger.LogDelegate += Utils.Log;
@@ -138,7 +136,6 @@ namespace LeanCloud.Play.Test
                     }
                 };
                 return c1.Player.SetCustomProperties(props);
-                //return c0.SetPlayerCustomProperties(c1.Player.ActorId, props);
             }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f0 || !f1) {
@@ -196,7 +193,7 @@ namespace LeanCloud.Play.Test
                 return c0.Player.SetCustomProperties(props);
             }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.Connect();
-            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => { 
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.JoinRoom(roomName);
             }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 var master = c1.Room.Master;

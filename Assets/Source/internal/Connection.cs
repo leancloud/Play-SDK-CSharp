@@ -8,7 +8,7 @@ using Google.Protobuf;
 using LeanCloud.Common;
 
 namespace LeanCloud.Play {
-    public abstract class Connection {
+    internal abstract class Connection {
         enum State {
             Init,
             Connecting,
@@ -19,7 +19,6 @@ namespace LeanCloud.Play {
 
         const int RECV_BUFFER_SIZE = 1024;
 
-        protected WebSocket ws;
         protected ClientWebSocket client;
         readonly Dictionary<int, TaskCompletionSource<ResponseWrapper>> responses;
 
@@ -32,13 +31,13 @@ namespace LeanCloud.Play {
         bool isMessageQueueRunning;
         Queue<CommandWrapper> messageQueue;
 
-        public bool IsOpen {
+        internal bool IsOpen {
             get {
                 return client != null && client.State == WebSocketState.Open;
             }
         }
 
-        public async Task Close() {
+        internal async Task Close() {
             try {
                 if (IsOpen) {
                     await client.CloseAsync(WebSocketCloseStatus.NormalClosure, "1", CancellationToken.None);
@@ -48,7 +47,7 @@ namespace LeanCloud.Play {
             }
         }
 
-        public void _Disconnect() {
+        internal void Disconnect() {
             _ = Close();
             OnClose?.Invoke(0, string.Empty);
         }
@@ -169,7 +168,7 @@ namespace LeanCloud.Play {
         }
 
 
-        public Connection() {
+        internal Connection() {
             responses = new Dictionary<int, TaskCompletionSource<ResponseWrapper>>();
         }
 

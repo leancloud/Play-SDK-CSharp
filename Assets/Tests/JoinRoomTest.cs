@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine.TestTools;
 using System.Threading.Tasks;
+using System.Reflection;
 using UnityEngine;
 using LeanCloud.Common;
 
-namespace LeanCloud.Play.Test
-{
-    public class JoinRoomTest
-    {
+namespace LeanCloud.Play {
+    public class JoinRoomTest {
         [SetUp]
         public void SetUp() {
             Common.Logger.LogDelegate += Utils.Log;
@@ -270,7 +269,8 @@ namespace LeanCloud.Play.Test
                         f = true;
                     });
                 };
-                c1.Room._Disconnect();
+                MethodInfo method = typeof(Room).GetMethod("Disconnect", BindingFlags.Instance | BindingFlags.NonPublic);
+                method.Invoke(c1.Room, null);
             }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f) {
@@ -302,7 +302,13 @@ namespace LeanCloud.Play.Test
                         f = true;
                     });
                 };
-                c1.Room._Disconnect();
+                MethodInfo method = typeof(Room).GetMethod("Disconnect", BindingFlags.Instance | BindingFlags.NonPublic);
+                if (method == null) {
+                    Debug.Log("method is null");
+                } else {
+                    Debug.Log("method is not null");
+                }
+                method.Invoke(c1.Room, null);
             }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f) {

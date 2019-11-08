@@ -43,7 +43,7 @@ namespace LeanCloud.Play {
         /// <value><c>true</c> if opened; otherwise, <c>false</c>.</value>
 		public bool Open {
             get; internal set;
-		}
+        }
 
         /// <summary>
         /// 房间是否可见
@@ -51,7 +51,7 @@ namespace LeanCloud.Play {
         /// <value><c>true</c> if visible; otherwise, <c>false</c>.</value>
 		public bool Visible {
             get; internal set;
-		}
+        }
 
         /// <summary>
         /// 房间允许的最大玩家数量
@@ -59,7 +59,7 @@ namespace LeanCloud.Play {
         /// <value>The max player count.</value>
 		public int MaxPlayerCount {
             get; internal set;
-		}
+        }
 
         /// <summary>
         /// 房间主机玩家 ID
@@ -67,7 +67,7 @@ namespace LeanCloud.Play {
         /// <value>The master actor identifier.</value>
 		public int MasterActorId {
             get; internal set;
-		}
+        }
 
         /// <summary>
         /// 获取房主
@@ -88,7 +88,7 @@ namespace LeanCloud.Play {
         /// <value>The expected user identifiers.</value>
         public List<string> ExpectedUserIds {
             get; internal set;
-		}
+        }
 
         /// <summary>
         /// 获取自定义属性
@@ -125,8 +125,8 @@ namespace LeanCloud.Play {
                 gameConn = new GameConnection();
                 LobbyInfo lobbyInfo = await Client.lobbyService.Authorize();
                 await gameConn.Connect(Client.AppId, lobbyRoom.Url, Client.GameVersion, Client.UserId, lobbyInfo.SessionToken);
-                Room room = await gameConn.CreateRoom(lobbyRoom.RoomId, roomOptions, expectedUserIds);
-                Init(room);
+                Protocol.RoomOptions options = await gameConn.CreateRoom(lobbyRoom.RoomId, roomOptions, expectedUserIds);
+                Init(options);
                 state = State.Game;
             } catch (Exception e) {
                 Logger.Error(e.Message);
@@ -142,8 +142,8 @@ namespace LeanCloud.Play {
                 gameConn = new GameConnection();
                 LobbyInfo lobbyInfo = await Client.lobbyService.Authorize();
                 await gameConn.Connect(Client.AppId, lobbyRoom.Url, Client.GameVersion, Client.UserId, lobbyInfo.SessionToken);
-                Room room = await gameConn.JoinRoom(lobbyRoom.RoomId, expectedUserIds);
-                Init(room);
+                Protocol.RoomOptions options = await gameConn.JoinRoom(lobbyRoom.RoomId, expectedUserIds);
+                Init(options);
                 state = State.Game;
             } catch (Exception e) {
                 Logger.Error(e.Message);
@@ -159,8 +159,8 @@ namespace LeanCloud.Play {
                 LobbyRoomResult lobbyRoom = await Client.lobbyService.JoinRoom(roomName, null, true, false);
                 gameConn = new GameConnection();
                 await gameConn.Connect(Client.AppId, lobbyRoom.Url, Client.GameVersion, Client.UserId, lobbyInfo.SessionToken);
-                Room room = await gameConn.JoinRoom(lobbyRoom.RoomId, null);
-                Init(room);
+                Protocol.RoomOptions options = await gameConn.JoinRoom(lobbyRoom.RoomId, null);
+                Init(options);
                 state = State.Game;
             } catch (Exception e) {
                 state = State.Closed;
@@ -175,13 +175,13 @@ namespace LeanCloud.Play {
                 LobbyRoomResult lobbyRoom = await Client.lobbyService.JoinRoom(roomName, null, false, true);
                 gameConn = new GameConnection();
                 await gameConn.Connect(Client.AppId, lobbyRoom.Url, Client.GameVersion, Client.UserId, lobbyInfo.SessionToken);
-                Room room;
+                Protocol.RoomOptions options;
                 if (lobbyRoom.Create) {
-                    room = await gameConn.CreateRoom(lobbyRoom.RoomId, roomOptions, expectedUserIds);
+                    options = await gameConn.CreateRoom(lobbyRoom.RoomId, roomOptions, expectedUserIds);
                 } else {
-                    room = await gameConn.JoinRoom(lobbyRoom.RoomId, null);
+                    options = await gameConn.JoinRoom(lobbyRoom.RoomId, null);
                 }
-                Init(room);
+                Init(options);
                 state = State.Game;
             } catch (Exception e) {
                 state = State.Closed;
@@ -196,8 +196,8 @@ namespace LeanCloud.Play {
                 LobbyRoomResult lobbyRoom = await Client.lobbyService.JoinRandomRoom(matchProperties, expectedUserIds);
                 gameConn = new GameConnection();
                 await gameConn.Connect(Client.AppId, lobbyRoom.Url, Client.GameVersion, Client.UserId, lobbyInfo.SessionToken);
-                Room room = await gameConn.JoinRoom(lobbyRoom.RoomId, expectedUserIds);
-                Init(room);
+                Protocol.RoomOptions options = await gameConn.JoinRoom(lobbyRoom.RoomId, expectedUserIds);
+                Init(options);
                 state = State.Game;
             } catch (Exception e) {
                 state = State.Closed;
@@ -345,7 +345,7 @@ namespace LeanCloud.Play {
                     ReceiverGroup = ReceiverGroup.All
                 };
             }
-           return gameConn.SendEvent(eventId, eventData, opts);
+            return gameConn.SendEvent(eventId, eventData, opts);
         }
 
         public async Task Close() {
@@ -366,18 +366,18 @@ namespace LeanCloud.Play {
             gameConn.ResumeMessageQueue();
         }
 
-        public void _Disconnect() {
-            gameConn._Disconnect();
+        internal void Disconnect() {
+            gameConn.Disconnect();
         }
 
         internal void AddPlayer(Player player) {
-			if (player == null) {
-				throw new Exception(string.Format("player is null"));
-			}
+            if (player == null) {
+                throw new Exception(string.Format("player is null"));
+            }
             lock (playerDict) {
                 playerDict.Add(player.ActorId, player);
             }
-		}
+        }
 
         internal void RemovePlayer(int actorId) {
             lock (playerDict) {
@@ -385,7 +385,7 @@ namespace LeanCloud.Play {
                     throw new Exception(string.Format("no player: {0}", actorId));
                 }
             }
-		}
+        }
 
         internal void MergeProperties(Dictionary<string, object> changedProps) {
             if (changedProps == null)
@@ -398,18 +398,18 @@ namespace LeanCloud.Play {
             }
         }
 
-        internal void MergeCustomProperties(PlayObject changedProps) { 
+        internal void MergeCustomProperties(PlayObject changedProps) {
             if (changedProps == null) {
                 return;
             }
-            lock (CustomProperties) { 
+            lock (CustomProperties) {
                 foreach (var entry in changedProps) {
                     CustomProperties[entry.Key] = entry.Value;
                 }
             }
         }
 
-        internal void MergeSystemProperties(PlayObject changedProps) { 
+        internal void MergeSystemProperties(PlayObject changedProps) {
             if (changedProps == null) {
                 return;
             }
@@ -427,24 +427,27 @@ namespace LeanCloud.Play {
             }
         }
 
-        void Init(Room room) {
-            if (room == null) {
-                return;
+        void Init(Protocol.RoomOptions options) {
+            Name = options.Cid;
+            Open = options.Open == null || options.Open.Value;
+            Visible = options.Visible == null || options.Visible.Value;
+            MaxPlayerCount = options.MaxMembers;
+            MasterActorId = options.MasterActorId;
+            ExpectedUserIds = new List<string>();
+            if (options.ExpectMembers != null) {
+                ExpectedUserIds.AddRange(options.ExpectMembers);
             }
-            Name = room.Name;
-            Open = room.Open;
-            Visible = room.Visible;
-            MaxPlayerCount = room.MaxPlayerCount;
-            MasterActorId = room.MasterActorId;
-            ExpectedUserIds = room.ExpectedUserIds;
-            playerDict = room.playerDict;
-            foreach (Player player in playerDict.Values) {
-                player.Room = this;
+            playerDict = new Dictionary<int, Player>();
+            foreach (RoomMember member in options.Members) {
+                Player player = new Player();
+                player.Init(this, member);
                 if (player.UserId == Client.UserId) {
                     Player = player;
                 }
+                playerDict.Add(player.ActorId, player);
             }
-            CustomProperties = room.CustomProperties;
+            // attr
+            CustomProperties = CodecUtils.DeserializePlayObject(options.Attr);
             gameConn.OnMessage += (cmd, op, body) => {
                 switch (cmd) {
                     case CommandType.Conv:
@@ -500,8 +503,8 @@ namespace LeanCloud.Play {
         }
 
         void HandlePlayerJoinedRoom(JoinRoomNotification joinRoomNotification) {
-            var player = Utils.ConvertToPlayer(joinRoomNotification.Member);
-            player.Room = this;
+            Player player = new Player();
+            player.Init(this, joinRoomNotification.Member);
             AddPlayer(player);
             Client.OnPlayerRoomJoined?.Invoke(player);
         }

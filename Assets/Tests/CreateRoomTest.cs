@@ -7,8 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using LeanCloud.Common;
 
-namespace LeanCloud.Play.Test
-{
+namespace LeanCloud.Play {
     public class CreateRoomTest {
         [SetUp]
         public void SetUp() {

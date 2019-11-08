@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using LeanCloud.Common;
 
 namespace LeanCloud.Play {
-	public class Lobby {
+	internal class Lobby {
         enum State {
             Init,
             Joining,

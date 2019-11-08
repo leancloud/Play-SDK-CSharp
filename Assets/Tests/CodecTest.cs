@@ -6,10 +6,8 @@ using System.Collections.Generic;
 using System.Collections;
 using System;
 
-namespace LeanCloud.Play.Test
-{
-    public class CodecTest
-    {
+namespace LeanCloud.Play {
+    public class CodecTest {
         class Hero {
             public string Name {
                 get; set;

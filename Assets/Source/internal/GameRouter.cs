@@ -43,8 +43,7 @@ namespace LeanCloud.Play {
         readonly string userId;
         readonly bool insecure;
         readonly string feature;
-
-        AppRouterController appRouterController;
+        readonly AppRouterController appRouterController;
         LobbyInfo lobbyInfo;
 
         readonly HttpClient client;

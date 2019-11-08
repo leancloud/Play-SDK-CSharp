@@ -5,8 +5,7 @@ using UnityEngine.TestTools;
 using System.Threading.Tasks;
 using LeanCloud.Common;
 
-namespace LeanCloud.Play.Test
-{
+namespace LeanCloud.Play {
     public class MasterTest {
         [SetUp]
         public void SetUp() {

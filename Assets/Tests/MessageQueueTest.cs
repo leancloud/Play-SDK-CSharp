@@ -5,10 +5,8 @@ using UnityEngine.TestTools;
 using System.Threading.Tasks;
 using LeanCloud.Common;
 
-namespace LeanCloud.Play.Test
-{
-    public class MessageQueueTest
-    {
+namespace LeanCloud.Play {
+    public class MessageQueueTest {
         [SetUp]
         public void SetUp() {
             Common.Logger.LogDelegate += Utils.Log;

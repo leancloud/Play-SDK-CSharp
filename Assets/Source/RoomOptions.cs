@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 
-namespace LeanCloud.Play
-{
+namespace LeanCloud.Play {
     /// <summary>
     /// 创建房间标识
     /// </summary>
@@ -21,8 +18,7 @@ namespace LeanCloud.Play
     /// <summary>
     /// 创建房间选项
     /// </summary>
-    public class RoomOptions
-    {
+    public class RoomOptions {
         private const int MAX_PLAYER_COUNT = 10;
 
         /// <summary>

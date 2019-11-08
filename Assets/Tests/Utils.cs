@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using LeanCloud.Common;
 
-namespace LeanCloud.Play.Test {
+namespace LeanCloud.Play {
     internal static class Utils {
         internal static Client NewClient(string userId) {
             // 华东节点，开发版本
