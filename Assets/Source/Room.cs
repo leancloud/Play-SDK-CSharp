@@ -32,7 +32,7 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 房间名称
         /// </summary>
-        /// <value>The name.</value>
+        /// <value>房间名称</value>
 		public string Name {
             get; internal set;
         }
@@ -40,7 +40,7 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 房间是否开启
         /// </summary>
-        /// <value><c>true</c> if opened; otherwise, <c>false</c>.</value>
+        /// <value>房间是否开启</value>
 		public bool Open {
             get; internal set;
         }
@@ -48,7 +48,7 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 房间是否可见
         /// </summary>
-        /// <value><c>true</c> if visible; otherwise, <c>false</c>.</value>
+        /// <value>房间是否可见</value>
 		public bool Visible {
             get; internal set;
         }
@@ -56,15 +56,15 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 房间允许的最大玩家数量
         /// </summary>
-        /// <value>The max player count.</value>
+        /// <value>房间允许的最大玩家数量</value>
 		public int MaxPlayerCount {
             get; internal set;
         }
 
         /// <summary>
-        /// 房间主机玩家 ID
+        /// 房间主机玩家 Id
         /// </summary>
-        /// <value>The master actor identifier.</value>
+        /// <value>房间主机玩家 Id</value>
 		public int MasterActorId {
             get; internal set;
         }
@@ -72,7 +72,7 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 获取房主
         /// </summary>
-        /// <value>The master.</value>
+        /// <value>房主玩家</value>
         public Player Master {
             get {
                 if (MasterActorId == 0) {
@@ -85,7 +85,7 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 邀请的好友 ID 列表
         /// </summary>
-        /// <value>The expected user identifiers.</value>
+        /// <value>期望玩家 Id 列表</value>
         public List<string> ExpectedUserIds {
             get; internal set;
         }
@@ -93,7 +93,7 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 获取自定义属性
         /// </summary>
-        /// <value>The custom properties.</value>
+        /// <value>自定义属性</value>
         public PlayObject CustomProperties {
             get; internal set;
         }
@@ -101,7 +101,7 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 获取房间内的玩家列表
         /// </summary>
-        /// <value>The player list.</value>
+        /// <value>房间内玩家列表</value>
         public List<Player> PlayerList {
             get {
                 lock (playerDict) {
@@ -266,7 +266,7 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 设置开启 / 关闭
         /// </summary>
-        /// <returns>The open.</returns>
+        /// <returns>房间是否开启</returns>
         /// <param name="open">是否开启</param>
         public async Task<bool> SetOpen(bool open) {
             if (state != State.Game) {
@@ -280,7 +280,7 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 设置可见性
         /// </summary>
-        /// <returns>The visible.</returns>
+        /// <returns>房间是否可见</returns>
         /// <param name="visible">是否可见</param>
         public async Task<bool> SetVisible(bool visible) {
             if (state != State.Game) {
@@ -294,7 +294,7 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 设置最大玩家数量
         /// </summary>
-        /// <returns>The max player count.</returns>
+        /// <returns>房间最大玩家数量</returns>
         /// <param name="count">数量</param>
         public async Task<int> SetMaxPlayerCount(int count) {
             if (state != State.Game) {
@@ -308,7 +308,7 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 设置期望玩家
         /// </summary>
-        /// <returns>The expected user identifiers.</returns>
+        /// <returns>期望玩家 Id 列表</returns>
         /// <param name="expectedUserIds">玩家 Id 列表</param>
         public async Task<List<string>> SetExpectedUserIds(List<string> expectedUserIds) {
             if (state != State.Game) {
@@ -322,7 +322,6 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 清空期望玩家
         /// </summary>
-        /// <returns>The expected user identifiers.</returns>
         public async Task ClearExpectedUserIds() {
             if (state != State.Game) {
                 throw new PlayException(PlayExceptionCode.StateError, $"Error state: {state}");
@@ -334,7 +333,7 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 增加期望玩家
         /// </summary>
-        /// <returns>The expected user identifiers.</returns>
+        /// <returns>期望玩家 Id 列表</returns>
         /// <param name="expectedUserIds">玩家 Id 列表</param>
         public async Task<List<string>> AddExpectedUserIds(List<string> expectedUserIds) {
             if (state != State.Game) {
@@ -348,7 +347,7 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 删除期望玩家
         /// </summary>
-        /// <returns>The expected user identifiers.</returns>
+        /// <returns>期望玩家 Id 列表</returns>
         /// <param name="expectedUserIds">玩家 Id 列表</param>
         public async Task<List<string>> RemoveExpectedUserIds(List<string> expectedUserIds) {
             if (state != State.Game) {
@@ -359,6 +358,11 @@ namespace LeanCloud.Play {
             return ExpectedUserIds;
         }
 
+        /// <summary>
+        /// 设置房主
+        /// </summary>
+        /// <param name="newMasterId">新的房主玩家 Id</param>
+        /// <returns></returns>
         public async Task<Player> SetMaster(int newMasterId) {
             if (state != State.Game) {
                 throw new PlayException(PlayExceptionCode.StateError, $"Error state: {state}");
@@ -367,6 +371,13 @@ namespace LeanCloud.Play {
             return Master;
         }
 
+        /// <summary>
+        /// 踢掉玩家
+        /// </summary>
+        /// <param name="actorId">玩家 Id</param>
+        /// <param name="code">附加码</param>
+        /// <param name="reason">附加消息</param>
+        /// <returns></returns>
         public async Task KickPlayer(int actorId, int code, string reason) {
             if (state != State.Game) {
                 throw new PlayException(PlayExceptionCode.StateError, $"Error state: {state}");
@@ -375,6 +386,13 @@ namespace LeanCloud.Play {
             RemovePlayer(playerId);
         }
 
+        /// <summary>
+        /// 发送自定义事件
+        /// </summary>
+        /// <param name="eventId">事件 Id</param>
+        /// <param name="eventData">事件参数</param>
+        /// <param name="options">事件选项</param>
+        /// <returns></returns>
         public Task SendEvent(byte eventId, PlayObject eventData, SendEventOptions options) {
             if (state != State.Game) {
                 throw new PlayException(PlayExceptionCode.StateError, $"Error state: {state}");
@@ -388,6 +406,10 @@ namespace LeanCloud.Play {
             return gameConn.SendEvent(eventId, eventData, opts);
         }
 
+        /// <summary>
+        /// 关闭
+        /// </summary>
+        /// <returns></returns>
         public async Task Close() {
             try {
                 await gameConn.Close();
