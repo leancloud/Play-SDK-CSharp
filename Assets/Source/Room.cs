@@ -226,6 +226,13 @@ namespace LeanCloud.Play {
             }
         }
 
+        /// <summary>
+        /// 设置玩家的自定义属性
+        /// </summary>
+        /// <param name="actorId">玩家 Id</param>
+        /// <param name="properties">自定义属性</param>
+        /// <param name="expectedValues">期望属性，用于 CAS 检测</param>
+        /// <returns></returns>
         public async Task SetPlayerCustomProperties(int actorId, PlayObject properties, PlayObject expectedValues) {
             if (state != State.Game) {
                 throw new PlayException(PlayExceptionCode.StateError, $"Error state: {state}");
@@ -245,6 +252,9 @@ namespace LeanCloud.Play {
         /// <returns>玩家对象</returns>
         /// <param name="actorId">玩家在房间中的 Id</param>
         public Player GetPlayer(int actorId) {
+            if (state != State.Game) {
+                throw new PlayException(PlayExceptionCode.StateError, $"Error state: {state}");
+            }
             lock (playerDict) {
                 if (!playerDict.TryGetValue(actorId, out Player player)) {
                     throw new Exception(string.Format("no player: {0}", actorId));
@@ -259,6 +269,9 @@ namespace LeanCloud.Play {
         /// <returns>The open.</returns>
         /// <param name="open">是否开启</param>
         public async Task<bool> SetOpen(bool open) {
+            if (state != State.Game) {
+                throw new PlayException(PlayExceptionCode.StateError, $"Error state: {state}");
+            }
             var sysProps = await gameConn.SetRoomOpen(open);
             MergeSystemProperties(sysProps);
             return Open;
@@ -270,6 +283,9 @@ namespace LeanCloud.Play {
         /// <returns>The visible.</returns>
         /// <param name="visible">是否可见</param>
         public async Task<bool> SetVisible(bool visible) {
+            if (state != State.Game) {
+                throw new PlayException(PlayExceptionCode.StateError, $"Error state: {state}");
+            }
             var sysProps = await gameConn.SetRoomVisible(visible);
             MergeSystemProperties(sysProps);
             return Visible;
@@ -281,6 +297,9 @@ namespace LeanCloud.Play {
         /// <returns>The max player count.</returns>
         /// <param name="count">数量</param>
         public async Task<int> SetMaxPlayerCount(int count) {
+            if (state != State.Game) {
+                throw new PlayException(PlayExceptionCode.StateError, $"Error state: {state}");
+            }
             var sysProps = await gameConn.SetRoomMaxPlayerCount(count);
             MergeSystemProperties(sysProps);
             return MaxPlayerCount;
@@ -292,6 +311,9 @@ namespace LeanCloud.Play {
         /// <returns>The expected user identifiers.</returns>
         /// <param name="expectedUserIds">玩家 Id 列表</param>
         public async Task<List<string>> SetExpectedUserIds(List<string> expectedUserIds) {
+            if (state != State.Game) {
+                throw new PlayException(PlayExceptionCode.StateError, $"Error state: {state}");
+            }
             var sysProps = await gameConn.SetRoomExpectedUserIds(expectedUserIds);
             MergeSystemProperties(sysProps);
             return ExpectedUserIds;
@@ -302,6 +324,9 @@ namespace LeanCloud.Play {
         /// </summary>
         /// <returns>The expected user identifiers.</returns>
         public async Task ClearExpectedUserIds() {
+            if (state != State.Game) {
+                throw new PlayException(PlayExceptionCode.StateError, $"Error state: {state}");
+            }
             var sysProps = await gameConn.ClearRoomExpectedUserIds();
             MergeSystemProperties(sysProps);
         }
@@ -312,6 +337,9 @@ namespace LeanCloud.Play {
         /// <returns>The expected user identifiers.</returns>
         /// <param name="expectedUserIds">玩家 Id 列表</param>
         public async Task<List<string>> AddExpectedUserIds(List<string> expectedUserIds) {
+            if (state != State.Game) {
+                throw new PlayException(PlayExceptionCode.StateError, $"Error state: {state}");
+            }
             var sysProps = await gameConn.AddRoomExpectedUserIds(expectedUserIds);
             MergeSystemProperties(sysProps);
             return ExpectedUserIds;
@@ -323,22 +351,34 @@ namespace LeanCloud.Play {
         /// <returns>The expected user identifiers.</returns>
         /// <param name="expectedUserIds">玩家 Id 列表</param>
         public async Task<List<string>> RemoveExpectedUserIds(List<string> expectedUserIds) {
+            if (state != State.Game) {
+                throw new PlayException(PlayExceptionCode.StateError, $"Error state: {state}");
+            }
             var sysProps = await gameConn.RemoveRoomExpectedUserIds(expectedUserIds);
             MergeSystemProperties(sysProps);
             return ExpectedUserIds;
         }
 
         public async Task<Player> SetMaster(int newMasterId) {
+            if (state != State.Game) {
+                throw new PlayException(PlayExceptionCode.StateError, $"Error state: {state}");
+            }
             MasterActorId = await gameConn.SetMaster(newMasterId);
             return Master;
         }
 
         public async Task KickPlayer(int actorId, int code, string reason) {
+            if (state != State.Game) {
+                throw new PlayException(PlayExceptionCode.StateError, $"Error state: {state}");
+            }
             var playerId = await gameConn.KickPlayer(actorId, code, reason);
             RemovePlayer(playerId);
         }
 
         public Task SendEvent(byte eventId, PlayObject eventData, SendEventOptions options) {
+            if (state != State.Game) {
+                throw new PlayException(PlayExceptionCode.StateError, $"Error state: {state}");
+            }
             var opts = options;
             if (opts == null) {
                 opts = new SendEventOptions {
@@ -359,10 +399,16 @@ namespace LeanCloud.Play {
         }
 
         internal void PauseMessageQueue() {
+            if (state != State.Game) {
+                throw new PlayException(PlayExceptionCode.StateError, $"Error state: {state}");
+            }
             gameConn.PauseMessageQueue();
         }
 
         internal void ResumeMessageQueue() {
+            if (state != State.Game) {
+                throw new PlayException(PlayExceptionCode.StateError, $"Error state: {state}");
+            }
             gameConn.ResumeMessageQueue();
         }
 

@@ -38,29 +38,24 @@ namespace LeanCloud.Play {
     }
 
     internal class GameRouter {
-        readonly string appId;
-        readonly string appKey;
-        readonly string userId;
-        readonly bool insecure;
-        readonly string feature;
         readonly AppRouterController appRouterController;
+
         LobbyInfo lobbyInfo;
 
-        readonly HttpClient client;
+        readonly HttpClient httpClient;
 
-        internal GameRouter(string server, string appId, string appKey, string userId, bool insecure, string feature) {
-            this.appId = appId;
-            this.appKey = appKey;
-            this.userId = userId;
-            this.insecure = insecure;
-            this.feature = feature;
+        internal GameRouter(Client client) {
+            string appId = client.AppId;
+            string appKey = client.AppKey;
+            string server = client.PlayServer;
+            string userId = client.UserId;
 
             appRouterController = new AppRouterController(appId, server);
 
-            client = new HttpClient();
-            client.DefaultRequestHeaders.Add("X-LC-ID", appId);
-            client.DefaultRequestHeaders.Add("X-LC-KEY", appKey);
-            client.DefaultRequestHeaders.Add("X-LC-PLAY-USER-ID", userId);
+            httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Add("X-LC-ID", appId);
+            httpClient.DefaultRequestHeaders.Add("X-LC-KEY", appKey);
+            httpClient.DefaultRequestHeaders.Add("X-LC-PLAY-USER-ID", userId);
         }
 
         internal async Task<LobbyInfo> Authorize() {
@@ -76,9 +71,6 @@ namespace LeanCloud.Play {
             HttpResponseMessage response = null;
             try {
                 Dictionary<string, object> data = new Dictionary<string, object>();
-                if (!string.IsNullOrEmpty(feature)) {
-                    data.Add("feature", feature);
-                }
                 string dataContent = JsonConvert.SerializeObject(data);
                 string url = $"{appRouter.PlayServer}/1/multiplayer/router/authorize";
                 request = new HttpRequestMessage {
@@ -87,15 +79,16 @@ namespace LeanCloud.Play {
                     Content = new StringContent(dataContent)
                 };
                 request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-                HttpUtils.PrintRequest(client, request, dataContent);
-                response = await client.SendAsync(request);
+                HttpUtils.PrintRequest(httpClient, request, dataContent);
+                response = await httpClient.SendAsync(request);
                 
                 string content = await response.Content.ReadAsStringAsync();
                 HttpUtils.PrintResponse(response, content);
                 if (response.StatusCode >= HttpStatusCode.OK && response.StatusCode < HttpStatusCode.Ambiguous) {
-                    return JsonConvert.DeserializeObject<LobbyInfo>(content);
+                    lobbyInfo = await JsonUtils.DeserializeObjectAsync<LobbyInfo>(content);
+                    return lobbyInfo;
                 }
-                PlayException exception = JsonConvert.DeserializeObject<PlayException>(content);
+                PlayException exception = await JsonUtils.DeserializeObjectAsync<PlayException>(content);
                 throw exception;
             } finally {
                 if (request != null) {

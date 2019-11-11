@@ -31,28 +31,17 @@ namespace LeanCloud.Play {
         bool isMessageQueueRunning;
         Queue<CommandWrapper> messageQueue;
 
+        internal Connection() {
+            responses = new Dictionary<int, TaskCompletionSource<ResponseWrapper>>();
+        }
+
         internal bool IsOpen {
             get {
                 return client != null && client.State == WebSocketState.Open;
             }
         }
 
-        internal async Task Close() {
-            try {
-                if (IsOpen) {
-                    await client.CloseAsync(WebSocketCloseStatus.NormalClosure, "1", CancellationToken.None);
-                }
-            } catch (Exception e) {
-                Logger.Error(e.Message);
-            }
-        }
-
-        internal void Disconnect() {
-            _ = Close();
-            OnClose?.Invoke(0, string.Empty);
-        }
-
-        internal async Task<Task<ResponseWrapper>> Connect(string appId, string server, string gameVersion, string userId, string sessionToken) {
+        internal Task<ResponseWrapper> Connect(string appId, string server, string gameVersion, string userId, string sessionToken) {
             this.userId = userId;
             TaskCompletionSource<ResponseWrapper> tcs = new TaskCompletionSource<ResponseWrapper>();
             client = new ClientWebSocket();
@@ -63,11 +52,15 @@ namespace LeanCloud.Play {
             string url = GetFastOpenUrl(newServer, appId, gameVersion, userId, sessionToken);
             url = $"{url}&i={i}";
             Logger.Debug($"Connect url: {url}");
-            await client.ConnectAsync(new Uri(url), default);
-            isMessageQueueRunning = true;
-            messageQueue = new Queue<CommandWrapper>();
-            _ = StartReceive();
-            responses.Add(i, tcs);
+            client.ConnectAsync(new Uri(url), default).ContinueWith(t => {
+                if (t.IsFaulted) {
+                    throw t.Exception.InnerException;
+                }
+                isMessageQueueRunning = true;
+                messageQueue = new Queue<CommandWrapper>();
+                _ = StartReceive();
+                responses.Add(i, tcs);
+            }, TaskScheduler.FromCurrentSynchronizationContext());
             return tcs.Task;
         }
 
@@ -167,11 +160,6 @@ namespace LeanCloud.Play {
             isMessageQueueRunning = true;
         }
 
-
-        internal Connection() {
-            responses = new Dictionary<int, TaskCompletionSource<ResponseWrapper>>();
-        }
-
         protected Task OpenSession(string appId, string userId, string gameVersion) {
             var request = NewRequest();
             request.SessionOpen = new SessionOpenRequest {
@@ -241,6 +229,21 @@ namespace LeanCloud.Play {
             } catch (Exception e) {
                 Logger.Error(e.Message);
             }
+        }
+
+        internal async Task Close() {
+            try {
+                if (IsOpen) {
+                    await client.CloseAsync(WebSocketCloseStatus.NormalClosure, "1", CancellationToken.None);
+                }
+            } catch (Exception e) {
+                Logger.Error(e.Message);
+            }
+        }
+
+        internal void Disconnect() {
+            _ = Close();
+            OnClose?.Invoke(0, string.Empty);
         }
     }
 }

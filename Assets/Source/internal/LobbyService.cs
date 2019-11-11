@@ -38,10 +38,10 @@ namespace LeanCloud.Play {
 
         internal LobbyService(Client client) {
             this.client = client;
+            gameRouter = new GameRouter(client);
         }
 
         internal async Task<LobbyInfo> Authorize() {
-            gameRouter = new GameRouter(client.PlayServer, client.AppId, client.AppKey, client.UserId, !client.Ssl, null);
             return await gameRouter.Authorize();
         }
 
