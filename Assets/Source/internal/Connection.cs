@@ -19,7 +19,7 @@ namespace LeanCloud.Play {
 
         const int RECV_BUFFER_SIZE = 1024;
 
-        protected ClientWebSocket client;
+        protected ClientWebSocket ws;
         readonly Dictionary<int, TaskCompletionSource<ResponseWrapper>> responses;
 
         internal Action<CommandType, OpType, Body> OnMessage;
@@ -37,22 +37,22 @@ namespace LeanCloud.Play {
 
         internal bool IsOpen {
             get {
-                return client != null && client.State == WebSocketState.Open;
+                return ws != null && ws.State == WebSocketState.Open;
             }
         }
 
         internal Task<ResponseWrapper> Connect(string appId, string server, string gameVersion, string userId, string sessionToken) {
             this.userId = userId;
             TaskCompletionSource<ResponseWrapper> tcs = new TaskCompletionSource<ResponseWrapper>();
-            client = new ClientWebSocket();
-            client.Options.AddSubProtocol("protobuf.1");
-            client.Options.KeepAliveInterval = TimeSpan.FromSeconds(10);
+            ws = new ClientWebSocket();
+            ws.Options.AddSubProtocol("protobuf.1");
+            ws.Options.KeepAliveInterval = TimeSpan.FromSeconds(10);
             string newServer = server.Replace("https://", "wss://").Replace("http://", "ws://");
             int i = RequestI;
             string url = GetFastOpenUrl(newServer, appId, gameVersion, userId, sessionToken);
             url = $"{url}&i={i}";
             Logger.Debug($"Connect url: {url}");
-            client.ConnectAsync(new Uri(url), default).ContinueWith(t => {
+            ws.ConnectAsync(new Uri(url), default).ContinueWith(t => {
                 if (t.IsFaulted) {
                     throw t.Exception.InnerException;
                 }
@@ -91,7 +91,7 @@ namespace LeanCloud.Play {
             };
             ArraySegment<byte> bytes = new ArraySegment<byte>(command.ToByteArray());
             try {
-                await client.SendAsync(bytes, WebSocketMessageType.Binary, true, default);
+                await ws.SendAsync(bytes, WebSocketMessageType.Binary, true, default);
             } catch (InvalidOperationException e) {
                 OnClose?.Invoke(-2, e.Message);
                 _ = Close();
@@ -101,11 +101,11 @@ namespace LeanCloud.Play {
         protected async Task StartReceive() {
             byte[] buffer = new byte[RECV_BUFFER_SIZE];
             try {
-                while (client.State == WebSocketState.Open) {
+                while (ws.State == WebSocketState.Open) {
                     byte[] data = new byte[0];
                     WebSocketReceiveResult result;
                     do {
-                        result = await client.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+                        result = await ws.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
                         if (result.MessageType == WebSocketMessageType.Close) {
                             OnClose?.Invoke((int)result.CloseStatus, result.CloseStatusDescription);
                             return;
@@ -218,23 +218,13 @@ namespace LeanCloud.Play {
         }
 
         protected void HandleErrorMsg(Body body) {
-            Logger.Error("error msg: {0}", body);
-            var errorInfo = body.Error.ErrorInfo;
-            OnError?.Invoke(errorInfo.ReasonCode, errorInfo.Detail);
-        }
-
-        protected void HandleUnknownMsg(CommandType cmd, OpType op, Body body) {
-            try {
-                Logger.Error("unknown msg: {0}/{1} {2}", cmd, op, body);
-            } catch (Exception e) {
-                Logger.Error(e.Message);
-            }
+            
         }
 
         internal async Task Close() {
             try {
                 if (IsOpen) {
-                    await client.CloseAsync(WebSocketCloseStatus.NormalClosure, "1", CancellationToken.None);
+                    await ws.CloseAsync(WebSocketCloseStatus.NormalClosure, "1", CancellationToken.None);
                 }
             } catch (Exception e) {
                 Logger.Error(e.Message);

@@ -526,7 +526,7 @@ namespace LeanCloud.Play {
                                 HandleRoomKicked(body.RoomNotification);
                                 break;
                             default:
-                                //HandleUnknownMsg(cmd, op, body);
+                                Logger.Error("unknown msg: {0}/{1} {2}", cmd, op, body);
                                 break;
                         }
                         break;
@@ -535,11 +535,14 @@ namespace LeanCloud.Play {
                     case CommandType.Direct:
                         HandleSendEvent(body.Direct);
                         break;
-                    case CommandType.Error:
-                        //HandleErrorMsg(body);
+                    case CommandType.Error: {
+                            Logger.Error("error msg: {0}", body);
+                            ErrorInfo errorInfo = body.Error.ErrorInfo;
+                            Client.OnError?.Invoke(errorInfo.ReasonCode, errorInfo.Detail);
+                        }
                         break;
                     default:
-                        //HandleUnknownMsg(cmd, op, body);
+                        Logger.Error("unknown msg: {0}/{1} {2}", cmd, op, body);
                         break;
                 }
             };
