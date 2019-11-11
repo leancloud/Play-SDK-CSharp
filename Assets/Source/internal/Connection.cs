@@ -24,7 +24,6 @@ namespace LeanCloud.Play {
 
         internal Action<CommandType, OpType, Body> OnMessage;
         internal Action<int, string> OnClose;
-        internal Action<int, string> OnError;
         
         string userId;
 
