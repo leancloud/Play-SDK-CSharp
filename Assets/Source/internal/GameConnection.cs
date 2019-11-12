@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using LeanCloud.Play.Protocol;
+using Newtonsoft.Json;
 using Google.Protobuf;
 
 namespace LeanCloud.Play {
@@ -11,28 +12,17 @@ namespace LeanCloud.Play {
             get; private set;
         }
 
-        internal GameConnection(PlayContext context): base(context) {
-        
-        }
-
-        internal static async Task<GameConnection> Connect(PlayContext context, string appId, string server, string userId, string gameVersion) {
-            var connection = new GameConnection(context);
-            await connection.Connect(server, userId);
-            await connection.OpenSession(appId, userId, gameVersion);
-            return connection;
-        }
-
-        internal async Task<Room> CreateRoom(string roomId, RoomOptions roomOptions, List<string> expectedUserIds) {
+        internal async Task<Protocol.RoomOptions> CreateRoom(string roomId, RoomOptions roomOptions, List<string> expectedUserIds) {
             var request = NewRequest();
-            var roomOpts = Utils.ConvertToRoomOptions(roomId, roomOptions, expectedUserIds);
-            request.CreateRoom = new CreateRoomRequest { 
+            var roomOpts = ConvertToRoomOptions(roomId, roomOptions, expectedUserIds);
+            request.CreateRoom = new CreateRoomRequest {
                 RoomOptions = roomOpts
             };
             var res = await SendRequest(CommandType.Conv, OpType.Start, request);
-            return Utils.ConvertToRoom(res.Response.CreateRoom.RoomOptions);
+            return res.Response.CreateRoom.RoomOptions;
         }
 
-        internal async Task<Room> JoinRoom(string roomId, List<string> expectedUserIds) {
+        internal async Task<Protocol.RoomOptions> JoinRoom(string roomId, List<string> expectedUserIds) {
             var request = NewRequest();
             request.JoinRoom = new JoinRoomRequest {
                 Rejoin = false,
@@ -44,7 +34,7 @@ namespace LeanCloud.Play {
                 request.JoinRoom.RoomOptions.ExpectMembers.AddRange(expectedUserIds);
             }
             var res = await SendRequest(CommandType.Conv, OpType.Add, request);
-            return Utils.ConvertToRoom(res.Response.JoinRoom.RoomOptions);
+            return res.Response.JoinRoom.RoomOptions;
         }
 
         internal async Task LeaveRoom() {
@@ -92,7 +82,7 @@ namespace LeanCloud.Play {
             };
             request.UpdateSysProperty = new UpdateSysPropertyRequest {
                 SysAttr = new RoomSystemProperty { 
-                    ExpectMembers = Json.Encode(args)
+                    ExpectMembers = JsonConvert.SerializeObject(args)
                 }
             };
             var res = await SendRequest(CommandType.Conv, OpType.UpdateSystemProperty, request);
@@ -106,7 +96,7 @@ namespace LeanCloud.Play {
             };
             request.UpdateSysProperty = new UpdateSysPropertyRequest {
                 SysAttr = new RoomSystemProperty { 
-                    ExpectMembers = Json.Encode(args)
+                    ExpectMembers = JsonConvert.SerializeObject(args)
                 }
             };
             var res = await SendRequest(CommandType.Conv, OpType.UpdateSystemProperty, request);
@@ -120,7 +110,7 @@ namespace LeanCloud.Play {
             };
             request.UpdateSysProperty = new UpdateSysPropertyRequest {
                 SysAttr = new RoomSystemProperty {
-                    ExpectMembers = Json.Encode(args)
+                    ExpectMembers = JsonConvert.SerializeObject(args)
                 }
             };
             var res = await SendRequest(CommandType.Conv, OpType.UpdateSystemProperty, request);
@@ -134,7 +124,7 @@ namespace LeanCloud.Play {
             };
             request.UpdateSysProperty = new UpdateSysPropertyRequest {
                 SysAttr = new RoomSystemProperty { 
-                    ExpectMembers = Json.Encode(args)
+                    ExpectMembers = JsonConvert.SerializeObject(args)
                 }
             };
             var res = await SendRequest(CommandType.Conv, OpType.UpdateSystemProperty, request);
@@ -174,7 +164,7 @@ namespace LeanCloud.Play {
             if (options.TargetActorIds != null) {
                 direct.ToActorIds.AddRange(options.TargetActorIds);
             }
-            Send(CommandType.Direct, OpType.None, new Body { 
+            _ = Send(CommandType.Direct, OpType.None, new Body { 
                 Direct = direct
             });
             return Task.FromResult(true);
@@ -210,6 +200,42 @@ namespace LeanCloud.Play {
 
         protected override int GetPingDuration() {
             return 7;
+        }
+
+        protected override string GetFastOpenUrl(string server, string appId, string gameVersion, string userId, string sessionToken) {
+            return $"{server}session?appId={appId}&sdkVersion={Config.SDKVersion}&protocolVersion={Config.ProtocolVersion}&gameVersion={gameVersion}&userId={userId}&sessionToken={sessionToken}";
+        }
+
+        protected override void HandleNotification(CommandType cmd, OpType op, Body body) {
+            OnMessage?.Invoke(cmd, op, body);
+        }
+
+        static Protocol.RoomOptions ConvertToRoomOptions(string roomName, RoomOptions options, List<string> expectedUserIds) {
+            var roomOptions = new Protocol.RoomOptions();
+            if (!string.IsNullOrEmpty(roomName)) {
+                roomOptions.Cid = roomName;
+            }
+            if (options != null) {
+                roomOptions.Visible = options.Visible;
+                roomOptions.Open = options.Open;
+                roomOptions.EmptyRoomTtl = options.EmptyRoomTtl;
+                roomOptions.PlayerTtl = options.PlayerTtl;
+                roomOptions.MaxMembers = options.MaxPlayerCount;
+                roomOptions.Flag = options.Flag;
+                if (options.CustomRoomProperties != null) {
+                    roomOptions.Attr = ByteString.CopyFrom(CodecUtils.SerializePlayObject(options.CustomRoomProperties));
+                }
+                if (options.CustoRoomPropertyKeysForLobby != null) {
+                    roomOptions.LobbyAttrKeys.AddRange(options.CustoRoomPropertyKeysForLobby);
+                }
+                if (options.PluginName != null) {
+                    roomOptions.PluginName = options.PluginName;
+                }
+            }
+            if (expectedUserIds != null) {
+                roomOptions.ExpectMembers.AddRange(expectedUserIds);
+            }
+            return roomOptions;
         }
     }
 }

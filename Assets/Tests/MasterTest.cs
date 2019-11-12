@@ -1,13 +1,22 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 using System.Threading.Tasks;
+using LeanCloud.Common;
 
-namespace LeanCloud.Play.Test
-{
+namespace LeanCloud.Play {
     public class MasterTest {
+        [SetUp]
+        public void SetUp() {
+            Common.Logger.LogDelegate += Utils.Log;
+        }
+
+        [TearDown]
+        public void TearDown() {
+            Common.Logger.LogDelegate -= Utils.Log;
+        }
+
         [UnityTest]
         public IEnumerator SetNewMaster() {
             var f0 = false;
@@ -18,7 +27,7 @@ namespace LeanCloud.Play.Test
 
             c0.Connect().OnSuccess(_ => {
                 return c0.CreateRoom(roomName);
-            }).Unwrap().OnSuccess(t => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(t => {
                 var room = t.Result;
                 c0.OnMasterSwitched += newMaster => {
                     Assert.AreEqual(newMaster.ActorId, c1.Player.ActorId);
@@ -26,30 +35,28 @@ namespace LeanCloud.Play.Test
                     f0 = true;
                 };
                 return c1.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.JoinRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 c1.OnMasterSwitched += newMaster => {
                     Assert.AreEqual(newMaster.ActorId, c1.Player.ActorId);
                     Assert.AreEqual(newMaster.ActorId, c1.Room.MasterActorId);
                     f1 = true;
                 };
                 return c0.SetMaster(c1.Player.ActorId);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 Debug.Log("set master done");
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f0 || !f1) {
                 yield return null;
             }
-            c0.Close();
-            c1.Close();
+            _ = c0.Close();
+            _ = c1.Close();
         }
 
         [UnityTest]
         public IEnumerator MasterLeave() {
-            Logger.LogDelegate += Utils.Log;
-
             var f0 = false;
             var f1 = false;
             var roomName = "mt1_r";
@@ -58,34 +65,35 @@ namespace LeanCloud.Play.Test
 
             c0.Connect().OnSuccess(_ => {
                 return c0.CreateRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.JoinRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
+                Debug.Log("---------------------------");
+                Debug.Log(c1.Room.MasterActorId);
+                Debug.Log(c0.Player.ActorId);
+                Debug.Log($"c1 joined, {c1.Room.MasterActorId}, {c0.Player.ActorId}");
                 Assert.AreEqual(c1.Room.MasterActorId, c0.Player.ActorId);
                 c1.OnMasterSwitched += newMaster => {
                     Assert.AreEqual(newMaster.ActorId, c1.Player.ActorId);
                     f1 = true;
                 };
                 return c0.LeaveRoom();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 Debug.Log("leave room done");
                 f0 = true;
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f0 || !f1) {
                 yield return null;
             }
-            c0.Close();
-            c1.Close();
-            Logger.LogDelegate -= Utils.Log;
+            _ = c0.Close();
+            _ = c1.Close();
         }
 
         [UnityTest]
         public IEnumerator FixMaster() {
-            Logger.LogDelegate += Utils.Log;
-
             var f0 = false;
             var f1 = false;
             var roomName = "mt2_r";
@@ -97,11 +105,11 @@ namespace LeanCloud.Play.Test
                     Flag = CreateRoomFlag.FixedMaster
                 };
                 return c0.CreateRoom(roomName, options);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.JoinRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 c1.OnPlayerRoomLeft += leftPlayer => {
                     Assert.AreEqual(leftPlayer.ActorId, c0.Player.ActorId);
                 };
@@ -111,17 +119,16 @@ namespace LeanCloud.Play.Test
                     f1 = true;
                 };
                 return c0.LeaveRoom();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 Debug.Log("leave room done");
                 f0 = true;
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f0 || !f1) {
                 yield return null;
             }
-            c0.Close();
-            c1.Close();
-            Logger.LogDelegate -= Utils.Log;
+            _ = c0.Close();
+            _ = c1.Close();
         }
     }
 }

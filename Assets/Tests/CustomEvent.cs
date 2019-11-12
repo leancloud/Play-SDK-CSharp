@@ -4,15 +4,22 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 using System.Threading.Tasks;
+using LeanCloud.Common;
 
-namespace LeanCloud.Play.Test
-{
-    public class CustomEvent
-    {
+namespace LeanCloud.Play {
+    public class CustomEvent {
+        [SetUp]
+        public void SetUp() {
+            Common.Logger.LogDelegate += Utils.Log;
+        }
+
+        [TearDown]
+        public void TearDown() {
+            Common.Logger.LogDelegate -= Utils.Log;
+        }
+
         [UnityTest]
         public IEnumerator CustomEventWithReceiverGroup() {
-            Logger.LogDelegate += Utils.Log;
-
             var f = false;
             var roomName = "ce0_r";
             var c0 = Utils.NewClient("ce0_0");
@@ -20,7 +27,7 @@ namespace LeanCloud.Play.Test
 
             c0.Connect().OnSuccess(_ => {
                 return c0.CreateRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 c0.OnCustomEvent += (eventId, eventData, senderId) => {
                     Assert.AreEqual(eventId, 1);
                     Assert.AreEqual(eventData["name"], "aaa");
@@ -28,9 +35,9 @@ namespace LeanCloud.Play.Test
                     f = true;
                 };
                 return c1.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.JoinRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 var eventData = new PlayObject {
                     { "name", "aaa" },
                     { "count", 100 },
@@ -39,22 +46,19 @@ namespace LeanCloud.Play.Test
                     ReceiverGroup = ReceiverGroup.MasterClient
                 };
                 return c1.SendEvent(1, eventData, options);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 Debug.Log("send event done");
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f) {
                 yield return null;
             }
-            c0.Close();
-            c1.Close();
-            Logger.LogDelegate -= Utils.Log;
+            _ = c0.Close();
+            _ = c1.Close();
         }
 
         [UnityTest]
         public IEnumerator CustomEventWithTargetIds() {
-            Logger.LogDelegate += Utils.Log;
-
             var f = false;
             var roomName = "ce1_r";
             var c0 = Utils.NewClient("ce1_0");
@@ -62,7 +66,7 @@ namespace LeanCloud.Play.Test
 
             c0.Connect().OnSuccess(_ => {
                 return c0.CreateRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 c0.OnCustomEvent += (eventId, eventData, senderId) => {
                     Assert.AreEqual(eventId, 2);
                     Assert.AreEqual(eventData["name"], "aaa");
@@ -70,9 +74,9 @@ namespace LeanCloud.Play.Test
                     f = true;
                 };
                 return c1.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.JoinRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 var eventData = new PlayObject {
                     { "name", "aaa" },
                     { "count", 100 },
@@ -81,23 +85,20 @@ namespace LeanCloud.Play.Test
                     TargetActorIds = new List<int> { 1, 2 }
                 };
                 return c1.SendEvent(2, eventData, options);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 Debug.Log("send event done");
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f) {
                 yield return null;
             }
-            c0.Close();
-            c1.Close();
-            Logger.LogDelegate -= Utils.Log;
+            _ = c0.Close();
+            _ = c1.Close();
         }
 
 
         [UnityTest]
         public IEnumerator SimpleEvent() {
-            Logger.LogDelegate += Utils.Log;
-
             var f0 = false;
             var f1 = false;
             var roomName = "ce2_r";
@@ -106,30 +107,29 @@ namespace LeanCloud.Play.Test
 
             c0.Connect().OnSuccess(_ => {
                 return c0.CreateRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 c0.OnCustomEvent += (eventId, eventData, senderId) => {
                     Assert.AreEqual(eventId, 3);
                     f0 = true;
                 };
                 return c1.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.JoinRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 c1.OnCustomEvent += (eventId, eventData, senderId) => {
                     Assert.AreEqual(eventId, 3);
                     f1 = true;
                 };
                 return c1.SendEvent(3);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 Debug.Log("send event done");
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f0 || !f1) {
                 yield return null;
             }
-            c0.Close();
-            c1.Close();
-            Logger.LogDelegate -= Utils.Log;
+            _ = c0.Close();
+            _ = c1.Close();
         }
     }
 }

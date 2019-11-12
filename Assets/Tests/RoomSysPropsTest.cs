@@ -1,24 +1,30 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using UnityEngine;
 using UnityEngine.TestTools;
+using LeanCloud.Common;
 
-namespace LeanCloud.Play.Test {
-    public class RoomSysPropsTest
-    {
+namespace LeanCloud.Play {
+    public class RoomSysPropsTest {
+        [SetUp]
+        public void SetUp() {
+            Logger.LogDelegate += Utils.Log;
+        }
+
+        [TearDown]
+        public void TearDown() {
+            Logger.LogDelegate -= Utils.Log;
+        }
+
         [UnityTest]
         public IEnumerator RoomOpen() {
-            Logger.LogDelegate += Utils.Log;
-
             var flag = false;
             var c = Utils.NewClient("rsp0");
             Room room = null;
             c.Connect().OnSuccess(_ => {
                 return c.CreateRoom();
-            }).Unwrap().OnSuccess(t => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(t => {
                 room = t.Result;
                 c.OnRoomSystemPropertiesChanged += changedProps => {
                     var openObj = changedProps["open"];
@@ -26,26 +32,24 @@ namespace LeanCloud.Play.Test {
                     Assert.AreEqual(open, false);
                     Assert.AreEqual(room.Open, false);
                     flag = true;
-                };
-                room.SetOpen(false);
-            });
+                };  
+                _ = room.SetOpen(false);
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+
             while (!flag) {
                 yield return null;
             }
-            c.Close();
-            Logger.LogDelegate -= Utils.Log;
+            _ = c.Close();
         }
 
         [UnityTest]
         public IEnumerator RoomVisible() {
-            Logger.LogDelegate += Utils.Log;
-
             var flag = false;
             var c = Utils.NewClient("rsp1");
             Room room = null;
             c.Connect().OnSuccess(_ => {
                 return c.CreateRoom();
-            }).Unwrap().OnSuccess(t => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(t => {
                 room = t.Result;
                 c.OnRoomSystemPropertiesChanged += changedProps => {
                     var visibleObj = changedProps["visible"];
@@ -54,25 +58,23 @@ namespace LeanCloud.Play.Test {
                     Assert.AreEqual(room.Visible, false);
                     flag = true;
                 };
-                room.SetVisible(false);
-            });
+                _ = room.SetVisible(false);
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+
             while (!flag) {
                 yield return null;
             }
-            c.Close();
-            Logger.LogDelegate -= Utils.Log;
+            _ = c.Close();
         }
 
         [UnityTest]
         public IEnumerator RoomMaxPlayerCount() {
-            Logger.LogDelegate += Utils.Log;
-
             var flag = false;
             var c = Utils.NewClient("rsp2");
             Room room = null;
             c.Connect().OnSuccess(_ => {
                 return c.CreateRoom();
-            }).Unwrap().OnSuccess(t => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(t => {
                 room = t.Result;
                 c.OnRoomSystemPropertiesChanged += changedProps => {
                     var maxPlayerCountObj = changedProps["maxPlayerCount"];
@@ -81,90 +83,77 @@ namespace LeanCloud.Play.Test {
                     Assert.AreEqual(room.MaxPlayerCount, 5);
                     flag = true;
                 };
-                room.SetMaxPlayerCount(5);
-            });
+                _ = room.SetMaxPlayerCount(5);
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+
             while (!flag) {
                 yield return null;
             }
-            c.Close();
-            Logger.LogDelegate -= Utils.Log;
+            _ = c.Close();
         }
 
         [UnityTest]
         public IEnumerator RoomSetAndClearExpectedUserIds() {
-            Logger.LogDelegate += Utils.Log;
-
             var f1 = false;
             var f2 = false;
             var c = Utils.NewClient("rsp3");
             Room room = null;
             c.Connect().OnSuccess(_ => {
                 return c.CreateRoom();
-            }).Unwrap().OnSuccess(t => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(t => {
                 room = t.Result;
                 c.OnRoomSystemPropertiesChanged += changedProps => {
                     var expectedUserIds = changedProps["expectedUserIds"] as List<string>;
-                    if (expectedUserIds.Count == 2 && room.ExpectedUserIds.Count == 2) {
-                        f1 = true;
-                    }
-                    if (expectedUserIds.Count == 0 && room.ExpectedUserIds.Count == 0) {
-                        f2 = true;
-                    }
+                    f1 |= expectedUserIds.Count == 2 && room.ExpectedUserIds.Count == 2;
+                    f2 |= expectedUserIds.Count == 0 && room.ExpectedUserIds.Count == 0;
                 };
                 return room.SetExpectedUserIds(new List<string> { "hello", "world" });
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 Assert.AreEqual(room.ExpectedUserIds.Count, 2);
                 return room.ClearExpectedUserIds();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 Assert.AreEqual(room.ExpectedUserIds.Count, 0);
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+
             while (!f1 || !f2) {
                 yield return null;
             }
-            c.Close();
-            Logger.LogDelegate -= Utils.Log;
+            _ = c.Close();
         }
 
         [UnityTest]
         public IEnumerator RoomAddAndRemoveExpectedUserIds() {
-            Logger.LogDelegate += Utils.Log;
-
             var f1 = false;
             var f2 = false;
             var f3 = false;
+
             var c = Utils.NewClient("rsp4");
             Room room = null;
             c.Connect().OnSuccess(_ => {
                 return c.CreateRoom();
-            }).Unwrap().OnSuccess(t => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(t => {
                 room = t.Result;
                 c.OnRoomSystemPropertiesChanged += changedProps => {
-                    var expectedUserIds = changedProps["expectedUserIds"] as List<string>;
-                    if (expectedUserIds.Count == 1 && room.ExpectedUserIds.Count == 1) {
-                        f1 = true;
-                    }
-                    if (expectedUserIds.Count == 3 && room.ExpectedUserIds.Count == 3) {
-                        f2 = true;
-                    }
-                    if (expectedUserIds.Count == 2 && room.ExpectedUserIds.Count == 2) {
-                        f3 = true;
-                    }
+                    List<string> expectedUserIds = changedProps["expectedUserIds"] as List<string>;
+                    f1 |= expectedUserIds.Count == 1 && room.ExpectedUserIds.Count == 1;
+                    f2 |= expectedUserIds.Count == 3 && room.ExpectedUserIds.Count == 3;
+                    f3 |= expectedUserIds.Count == 2 && room.ExpectedUserIds.Count == 2;
                 };
                 return room.SetExpectedUserIds(new List<string> { "hello" });
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 Assert.AreEqual(room.ExpectedUserIds.Count, 1);
                 return room.AddExpectedUserIds(new List<string> { "csharp", "js" });
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 Assert.AreEqual(room.ExpectedUserIds.Count, 3);
                 return room.RemoveExpectedUserIds(new List<string> { "hello" });
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 Assert.AreEqual(room.ExpectedUserIds.Count, 2);
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+
             while (!f1 || !f2 || !f3) {
                 yield return null;
             }
-            c.Close();
-            Logger.LogDelegate -= Utils.Log;
+            _ = c.Close();
         }
     }
 }

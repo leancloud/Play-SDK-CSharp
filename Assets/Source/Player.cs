@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using LeanCloud.Play.Protocol;
 
 namespace LeanCloud.Play {
 	/// <summary>
     /// 玩家类
     /// </summary>
 	public class Player {
-		internal Client Client {
+        internal Room Room {
             get; set;
         }
 
@@ -51,7 +48,7 @@ namespace LeanCloud.Play {
         /// <value><c>true</c> if is local; otherwise, <c>false</c>.</value>
         public bool IsLocal {
             get {
-                return ActorId != -1 && ActorId == Client.Player.ActorId;
+                return ActorId != -1 && ActorId == Room.Player.ActorId;
             }
         }
 
@@ -61,7 +58,7 @@ namespace LeanCloud.Play {
         /// <value><c>true</c> if is master; otherwise, <c>false</c>.</value>
         public bool IsMaster {
             get {
-                return ActorId != -1 && ActorId == Client.Room.MasterActorId;
+                return ActorId != -1 && ActorId == Room.MasterActorId;
             }
         }
 
@@ -71,13 +68,23 @@ namespace LeanCloud.Play {
         /// <param name="properties">Properties.</param>
         /// <param name="expectedValues">Expected values.</param>
         public Task SetCustomProperties(PlayObject properties, PlayObject expectedValues = null) {
-            return Client.SetPlayerCustomProperties(ActorId, properties, expectedValues);
+            return Room.SetPlayerCustomProperties(ActorId, properties, expectedValues);
         }
 
         internal Player() {
             ActorId = -1;
             UserId = null;
 		}
+
+        internal void Init(Room room, RoomMember playerData) {
+            Room = room;
+            UserId = playerData.Pid;
+            ActorId = playerData.ActorId;
+            IsActive = !playerData.Inactive;
+            if (playerData.Attr != null) {
+                CustomProperties = CodecUtils.DeserializePlayObject(playerData.Attr);
+            }
+        }
 
         internal void MergeCustomProperties(PlayObject changedProps) {
             if (changedProps == null)

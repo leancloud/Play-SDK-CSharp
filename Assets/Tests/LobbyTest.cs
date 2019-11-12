@@ -1,19 +1,24 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 using System.Threading.Tasks;
+using LeanCloud.Common;
 
-namespace LeanCloud.Play.Test
-{
-    public class LobbyTest
-    {
+namespace LeanCloud.Play {
+    public class LobbyTest {
+        [SetUp]
+        public void SetUp() {
+            Common.Logger.LogDelegate += Utils.Log;
+        }
+
+        [TearDown]
+        public void TearDown() {
+            Common.Logger.LogDelegate -= Utils.Log;
+        }
+
         [UnityTest, Timeout(100000)]
-        public IEnumerator RoomListUpdate()
-        {
-            Logger.LogDelegate += Utils.Log;
-
+        public IEnumerator RoomListUpdate() {
             var f = false;
             var c0 = Utils.NewClient("lt0_0");
             var c1 = Utils.NewClient("lt0_1");
@@ -26,30 +31,29 @@ namespace LeanCloud.Play.Test
                     f = roomList.Count >= 3;
                 };
                 return c0.JoinLobby();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.CreateRoom();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c2.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c2.CreateRoom();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c3.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c3.CreateRoom();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 Debug.Log("create dones");
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
                 
             while (!f) {
                 yield return null;
             }
-            c0.Close();
-            c1.Close();
-            c2.Close();
-            c3.Close();
-            Logger.LogDelegate -= Utils.Log;
+            _ = c0.Close();
+            _ = c1.Close();
+            _ = c2.Close();
+            _ = c3.Close();
         }
     }
 }

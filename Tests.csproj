@@ -2,8 +2,6 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
-    <CscToolPath>/Applications/Unity/Hub/Editor/2019.1.0f2/Unity.app/Contents/Tools/RoslynScripts</CscToolPath>
-    <CscToolExe>unity_csc.sh</CscToolExe>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -54,6 +52,9 @@
     <UnityVersion>2019.1.0f2</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Analyzer Include="/Applications/Visual Studio.app/Contents/Resources/lib/monodevelop/AddIns/MonoDevelop.Unity/Analyzers/Microsoft.Unity.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="UnityEngine">
       <HintPath>/Applications/Unity/Hub/Editor/2019.1.0f2/Unity.app/Contents/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>
@@ -73,7 +74,6 @@
     <Compile Include="Assets\Tests\MasterTest.cs" />
     <Compile Include="Assets\Tests\MessageQueueTest.cs" />
     <Compile Include="Assets\Tests\RoomSysPropsTest.cs" />
-    <Compile Include="Assets\Tests\RouterTest.cs" />
     <Compile Include="Assets\Tests\Utils.cs" />
     <Reference Include="UnityEngine.AIModule">
       <HintPath>/Applications/Unity/Hub/Editor/2019.1.0f2/Unity.app/Contents/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
@@ -282,11 +282,14 @@
     <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
       <HintPath>/Applications/Visual Studio.app/Contents/Resources/lib/monodevelop/AddIns/MonoDevelop.Unity/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
-    <Reference Include="websocket-sharp">
-      <HintPath>/Users/onerainyu/LeanCloud/Play-SDK-CSharp/Assets/Plugins/websocket-sharp.dll</HintPath>
-    </Reference>
     <Reference Include="Google.Protobuf">
       <HintPath>/Users/onerainyu/LeanCloud/Play-SDK-CSharp/Assets/Plugins/Google.Protobuf.dll</HintPath>
+    </Reference>
+    <Reference Include="LeanCloud.Common">
+      <HintPath>/Users/onerainyu/LeanCloud/Play-SDK-CSharp/Assets/Plugins/LeanCloud.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>/Users/onerainyu/LeanCloud/Play-SDK-CSharp/Assets/Plugins/Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Advertisements.Editor">
       <HintPath>/Users/onerainyu/LeanCloud/Play-SDK-CSharp/Library/PackageCache/com.unity.ads@2.3.1/Runtime/UnityEngine.Advertisements.Editor.dll</HintPath>

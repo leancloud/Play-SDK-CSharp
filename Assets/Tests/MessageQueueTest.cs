@@ -1,18 +1,24 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 using System.Threading.Tasks;
+using LeanCloud.Common;
 
-namespace LeanCloud.Play.Test
-{
-    public class MessageQueueTest
-    {
+namespace LeanCloud.Play {
+    public class MessageQueueTest {
+        [SetUp]
+        public void SetUp() {
+            Common.Logger.LogDelegate += Utils.Log;
+        }
+
+        [TearDown]
+        public void TearDown() {
+            Common.Logger.LogDelegate -= Utils.Log;
+        }
+
         [UnityTest]
         public IEnumerator PauseAndResume() {
-            Logger.LogDelegate += Utils.Log;
-
             var f0 = false;
             var f1 = false;
 
@@ -22,7 +28,7 @@ namespace LeanCloud.Play.Test
 
             c0.Connect().OnSuccess(_ => {
                 return c0.CreateRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 c0.OnPlayerRoomJoined += newPlayer => {
                     Debug.Log("---- new player joined");
                     Assert.AreEqual(newPlayer.UserId, "mq1_1");
@@ -35,26 +41,25 @@ namespace LeanCloud.Play.Test
                 };
                 c0.PauseMessageQueue();
                 return c1.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.JoinRoom(roomName);
-            }).Unwrap().OnSuccess(_ => Task.Delay(3000))
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => Task.Delay(3000), TaskScheduler.FromCurrentSynchronizationContext())
             .Unwrap().OnSuccess(_ => {
                 c0.ResumeMessageQueue();
                 Debug.Log("resume message queue");
                 c0.PauseMessageQueue();
                 return c1.SendEvent(4);
-            }).Unwrap().OnSuccess(_ => Task.Delay(5000))
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => Task.Delay(5000), TaskScheduler.FromCurrentSynchronizationContext())
             .Unwrap().OnSuccess(_ => {
                 Debug.Log("delay done");
                 c0.ResumeMessageQueue();
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f0 || !f1) {
                 yield return null;
             }
-            c0.Close();
-            c1.Close();
-            Logger.LogDelegate -= Utils.Log;
+            _ = c0.Close();
+            _ = c1.Close();
         }
     }
 }

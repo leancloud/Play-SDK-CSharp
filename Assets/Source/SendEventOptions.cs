@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace LeanCloud.Play
-{
+namespace LeanCloud.Play {
     /// <summary>
     /// 接收组枚举
     /// </summary>
@@ -24,8 +23,7 @@ namespace LeanCloud.Play
     /// <summary>
     /// 发送事件选项
     /// </summary>
-    public class SendEventOptions
-    {
+    public class SendEventOptions {
         /// <summary>
         /// 接收组
         /// </summary>

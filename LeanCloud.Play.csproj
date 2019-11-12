@@ -2,8 +2,6 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
-    <CscToolPath>/Applications/Unity/Hub/Editor/2019.1.0f2/Unity.app/Contents/Tools/RoslynScripts</CscToolPath>
-    <CscToolExe>unity_csc.sh</CscToolExe>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -54,6 +52,9 @@
     <UnityVersion>2019.1.0f2</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Analyzer Include="/Applications/Visual Studio.app/Contents/Resources/lib/monodevelop/AddIns/MonoDevelop.Unity/Analyzers/Microsoft.Unity.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="UnityEngine">
       <HintPath>/Applications/Unity/Hub/Editor/2019.1.0f2/Unity.app/Contents/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>
@@ -69,30 +70,23 @@
     <Compile Include="Assets\Source\internal\Connection.cs" />
     <Compile Include="Assets\Source\internal\CustomType.cs" />
     <Compile Include="Assets\Source\internal\GameConnection.cs" />
+    <Compile Include="Assets\Source\internal\GameRouter.cs" />
     <Compile Include="Assets\Source\internal\LobbyConnection.cs" />
-    <Compile Include="Assets\Source\internal\LobbyRoomResult.cs" />
-    <Compile Include="Assets\Source\internal\LobbyRouter.cs" />
-    <Compile Include="Assets\Source\internal\Message.cs" />
-    <Compile Include="Assets\Source\internal\PlayContext.cs" />
-    <Compile Include="Assets\Source\internal\PlayRouter.cs" />
+    <Compile Include="Assets\Source\internal\LobbyService.cs" />
     <Compile Include="Assets\Source\internal\ResponseWrapper.cs" />
+    <Compile Include="Assets\Source\Lobby.cs" />
     <Compile Include="Assets\Source\LobbyRoom.cs" />
     <Compile Include="Assets\Source\PlayArray.cs" />
     <Compile Include="Assets\Source\Player.cs" />
     <Compile Include="Assets\Source\PlayException.cs" />
     <Compile Include="Assets\Source\PlayExceptionCode.cs" />
     <Compile Include="Assets\Source\PlayObject.cs" />
-    <Compile Include="Assets\Source\PlayState.cs" />
     <Compile Include="Assets\Source\protocol\GenericCollection.cs" />
     <Compile Include="Assets\Source\protocol\Messages.cs" />
     <Compile Include="Assets\Source\Room.cs" />
     <Compile Include="Assets\Source\RoomOptions.cs" />
     <Compile Include="Assets\Source\SendEventOptions.cs" />
-    <Compile Include="Assets\Source\utilities\DateTimeUtils.cs" />
-    <Compile Include="Assets\Source\utilities\InternalExtensions.cs" />
-    <Compile Include="Assets\Source\utilities\Json.cs" />
-    <Compile Include="Assets\Source\utilities\Logger.cs" />
-    <Compile Include="Assets\Source\utilities\Utils.cs" />
+    <Compile Include="Assets\Source\Utils.cs" />
     <Reference Include="UnityEngine.AIModule">
       <HintPath>/Applications/Unity/Hub/Editor/2019.1.0f2/Unity.app/Contents/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
     </Reference>
@@ -300,11 +294,14 @@
     <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
       <HintPath>/Applications/Visual Studio.app/Contents/Resources/lib/monodevelop/AddIns/MonoDevelop.Unity/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
-    <Reference Include="websocket-sharp">
-      <HintPath>/Users/onerainyu/LeanCloud/Play-SDK-CSharp/Assets/Plugins/websocket-sharp.dll</HintPath>
-    </Reference>
     <Reference Include="Google.Protobuf">
       <HintPath>/Users/onerainyu/LeanCloud/Play-SDK-CSharp/Assets/Plugins/Google.Protobuf.dll</HintPath>
+    </Reference>
+    <Reference Include="LeanCloud.Common">
+      <HintPath>/Users/onerainyu/LeanCloud/Play-SDK-CSharp/Assets/Plugins/LeanCloud.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>/Users/onerainyu/LeanCloud/Play-SDK-CSharp/Assets/Plugins/Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Advertisements.Editor">
       <HintPath>/Users/onerainyu/LeanCloud/Play-SDK-CSharp/Library/PackageCache/com.unity.ads@2.3.1/Runtime/UnityEngine.Advertisements.Editor.dll</HintPath>

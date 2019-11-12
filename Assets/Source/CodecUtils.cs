@@ -13,6 +13,9 @@ namespace LeanCloud.Play {
     /// </summary>
     public delegate object DeserializeMethod(byte[] bytes);
 
+    /// <summary>
+    /// 序列化工具类
+    /// </summary>
     public static class CodecUtils {
         static readonly Dictionary<Type, CustomType> typeDict = new Dictionary<Type, CustomType>();
         static readonly Dictionary<int, CustomType> typeIdDict = new Dictionary<int, CustomType>();
@@ -220,7 +223,7 @@ namespace LeanCloud.Play {
         /// <summary>
         /// 反序列化 PlayObject 对象
         /// </summary>
-        /// <returns>The play object.</returns>
+        /// <returns>PlayObject 对象</returns>
         /// <param name="bytes">要反序列化的字节码</param>
         public static PlayObject DeserializePlayObject(byte[] bytes) {
             var collection = GenericCollection.Parser.ParseFrom(bytes);
@@ -231,6 +234,11 @@ namespace LeanCloud.Play {
             return playObject; 
         }
 
+        /// <summary>
+        /// 反序列化 PlayObject 对象
+        /// </summary>
+        /// <param name="byteString">要反序列化的字符串</param>
+        /// <returns>PlayObject 对象</returns>
         public static PlayObject DeserializePlayObject(ByteString byteString) { 
             if (byteString == null) {
                 return null;

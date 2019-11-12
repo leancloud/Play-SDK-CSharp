@@ -6,10 +6,8 @@ using System.Collections.Generic;
 using System.Collections;
 using System;
 
-namespace LeanCloud.Play.Test
-{
-    public class CodecTest
-    {
+namespace LeanCloud.Play {
+    public class CodecTest {
         class Hero {
             public string Name {
                 get; set;
@@ -84,6 +82,16 @@ namespace LeanCloud.Play.Test
             }
         }
 
+        [SetUp]
+        public void SetUp() {
+            Common.Logger.LogDelegate += Utils.Log;
+        }
+
+        [TearDown]
+        public void TearDown() {
+            Common.Logger.LogDelegate -= Utils.Log;
+        }
+
         [Test]
         public void CheckType() {
             object s = (short)10;
@@ -107,7 +115,6 @@ namespace LeanCloud.Play.Test
                 { "aa", "bb" },
                 { "cc", "dd" }
             };
-            var sdType = sd.GetType();
             Assert.AreEqual(sd is IDictionary, true);
             var isd = (IDictionary)sd;
             foreach (var key in isd.Keys) {
@@ -135,14 +142,14 @@ namespace LeanCloud.Play.Test
             var genericValue = CodecUtils.Serialize(playObj);
             Debug.Log(genericValue);
             var newPlayObj = CodecUtils.Deserialize(genericValue) as PlayObject;
-            Assert.AreEqual(playObj["i"], 123);
-            Assert.AreEqual(playObj["b"], true);
-            Assert.AreEqual(playObj["str"], "hello, world");
-            var newSubPlayObj = playObj["obj"] as PlayObject;
+            Assert.AreEqual(newPlayObj["i"], 123);
+            Assert.AreEqual(newPlayObj["b"], true);
+            Assert.AreEqual(newPlayObj["str"], "hello, world");
+            var newSubPlayObj = newPlayObj["obj"] as PlayObject;
             Assert.AreEqual(newSubPlayObj["si"], 345);
             Assert.AreEqual(newSubPlayObj["sb"], true);
             Assert.AreEqual(newSubPlayObj["sstr"], "code");
-            var newSubPlayArr = playObj["arr"] as PlayArray;
+            var newSubPlayArr = newPlayObj["arr"] as PlayArray;
             Assert.AreEqual(newSubPlayArr[0], 666);
             Assert.AreEqual(newSubPlayArr[1], true);
             Assert.AreEqual(newSubPlayArr[2], "engineer");
@@ -169,10 +176,10 @@ namespace LeanCloud.Play.Test
             var genericValue = CodecUtils.Serialize(playArr);
             Debug.Log(genericValue);
             var newPlayArr = CodecUtils.Deserialize(genericValue) as PlayArray;
-            Assert.AreEqual(playArr[0], 123);
-            Assert.AreEqual(playArr[1], true);
-            Assert.AreEqual(playArr[2], "hello, world");
-            var subPlayObj = playArr[3] as PlayObject;
+            Assert.AreEqual(newPlayArr[0], 123);
+            Assert.AreEqual(newPlayArr[1], true);
+            Assert.AreEqual(newPlayArr[2], "hello, world");
+            var subPlayObj = newPlayArr[3] as PlayObject;
             Assert.AreEqual(subPlayObj["i"], 23);
             Assert.AreEqual(subPlayObj["b"], true);
             Assert.AreEqual(subPlayObj["str"], "hello");

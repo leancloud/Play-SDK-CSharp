@@ -1,13 +1,20 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace LeanCloud.Play {
     public class PlayException : Exception {
+        [JsonProperty("reasonCode")]
         public int Code {
             get; private set;
         }
 
+        [JsonProperty("detail")]
         public string Detail {
             get; private set;
+        }
+
+        public PlayException() {
+
         }
 
         public PlayException(int code, string detail): 

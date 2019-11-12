@@ -1,18 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
-using UnityEngine;
 using UnityEngine.TestTools;
 using System.Threading.Tasks;
+using System.Reflection;
+using UnityEngine;
+using LeanCloud.Common;
 
-namespace LeanCloud.Play.Test
-{
-    public class JoinRoomTest
-    {
+namespace LeanCloud.Play {
+    public class JoinRoomTest {
+        [SetUp]
+        public void SetUp() {
+            Common.Logger.LogDelegate += Utils.Log;
+        }
+
+        [TearDown]
+        public void TearDown() {
+            Common.Logger.LogDelegate -= Utils.Log;
+        }
+
         [UnityTest]
+        [Order(0)]
         public IEnumerator JoinRoomByName() {
-            Logger.LogDelegate += Utils.Log;
-
             var f = false;
             var roomName = "jrt0_r";
             var c0 = Utils.NewClient("jrt0_0");
@@ -20,84 +29,187 @@ namespace LeanCloud.Play.Test
 
             c0.Connect().OnSuccess(_ => {
                 return c0.CreateRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.JoinRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(async _ => {
                 var room = _.Result;
                 Assert.AreEqual(room.Name, roomName);
-                c0.Close();
-                c1.Close();
+                await c0.Close();
+                await c1.Close();
                 f = true;
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f) {
                 yield return null;
             }
-            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]
+        [Order(1)]
         public IEnumerator JoinRandomRoom() {
-            Logger.LogDelegate += Utils.Log;
-
             var f = false;
             var c0 = Utils.NewClient("jrt1_0");
             var c1 = Utils.NewClient("jrt1_1");
 
             c0.Connect().OnSuccess(_ => {
                 return c0.CreateRoom();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.JoinRandomRoom();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(async _ => {
                 var room = _.Result;
                 Debug.Log($"join random: {room.Name}");
-                c0.Close();
-                c1.Close();
+                await c0.Close();
+                await c1.Close();
                 f = true;
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f) {
                 yield return null;
             }
-            Logger.LogDelegate -= Utils.Log;
         }
 
-        [Test]
-        public async void JoinWithExpectedUserIds() {
+        [UnityTest]
+        [Order(2)]
+        public IEnumerator JoinWithExpectedUserIds() {
+            var f = false;
             var roomName = "jrt2_r";
             var c0 = Utils.NewClient("jrt2_0");
             var c1 = Utils.NewClient("jrt2_1");
             var c2 = Utils.NewClient("jrt2_2");
-            await c0.Connect();
-            var roomOptions = new RoomOptions { 
-                MaxPlayerCount = 2
-            };
-            await c0.CreateRoom(roomName, roomOptions, new List<string> { "jrt2_2" });
 
-            await c1.Connect();
-            try {
-                await c1.JoinRoom(roomName);
-            } catch (PlayException e) {
-                Assert.AreEqual(e.Code, 4302);
-                Debug.Log(e.Detail);
+            c0.Connect().OnSuccess(_ => {
+                var roomOptions = new RoomOptions {
+                    MaxPlayerCount = 2
+                };
+                return c0.CreateRoom(roomName, roomOptions, new List<string> { "jrt2_2" });
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
+                return c1.Connect();
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
+                return c1.JoinRoom(roomName);
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().ContinueWith(t => {
+                Assert.AreEqual(t.IsFaulted, true);
+                PlayException exception = t.Exception.InnerException as PlayException;
+                Assert.AreEqual(exception.Code, 4302);
+                Debug.Log(exception.Detail);
+                return c2.Connect();
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
+                return c2.JoinRoom(roomName);
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(async t => {
+                Room room = t.Result;
+                Assert.AreEqual(room.Name, roomName);
+                await c0.Close();
+                await c1.Close();
+                await c2.Close();
+                f = true;
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+
+            while (!f) {
+                yield return null;
             }
-
-            await c2.Connect();
-            var room = await c2.JoinRoom(roomName);
-            Assert.AreEqual(room.Name, roomName);
-            c0.Close();
-            c1.Close();
-            c2.Close();
         }
 
         [UnityTest]
-        public IEnumerator LeaveRoom() {
-            Logger.LogDelegate += Utils.Log;
+        [Order(3)]
+        public IEnumerator JoinWithExpectedUserIdsFixBug() {
+            var f = false;
+            var roomName = "jr9_r0";
+            var c0 = Utils.NewClient("jr9_0");
+            var c1 = Utils.NewClient("jr9_1");
+            var c2 = Utils.NewClient("jr9_2");
+            var c3 = Utils.NewClient("jr9_3");
 
+            c0.Connect().OnSuccess(_ => {
+                var roomOptions = new RoomOptions {
+                    MaxPlayerCount = 4
+                };
+                return c0.CreateRoom(roomName, roomOptions, new List<string> { "jr9_1" });
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
+                return c1.Connect();
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
+                return c1.JoinRoom(roomName);
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
+                return c2.Connect();
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
+                return c2.JoinRoom(roomName);
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
+                return c3.Connect();
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
+                return c3.JoinRoom(roomName);
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(async _ => {
+                await c0.Close();
+                await c1.Close();
+                await c2.Close();
+                await c3.Close();
+                f = true;
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+
+            while (!f) {
+                yield return null;
+            }
+        }
+
+        [UnityTest]
+        [Order(4)]
+        public IEnumerator MatchRandom() {
+            var f = false;
+
+            var roomName = "jr8_r";
+            var c0 = Utils.NewClient("jr8_0");
+            var c1 = Utils.NewClient("jr8_1");
+            var c2 = Utils.NewClient("jr8_2");
+            var c3 = Utils.NewClient("jr8_xxx");
+
+            var props = new PlayObject {
+                { "lv", 5 }
+            };
+            c0.Connect().OnSuccess(_ => {
+                var roomOptions = new RoomOptions {
+                    MaxPlayerCount = 3,
+                    CustomRoomProperties = props,
+                    CustoRoomPropertyKeysForLobby = new List<string> { "lv" }
+                };
+                return c0.CreateRoom(roomName, roomOptions);
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
+                return c1.Connect();
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
+                Debug.Log("c1 connected");
+                return c1.MatchRandom("jr8_1", new PlayObject {
+                    { "lv", 5 }
+                }, new List<string> { "jr8_xxx" });
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(t => {
+                var roomId = t.Result;
+                Assert.AreEqual(roomId, roomName);
+                return c1.JoinRoom(roomId);
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
+                return c2.Connect();
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
+                return c2.JoinRandomRoom(props);
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().ContinueWith(t => {
+                PlayException e = (PlayException)t.Exception.InnerException;
+                Assert.AreEqual(e.Code, 4301);
+                _ = c2.Close();
+                return c3.Connect();
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
+                return c3.JoinRandomRoom(props);
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(async _ => {
+                await c0.Close();
+                await c1.Close();
+                await c3.Close();
+                f = true;
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+
+            while (!f) {
+                yield return null;
+            }
+        }
+
+        [UnityTest]
+        [Order(5)]
+        public IEnumerator LeaveRoom() {
             var f0 = false;
             var f1 = false;
             var roomName = "jrt3_r";
@@ -106,32 +218,32 @@ namespace LeanCloud.Play.Test
 
             c0.Connect().OnSuccess(_ => {
                 return c0.CreateRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 c0.OnPlayerRoomLeft += leftPlayer => {
+                    Debug.Log("left");
                     f0 = true;
                 };
                 return c1.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.JoinRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 Debug.Log($"{c1.UserId} joined room");
                 return c1.LeaveRoom();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(async _ => {
+                await c0.Close();
+                await c1.Close();
                 f1 = true;
-            });
+                Debug.Log("left");
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f0 || !f1) {
                 yield return null;
             }
-            c0.Close();
-            c1.Close();
-            Logger.LogDelegate -= Utils.Log;
+            
         }
 
         [UnityTest]
         public IEnumerator RejoinRoom() {
-            Logger.LogDelegate += Utils.Log;
-
             var f = false;
             var roomName = $"jrt4_r_{Random.Range(0, 1000000)}";
             var c0 = Utils.NewClient("jrt4_0");
@@ -142,34 +254,32 @@ namespace LeanCloud.Play.Test
                     PlayerTtl = 600
                 };
                 return c0.CreateRoom(roomName, roomOptions);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.JoinRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 c1.OnDisconnected += () => {
                     Debug.Log("------------- disconnected");
                     c1.Connect().OnSuccess(__ => {
                         return c1.RejoinRoom(roomName);
-                    }).Unwrap().OnSuccess(__ => {
+                    }).Unwrap().OnSuccess(async __ => {
+                        await c0.Close();
+                        await c1.Close();
                         f = true;
                     });
                 };
-                c1._Disconnect();
-            });
+                MethodInfo method = typeof(Room).GetMethod("Disconnect", BindingFlags.Instance | BindingFlags.NonPublic);
+                method.Invoke(c1.Room, null);
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f) {
                 yield return null;
             }
-            c0.Close();
-            c1.Close();
-            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]
         public IEnumerator ReconnectAndRejoin() {
-            Logger.LogDelegate += Utils.Log;
-
             var f = false;
             var roomName = "jrt5_r";
             var c0 = Utils.NewClient("jrt5_0");
@@ -180,56 +290,56 @@ namespace LeanCloud.Play.Test
                     PlayerTtl = 600
                 };
                 return c0.CreateRoom(roomName, roomOptions);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.JoinRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 c1.OnDisconnected += () => {
-                    c1.ReconnectAndRejoin().OnSuccess(__ => {
+                    c1.ReconnectAndRejoin().OnSuccess(async __ => {
+                        await c0.Close();
+                        await c1.Close();
                         f = true;
                     });
                 };
-                c1._Disconnect();
-            });
+                MethodInfo method = typeof(Room).GetMethod("Disconnect", BindingFlags.Instance | BindingFlags.NonPublic);
+                if (method == null) {
+                    Debug.Log("method is null");
+                } else {
+                    Debug.Log("method is not null");
+                }
+                method.Invoke(c1.Room, null);
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f) {
                 yield return null;
             }
-            c0.Close();
-            c1.Close();
-            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]
         public IEnumerator JoinRoomFailed() {
-            Logger.LogDelegate += Utils.Log;
-
             var f = false;
             var roomName = "jrt6_r";
             var c = Utils.NewClient("jrt6");
 
             c.Connect().OnSuccess(_ => {
                 return c.JoinRoom(roomName);
-            }).Unwrap().ContinueWith(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().ContinueWith(async _ => {
                 Assert.AreEqual(_.IsFaulted, true);
                 var e = _.Exception.InnerException as PlayException;
                 Assert.AreEqual(e.Code, 4301);
                 Debug.Log(e.Detail);
-                c.Close();
+                await c.Close();
                 f = true;
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f) {
                 yield return null;
             }
-            Logger.LogDelegate -= Utils.Log;
         }
 
         [UnityTest]
         public IEnumerator JoinRandomWithMatchProperties() {
-            Logger.LogDelegate += Utils.Log;
-
             var f = false;
             var roomName = "jrt7_r";
             var c0 = Utils.NewClient("jrt7_0");
@@ -248,140 +358,40 @@ namespace LeanCloud.Play.Test
                     CustoRoomPropertyKeysForLobby = new List<string> { "lv" }
                 };
                 return c0.CreateRoom(roomName, roomOptions);
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.JoinRandomRoom(props, new List<string> { "jrt7_2" });
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c2.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c2.JoinRandomRoom(new PlayObject {
                     { "lv", 3 }
                 });
-            }).Unwrap().ContinueWith(t => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().ContinueWith(async t => {
                 PlayException e = (PlayException)t.Exception.InnerException;
                 Assert.AreEqual(e.Code, 4301);
-                c2.Close();
+                await c2.Close();
                 return c3.Connect();
-            }).Unwrap().OnSuccess(t => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(t => {
                 return c3.JoinRandomRoom(props);
-            }).Unwrap().ContinueWith(t => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().ContinueWith(async t => {
                 PlayException e = (PlayException)t.Exception.InnerException;
                 Assert.AreEqual(e.Code, 4301);
-                c3.Close();
+                await c3.Close();
                 return c4.Connect();
-            }).Unwrap().OnSuccess(_ => {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c4.JoinRandomRoom(props);
-            }).Unwrap().OnSuccess(_ => {
-                c0.Close();
-                c1.Close();
-                c4.Close();
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(async _ => {
+                await c0.Close();
+                await c1.Close();
+                await c4.Close();
                 f = true;
-            });
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
             while (!f) {
                 yield return null;
             }
-            Logger.LogDelegate -= Utils.Log;
-        }
-
-        [UnityTest]
-        public IEnumerator MatchRandom() {
-            Logger.LogDelegate += Utils.Log;
-
-            var f = false;
-
-            var roomName = "jr8_r";
-            var c0 = Utils.NewClient("jr8_0");
-            var c1 = Utils.NewClient("jr8_1");
-            var c2 = Utils.NewClient("jr8_2");
-            var c3 = Utils.NewClient("jr8_xxx");
-
-            var props = new PlayObject {
-                    { "lv", 5 }
-                };
-            c0.Connect().OnSuccess(_ => {
-                var roomOptions = new RoomOptions {
-                    MaxPlayerCount = 3,
-                    CustomRoomProperties = props,
-                    CustoRoomPropertyKeysForLobby = new List<string> { "lv" }
-                };
-                return c0.CreateRoom(roomName, roomOptions);
-            }).Unwrap().OnSuccess(_ => {
-                return c1.Connect();
-            }).Unwrap().OnSuccess(_ => {
-                Debug.Log("c1 connected");
-                return c1.MatchRandom("jr8_1", new PlayObject {
-                    { "lv", 5 }
-                }, new List<string> { "jr8_xxx" });
-            }).Unwrap().OnSuccess(t => {
-                var lobbyRoom = t.Result;
-                Assert.AreEqual(lobbyRoom.RoomName, roomName);
-                return c1.JoinRoom(lobbyRoom.RoomName);
-            }).Unwrap().OnSuccess(_ => {
-                return c2.Connect();
-            }).Unwrap().OnSuccess(_ => {
-                return c2.JoinRandomRoom(props);
-            }).Unwrap().ContinueWith(t => {
-                PlayException e = (PlayException)t.Exception.InnerException;
-                Assert.AreEqual(e.Code, 4301);
-                c2.Close();
-                return c3.Connect();
-            }).Unwrap().OnSuccess(_ => {
-                return c3.JoinRandomRoom(props);
-            }).Unwrap().OnSuccess(_ => {
-                c0.Close();
-                c1.Close();
-                c3.Close();
-                f = true;
-            });
-
-            while (!f) {
-                yield return null;
-            }
-            Logger.LogDelegate -= Utils.Log;
-        }
-
-        [UnityTest]
-        public IEnumerator JoinWithExpectedUserIdsFixBug() {
-            Logger.LogDelegate += Utils.Log;
-
-            var f = false;
-            var roomName = "jr9_r0";
-            var c0 = Utils.NewClient("jr9_0");
-            var c1 = Utils.NewClient("jr9_1");
-            var c2 = Utils.NewClient("jr9_2");
-            var c3 = Utils.NewClient("jr9_3");
-
-            c0.Connect().OnSuccess(_ => {
-                var roomOptions = new RoomOptions {
-                    MaxPlayerCount = 4
-                };
-                return c0.CreateRoom(roomName, roomOptions, new List<string> { "jr9_1" });
-            }).Unwrap().OnSuccess(_ => {
-                return c1.Connect();
-            }).Unwrap().OnSuccess(_ => {
-                return c1.JoinRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
-                return c2.Connect();
-            }).Unwrap().OnSuccess(_ => {
-                return c2.JoinRoom(roomName);
-            }).Unwrap().OnSuccess(_ => { 
-                return c3.Connect();
-            }).Unwrap().OnSuccess(_ => {
-                return c3.JoinRoom(roomName);
-            }).Unwrap().OnSuccess(_ => {
-                c0.Close();
-                c1.Close();
-                c2.Close();
-                c3.Close();
-                f = true;
-            });
-
-            while (!f) {
-                yield return null;
-            }
-            Logger.LogDelegate -= Utils.Log;
         }
     }
 }
