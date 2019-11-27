@@ -34,7 +34,13 @@ namespace LeanCloud.Play {
             }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c1.Connect();
             }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
-                return c1.CreateRoom();
+                RoomOptions options = new RoomOptions {
+                    CustomRoomProperties = new PlayObject {
+                        { "owner", "123" }
+                    },
+                    CustomRoomPropertyKeysForLobby = new System.Collections.Generic.List<string> { "owner" }
+                };
+                return c1.CreateRoom(roomOptions: options);
             }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 return c2.Connect();
             }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {

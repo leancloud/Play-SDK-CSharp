@@ -170,7 +170,7 @@ namespace LeanCloud.Play {
                 var roomOptions = new RoomOptions {
                     MaxPlayerCount = 3,
                     CustomRoomProperties = props,
-                    CustoRoomPropertyKeysForLobby = new List<string> { "lv" }
+                    CustomRoomPropertyKeysForLobby = new List<string> { "lv" }
                 };
                 return c0.CreateRoom(roomName, roomOptions);
             }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
@@ -239,7 +239,7 @@ namespace LeanCloud.Play {
             while (!f0 || !f1) {
                 yield return null;
             }
-            
+
         }
 
         [UnityTest]
@@ -355,7 +355,7 @@ namespace LeanCloud.Play {
                 var roomOptions = new RoomOptions {
                     MaxPlayerCount = 3,
                     CustomRoomProperties = props,
-                    CustoRoomPropertyKeysForLobby = new List<string> { "lv" }
+                    CustomRoomPropertyKeysForLobby = new List<string> { "lv" }
                 };
                 return c0.CreateRoom(roomName, roomOptions);
             }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
