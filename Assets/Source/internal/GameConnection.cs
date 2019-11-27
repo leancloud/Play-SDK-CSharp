@@ -44,8 +44,8 @@ namespace LeanCloud.Play {
 
         internal async Task<PlayObject> SetRoomOpen(bool open) {
             var request = NewRequest();
-            request.UpdateSysProperty = new UpdateSysPropertyRequest { 
-                SysAttr = new RoomSystemProperty { 
+            request.UpdateSysProperty = new UpdateSysPropertyRequest {
+                SysAttr = new RoomSystemProperty {
                     Open = open
                 }
             };
@@ -55,8 +55,8 @@ namespace LeanCloud.Play {
 
         internal async Task<PlayObject> SetRoomVisible(bool visible) {
             var request = NewRequest();
-            request.UpdateSysProperty = new UpdateSysPropertyRequest { 
-                SysAttr = new RoomSystemProperty { 
+            request.UpdateSysProperty = new UpdateSysPropertyRequest {
+                SysAttr = new RoomSystemProperty {
                     Visible = visible
                 }
             };
@@ -66,8 +66,8 @@ namespace LeanCloud.Play {
 
         internal async Task<PlayObject> SetRoomMaxPlayerCount(int count) {
             var request = NewRequest();
-            request.UpdateSysProperty = new UpdateSysPropertyRequest { 
-                SysAttr = new RoomSystemProperty { 
+            request.UpdateSysProperty = new UpdateSysPropertyRequest {
+                SysAttr = new RoomSystemProperty {
                     MaxMembers = count
                 }
             };
@@ -81,7 +81,7 @@ namespace LeanCloud.Play {
                 { "$set", expectedUserIds.ToList<object>() }
             };
             request.UpdateSysProperty = new UpdateSysPropertyRequest {
-                SysAttr = new RoomSystemProperty { 
+                SysAttr = new RoomSystemProperty {
                     ExpectMembers = JsonConvert.SerializeObject(args)
                 }
             };
@@ -95,7 +95,7 @@ namespace LeanCloud.Play {
                 { "$drop", true }
             };
             request.UpdateSysProperty = new UpdateSysPropertyRequest {
-                SysAttr = new RoomSystemProperty { 
+                SysAttr = new RoomSystemProperty {
                     ExpectMembers = JsonConvert.SerializeObject(args)
                 }
             };
@@ -123,7 +123,7 @@ namespace LeanCloud.Play {
                 { "$remove", expectedUserIds.ToList<object>() }
             };
             request.UpdateSysProperty = new UpdateSysPropertyRequest {
-                SysAttr = new RoomSystemProperty { 
+                SysAttr = new RoomSystemProperty {
                     ExpectMembers = JsonConvert.SerializeObject(args)
                 }
             };
@@ -133,7 +133,7 @@ namespace LeanCloud.Play {
 
         internal async Task<int> SetMaster(int newMasterId) {
             var request = NewRequest();
-            request.UpdateMasterClient = new UpdateMasterClientRequest { 
+            request.UpdateMasterClient = new UpdateMasterClientRequest {
                 MasterActorId = newMasterId
             };
             var res = await SendRequest(CommandType.Conv, OpType.UpdateMasterClient, request);
@@ -142,9 +142,9 @@ namespace LeanCloud.Play {
 
         internal async Task<int> KickPlayer(int actorId, int code, string reason) {
             var request = NewRequest();
-            request.KickMember = new KickMemberRequest { 
+            request.KickMember = new KickMemberRequest {
                 TargetActorId = actorId,
-                AppInfo = new AppInfo { 
+                AppInfo = new AppInfo {
                     AppCode = code,
                     AppMsg = reason ?? string.Empty
                 }
@@ -154,17 +154,17 @@ namespace LeanCloud.Play {
         }
 
         internal Task SendEvent(byte eventId, PlayObject eventData, SendEventOptions options) {
-            var direct = new DirectCommand { 
+            var direct = new DirectCommand {
                 EventId = eventId
             };
             if (eventData != null) {
                 direct.Msg = ByteString.CopyFrom(CodecUtils.SerializePlayObject(eventData));
             }
-            direct.ReceiverGroup = (int) options.ReceiverGroup;
+            direct.ReceiverGroup = (int)options.ReceiverGroup;
             if (options.TargetActorIds != null) {
                 direct.ToActorIds.AddRange(options.TargetActorIds);
             }
-            _ = Send(CommandType.Direct, OpType.None, new Body { 
+            _ = Send(CommandType.Direct, OpType.None, new Body {
                 Direct = direct
             });
             return Task.FromResult(true);
@@ -225,8 +225,8 @@ namespace LeanCloud.Play {
                 if (options.CustomRoomProperties != null) {
                     roomOptions.Attr = ByteString.CopyFrom(CodecUtils.SerializePlayObject(options.CustomRoomProperties));
                 }
-                if (options.CustoRoomPropertyKeysForLobby != null) {
-                    roomOptions.LobbyAttrKeys.AddRange(options.CustoRoomPropertyKeysForLobby);
+                if (options.CustomRoomPropertyKeysForLobby != null) {
+                    roomOptions.LobbyAttrKeys.AddRange(options.CustomRoomPropertyKeysForLobby);
                 }
                 if (options.PluginName != null) {
                     roomOptions.PluginName = options.PluginName;

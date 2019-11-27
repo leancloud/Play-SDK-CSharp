@@ -54,7 +54,7 @@ namespace LeanCloud.Play {
             }
         }
 
-        class Weapon { 
+        class Weapon {
             public string Name {
                 get; set;
             }
@@ -103,7 +103,7 @@ namespace LeanCloud.Play {
             Assert.AreEqual(l is long, true);
             Assert.AreEqual(f is float, true);
             Assert.AreEqual(f is double, false);
-            var sl = new List<string> { 
+            var sl = new List<string> {
                 "aaa", "bbb", "ccc"
             };
             Assert.AreEqual(sl is IList, true);
@@ -135,7 +135,7 @@ namespace LeanCloud.Play {
                 ["sstr"] = "code"
             };
             playObj.Add("obj", subPlayObj);
-            var subPlayArr = new PlayArray { 
+            var subPlayArr = new PlayArray {
                 666, true, "engineer"
             };
             playObj.Add("arr", subPlayArr);
@@ -165,7 +165,7 @@ namespace LeanCloud.Play {
 
         [Test]
         public void PlayArray() {
-            var playArr = new PlayArray { 
+            var playArr = new PlayArray {
                 123, true, "hello, world",
                 new PlayObject {
                     ["i"] = 23,
@@ -209,7 +209,7 @@ namespace LeanCloud.Play {
                     { "title", "room title" },
                     { "level", 2 },
                 },
-                CustoRoomPropertyKeysForLobby = new List<string> { "level" }
+                CustomRoomPropertyKeysForLobby = new List<string> { "level" }
             };
             var expectedUserIds = new List<string> { "world" };
             var roomOpts = ConvertToRoomOptions("abc", roomOptions, expectedUserIds);
@@ -254,8 +254,8 @@ namespace LeanCloud.Play {
                 Score = 99.9f,
                 Hp = 10,
                 Mp = 8,
-                Weapons = new List<Weapon> { 
-                    new Weapon { 
+                Weapons = new List<Weapon> {
+                    new Weapon {
                         Name = "pen",
                         Attack = 100
                     },
@@ -292,7 +292,7 @@ namespace LeanCloud.Play {
                 roomOptions.MaxMembers = options.MaxPlayerCount;
                 roomOptions.Flag = options.Flag;
                 roomOptions.Attr = CodecUtils.Serialize(options.CustomRoomProperties).ToByteString();
-                roomOptions.LobbyAttrKeys.AddRange(options.CustoRoomPropertyKeysForLobby);
+                roomOptions.LobbyAttrKeys.AddRange(options.CustomRoomPropertyKeysForLobby);
             }
             if (expectedUserIds != null) {
                 roomOptions.ExpectMembers.AddRange(expectedUserIds);

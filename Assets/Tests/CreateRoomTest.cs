@@ -78,7 +78,7 @@ namespace LeanCloud.Play {
                         { "title", roomTitle },
                         { "level", 2 },
                     },
-                    CustoRoomPropertyKeysForLobby = new List<string> { "level" }
+                    CustomRoomPropertyKeysForLobby = new List<string> { "level" }
                 };
                 var expectedUserIds = new List<string> { "world" };
                 return c.JoinOrCreateRoom(roomName, roomOptions, expectedUserIds);
@@ -141,6 +141,44 @@ namespace LeanCloud.Play {
                 Assert.AreEqual(_.IsFaulted, true);
                 var e = _.Exception.InnerException as PlayException;
                 Assert.AreEqual(e.Code, 4316);
+                await c.Close();
+                f = true;
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+
+            while (!f) {
+                yield return null;
+            }
+        }
+
+        [UnityTest]
+        [Order(5)]
+        public IEnumerator CreateNorthChinaRoom() {
+            var f = false;
+            var c = Utils.NewNorthChinaClient("crt6");
+            c.Connect().OnSuccess(_ => {
+                return c.CreateRoom();
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(async _ => {
+                var room = _.Result;
+                Debug.Log(room.Name);
+                await c.Close();
+                f = true;
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+
+            while (!f) {
+                yield return null;
+            }
+        }
+
+        [UnityTest]
+        [Order(6)]
+        public IEnumerator CreateUSRoom() {
+            var f = false;
+            var c = Utils.NewClient("crt7");
+            c.Connect().OnSuccess(_ => {
+                return c.CreateRoom();
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(async _ => {
+                var room = _.Result;
+                Debug.Log(room.Name);
                 await c.Close();
                 f = true;
             }, TaskScheduler.FromCurrentSynchronizationContext());

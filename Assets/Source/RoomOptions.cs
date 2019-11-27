@@ -73,7 +73,7 @@ namespace LeanCloud.Play {
         /// 在大厅中可获得的房间属性「键」数组
         /// </summary>
         /// <value>The custo room property keys for lobby.</value>
-        public List<string> CustoRoomPropertyKeysForLobby {
+        public List<string> CustomRoomPropertyKeysForLobby {
             get; set;
         }
 
@@ -103,7 +103,7 @@ namespace LeanCloud.Play {
             PlayerTtl = 0;
             MaxPlayerCount = MAX_PLAYER_COUNT;
             CustomRoomProperties = null;
-            CustoRoomPropertyKeysForLobby = null;
+            CustomRoomPropertyKeysForLobby = null;
             Flag = 0;
             PluginName = null;
         }
