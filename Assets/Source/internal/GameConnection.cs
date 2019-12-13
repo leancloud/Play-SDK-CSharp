@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
+using System.Collections.Specialized;
 using LeanCloud.Play.Protocol;
 using Newtonsoft.Json;
 using Google.Protobuf;
@@ -203,7 +205,21 @@ namespace LeanCloud.Play {
         }
 
         protected override string GetFastOpenUrl(string server, string appId, string gameVersion, string userId, string sessionToken) {
-            return $"{server}session?appId={appId}&sdkVersion={Config.SDKVersion}&protocolVersion={Config.ProtocolVersion}&gameVersion={gameVersion}&userId={userId}&sessionToken={sessionToken}";
+            Uri uri = new Uri(server);
+            string url = $"{uri.Scheme}://{uri.Authority}{uri.AbsolutePath}";
+            NameValueCollection nameValueCollection = HttpUtility.ParseQueryString(uri.Query);
+            Dictionary<string, string> query = nameValueCollection.AllKeys.ToDictionary(k => k, k => nameValueCollection[k]);
+            Dictionary<string, string> parameters = new Dictionary<string, string> {
+                { "appId", appId },
+                { "sdkVersion", Config.SDKVersion },
+                { "protocolVersion", Config.ProtocolVersion },
+                { "gameVersion", gameVersion },
+                { "userId", userId },
+                { "sessionToken", sessionToken }
+            };
+            Dictionary<string, string> queries = parameters.Concat(query.Where(entry => !parameters.ContainsKey(entry.Key)))
+                .ToDictionary(entry => entry.Key, entry => entry.Value);
+            return $"{url}session?{string.Join("&", queries.Select(entry => $"{entry.Key}={entry.Value}"))}";
         }
 
         protected override void HandleNotification(CommandType cmd, OpType op, Body body) {
