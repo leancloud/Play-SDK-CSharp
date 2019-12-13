@@ -1,33 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{71F8B3B7-04BE-43D5-AB48-5F8485B7BEE7}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>SDK</RootNamespace>
-    <AssemblyName>LeanCloud.Play</AssemblyName>
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
+    <Compile Remove="Class1.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="Google.Protobuf">
       <HintPath>..\..\Assets\Plugins\Google.Protobuf.dll</HintPath>
     </Reference>
@@ -37,81 +17,6 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\Assets\Plugins\Newtonsoft.Json.dll</HintPath>
     </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="..\..\Assets\Source\CodecUtils.cs">
-      <Link>Source\CodecUtils.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Assets\Source\Client.cs">
-      <Link>Source\Client.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Assets\Source\RoomOptions.cs">
-      <Link>Source\RoomOptions.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Assets\Source\Config.cs">
-      <Link>Source\Config.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Assets\Source\PlayObject.cs">
-      <Link>Source\PlayObject.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Assets\Source\Lobby.cs">
-      <Link>Source\Lobby.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Assets\Source\LobbyRoom.cs">
-      <Link>Source\LobbyRoom.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Assets\Source\Room.cs">
-      <Link>Source\Room.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Assets\Source\PlayExceptionCode.cs">
-      <Link>Source\PlayExceptionCode.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Assets\Source\PlayException.cs">
-      <Link>Source\PlayException.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Assets\Source\Player.cs">
-      <Link>Source\Player.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Assets\Source\SendEventOptions.cs">
-      <Link>Source\SendEventOptions.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Assets\Source\Utils.cs">
-      <Link>Source\Utils.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Assets\Source\PlayArray.cs">
-      <Link>Source\PlayArray.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Assets\Source\internal\GameConnection.cs">
-      <Link>Source\internal\GameConnection.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Assets\Source\internal\GameRouter.cs">
-      <Link>Source\internal\GameRouter.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Assets\Source\internal\CustomType.cs">
-      <Link>Source\internal\CustomType.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Assets\Source\internal\LobbyConnection.cs">
-      <Link>Source\internal\LobbyConnection.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Assets\Source\internal\LobbyService.cs">
-      <Link>Source\internal\LobbyService.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Assets\Source\internal\ResponseWrapper.cs">
-      <Link>Source\internal\ResponseWrapper.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Assets\Source\internal\Connection.cs">
-      <Link>Source\internal\Connection.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Assets\Source\internal\CommandWrapper.cs">
-      <Link>Source\internal\CommandWrapper.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Assets\Source\protocol\GenericCollection.cs">
-      <Link>Source\protocol\GenericCollection.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Assets\Source\protocol\Messages.cs">
-      <Link>Source\protocol\Messages.cs</Link>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Assets\Source\Room.cs.meta">
@@ -202,5 +107,78 @@
       <Link>Source\protocol\Messages.cs.meta</Link>
     </None>
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Compile Include="..\..\Assets\Source\CodecUtils.cs">
+      <Link>Source\CodecUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Assets\Source\Client.cs">
+      <Link>Source\Client.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Assets\Source\RoomOptions.cs">
+      <Link>Source\RoomOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Assets\Source\Config.cs">
+      <Link>Source\Config.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Assets\Source\PlayObject.cs">
+      <Link>Source\PlayObject.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Assets\Source\Lobby.cs">
+      <Link>Source\Lobby.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Assets\Source\LobbyRoom.cs">
+      <Link>Source\LobbyRoom.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Assets\Source\Room.cs">
+      <Link>Source\Room.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Assets\Source\PlayExceptionCode.cs">
+      <Link>Source\PlayExceptionCode.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Assets\Source\PlayException.cs">
+      <Link>Source\PlayException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Assets\Source\Player.cs">
+      <Link>Source\Player.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Assets\Source\SendEventOptions.cs">
+      <Link>Source\SendEventOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Assets\Source\Utils.cs">
+      <Link>Source\Utils.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Assets\Source\PlayArray.cs">
+      <Link>Source\PlayArray.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Assets\Source\internal\GameConnection.cs">
+      <Link>Source\internal\GameConnection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Assets\Source\internal\GameRouter.cs">
+      <Link>Source\internal\GameRouter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Assets\Source\internal\CustomType.cs">
+      <Link>Source\internal\CustomType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Assets\Source\internal\LobbyConnection.cs">
+      <Link>Source\internal\LobbyConnection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Assets\Source\internal\LobbyService.cs">
+      <Link>Source\internal\LobbyService.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Assets\Source\internal\ResponseWrapper.cs">
+      <Link>Source\internal\ResponseWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Assets\Source\internal\Connection.cs">
+      <Link>Source\internal\Connection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Assets\Source\internal\CommandWrapper.cs">
+      <Link>Source\internal\CommandWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Assets\Source\protocol\GenericCollection.cs">
+      <Link>Source\protocol\GenericCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Assets\Source\protocol\Messages.cs">
+      <Link>Source\protocol\Messages.cs</Link>
+    </Compile>
+  </ItemGroup>
 </Project>
