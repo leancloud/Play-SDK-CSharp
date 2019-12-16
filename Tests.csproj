@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Tests\ChangeProperties.cs" />
+    <Compile Include="Assets\Tests\ChoreTest.cs" />
     <Compile Include="Assets\Tests\CodecTest.cs" />
     <Compile Include="Assets\Tests\ConnectTest.cs" />
     <Compile Include="Assets\Tests\CreateRoomTest.cs" />
