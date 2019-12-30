@@ -73,6 +73,9 @@ namespace LeanCloud.Play {
                 Dictionary<string, object> data = new Dictionary<string, object>();
                 string dataContent = JsonConvert.SerializeObject(data);
                 string url = $"{appRouter.PlayServer}/1/multiplayer/router/authorize";
+                if (!Uri.IsWellFormedUriString(appRouter.PlayServer, UriKind.Absolute)) {
+                    url = $"https://{appRouter.PlayServer}/1/multiplayer/router/authorize";
+                }
                 request = new HttpRequestMessage {
                     RequestUri = new Uri(url),
                     Method = HttpMethod.Post,
