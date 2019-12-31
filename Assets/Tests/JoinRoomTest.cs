@@ -393,5 +393,25 @@ namespace LeanCloud.Play {
                 yield return null;
             }
         }
+
+        [UnityTest]
+        public IEnumerator CreateAfterJoinFailed() {
+            var f = false;
+            var roomName = "jrt8_r";
+            var c0 = Utils.NewClient("jrt8_0");
+            c0.Connect().OnSuccess(_ => {
+                return c0.JoinRoom(roomName);
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().ContinueWith(t => {
+                Assert.AreEqual(t.IsFaulted, true);
+                return c0.CreateRoom(roomName);
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(async t => {
+                await c0.Close();
+                f = true;
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+
+            while (!f) {
+                yield return null;
+            }
+        }
     }
 }

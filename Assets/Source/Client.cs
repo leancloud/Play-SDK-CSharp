@@ -207,9 +207,14 @@ namespace LeanCloud.Play {
             if (lobby != null) {
                 await lobby.Close();
             }
-            Room = new Room(this);
-            await Room.Create(roomName, roomOptions, expectedUserIds);
-            return Room;
+            try {
+                Room = new Room(this);
+                await Room.Create(roomName, roomOptions, expectedUserIds);
+                return Room;
+            } catch (Exception e) {
+                Room = null;
+                throw e;
+            }
         }
 
         /// <summary>
@@ -226,9 +231,14 @@ namespace LeanCloud.Play {
             if (lobby != null) {
                 await lobby.Close();
             }
-            Room = new Room(this);
-            await Room.Join(roomName, expectedUserIds);
-            return Room;
+            try {
+                Room = new Room(this);
+                await Room.Join(roomName, expectedUserIds);
+                return Room;
+            } catch (Exception e) {
+                Room = null;
+                throw e;
+            }
         }
 
         /// <summary>
@@ -241,9 +251,14 @@ namespace LeanCloud.Play {
             if (lobby != null) {
                 await lobby.Close();
             }
-            Room = new Room(this);
-            await Room.Rejoin(roomName);
-            return Room;
+            try {
+                Room = new Room(this);
+                await Room.Rejoin(roomName);
+                return Room;
+            } catch (Exception e) {
+                Room = null;
+                throw e;
+            }
         }
 
         /// <summary>
@@ -261,9 +276,14 @@ namespace LeanCloud.Play {
             if (lobby != null) {
                 await lobby.Close();
             }
-            Room = new Room(this);
-            await Room.JoinOrCreate(roomName, roomOptions, expectedUserIds);
-            return Room;
+            try {
+                Room = new Room(this);
+                await Room.JoinOrCreate(roomName, roomOptions, expectedUserIds);
+                return Room;
+            } catch (Exception e) {
+                Room = null;
+                throw e;
+            }
         }
 
         /// <summary>
@@ -280,9 +300,14 @@ namespace LeanCloud.Play {
             if (lobby != null) {
                 await lobby.Close();
             }
-            Room = new Room(this);
-            await Room.JoinRandom(matchProperties, expectedUserIds);
-            return Room;
+            try {
+                Room = new Room(this);
+                await Room.JoinRandom(matchProperties, expectedUserIds);
+                return Room;
+            } catch (Exception e) {
+                Room = null;
+                throw e;
+            }
         }
 
         /// <summary>
