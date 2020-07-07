@@ -1,0 +1,27 @@
+var searchData=
+[
+  ['object',['Object',['../classLeanCloud_1_1Play_1_1Protocol_1_1GenericCollectionValue_1_1Types.htm#acd0d8ffa0b8ebc65e78daf229d6a6d61a497031794414a552435f90151ac3b54b',1,'LeanCloud::Play::Protocol::GenericCollectionValue::Types']]],
+  ['objecttypeid',['ObjectTypeId',['../classLeanCloud_1_1Play_1_1Protocol_1_1GenericCollectionValue.htm#ac56affa8289383b50898e43f61f6fbd5',1,'LeanCloud::Play::Protocol::GenericCollectionValue']]],
+  ['objecttypeidfieldnumber',['ObjectTypeIdFieldNumber',['../classLeanCloud_1_1Play_1_1Protocol_1_1GenericCollectionValue.htm#af208f36cfc2b576aeda7cf51a2067ba2',1,'LeanCloud::Play::Protocol::GenericCollectionValue']]],
+  ['oncustomevent',['OnCustomEvent',['../classLeanCloud_1_1Play_1_1Client.htm#a8fc5764433168a998137b1dbdbda430d',1,'LeanCloud::Play::Client']]],
+  ['ondisconnected',['OnDisconnected',['../classLeanCloud_1_1Play_1_1Client.htm#a523a7345bd8b05fc1ac8d5299d9c2ea5',1,'LeanCloud::Play::Client']]],
+  ['onerror',['OnError',['../classLeanCloud_1_1Play_1_1Client.htm#ae4cfe2f42844ecb92c366341baa01a33',1,'LeanCloud::Play::Client']]],
+  ['onlobbyroomlistupdated',['OnLobbyRoomListUpdated',['../classLeanCloud_1_1Play_1_1Client.htm#a6c5cfef4b40350042e4c0aeccc60e56c',1,'LeanCloud::Play::Client']]],
+  ['onmasterswitched',['OnMasterSwitched',['../classLeanCloud_1_1Play_1_1Client.htm#afcec28949e490b77b057804f2abc5708',1,'LeanCloud::Play::Client']]],
+  ['onplayeractivitychanged',['OnPlayerActivityChanged',['../classLeanCloud_1_1Play_1_1Client.htm#a27f55042e5ccd85eb3df5bc0af14bd23',1,'LeanCloud::Play::Client']]],
+  ['onplayercustompropertieschanged',['OnPlayerCustomPropertiesChanged',['../classLeanCloud_1_1Play_1_1Client.htm#aef26da924d03807404ecd5585e2e46b0',1,'LeanCloud::Play::Client']]],
+  ['onplayerroomjoined',['OnPlayerRoomJoined',['../classLeanCloud_1_1Play_1_1Client.htm#a0b2aa455d1c62ace882715641064eb8a',1,'LeanCloud::Play::Client']]],
+  ['onplayerroomleft',['OnPlayerRoomLeft',['../classLeanCloud_1_1Play_1_1Client.htm#a8e9f844f11ce74431e20e85804ab9b51',1,'LeanCloud::Play::Client']]],
+  ['onroomcustompropertieschanged',['OnRoomCustomPropertiesChanged',['../classLeanCloud_1_1Play_1_1Client.htm#aa254fd0e93034599173b49aa7b30f901',1,'LeanCloud::Play::Client']]],
+  ['onroomkicked',['OnRoomKicked',['../classLeanCloud_1_1Play_1_1Client.htm#a61021ae47338cba72ccb1dd6240c6c5f',1,'LeanCloud::Play::Client']]],
+  ['onroomsystempropertieschanged',['OnRoomSystemPropertiesChanged',['../classLeanCloud_1_1Play_1_1Client.htm#ad664fe9b205f8eba25c001f438746817',1,'LeanCloud::Play::Client']]],
+  ['op',['Op',['../classLeanCloud_1_1Play_1_1Protocol_1_1Command.htm#a868e08f6b6b4caa610324545916aa29b',1,'LeanCloud::Play::Protocol::Command']]],
+  ['open',['Open',['../classLeanCloud_1_1Play_1_1LobbyRoom.htm#a65fdb18565b986d27e898cf4ceb4ce4c',1,'LeanCloud.Play.LobbyRoom.Open()'],['../classLeanCloud_1_1Play_1_1Protocol_1_1RoomSystemProperty.htm#a1fefbdd4466f3caee4d5d7e88e49d22d',1,'LeanCloud.Play.Protocol.RoomSystemProperty.Open()'],['../classLeanCloud_1_1Play_1_1Protocol_1_1RoomOptions.htm#aa408e5d0508b7a3e426706fc0006d1b7',1,'LeanCloud.Play.Protocol.RoomOptions.Open()'],['../classLeanCloud_1_1Play_1_1Room.htm#a2c064ddb1f6b7d74465534cda6450fea',1,'LeanCloud.Play.Room.Open()'],['../classLeanCloud_1_1Play_1_1RoomOptions.htm#ac82e5f4fb650c006226c0fedadb76952',1,'LeanCloud.Play.RoomOptions.Open()'],['../namespaceLeanCloud_1_1Play_1_1Protocol.htm#ab827a6de227c6ca4cb7cace391a3c1bcac3bf447eabe632720a3aa1a7ce401274',1,'LeanCloud.Play.Protocol.Open()']]],
+  ['opened',['Opened',['../namespaceLeanCloud_1_1Play_1_1Protocol.htm#ab827a6de227c6ca4cb7cace391a3c1bca1a11b1adc359c03db0ca798a00e2632c',1,'LeanCloud::Play::Protocol']]],
+  ['openednotify',['OpenedNotify',['../namespaceLeanCloud_1_1Play_1_1Protocol.htm#ab827a6de227c6ca4cb7cace391a3c1bca193f03dca487baf548f49a5686fccaea',1,'LeanCloud::Play::Protocol']]],
+  ['openfieldnumber',['OpenFieldNumber',['../classLeanCloud_1_1Play_1_1Protocol_1_1RoomSystemProperty.htm#af27cc3d06b0613ba6297aa254d8fbf7e',1,'LeanCloud.Play.Protocol.RoomSystemProperty.OpenFieldNumber()'],['../classLeanCloud_1_1Play_1_1Protocol_1_1RoomOptions.htm#ab33fb9ad7dba045334e91f7a0fd7b27c',1,'LeanCloud.Play.Protocol.RoomOptions.OpenFieldNumber()']]],
+  ['openwebsocketerror',['OpenWebSocketError',['../classLeanCloud_1_1Play_1_1PlayExceptionCode.htm#a949c524435e5d3af29312b2733feba55',1,'LeanCloud::Play::PlayExceptionCode']]],
+  ['opfieldnumber',['OpFieldNumber',['../classLeanCloud_1_1Play_1_1Protocol_1_1Command.htm#a53b2eb124739aa98cc90b99229144803',1,'LeanCloud::Play::Protocol::Command']]],
+  ['optype',['OpType',['../namespaceLeanCloud_1_1Play_1_1Protocol.htm#ab827a6de227c6ca4cb7cace391a3c1bc',1,'LeanCloud::Play::Protocol']]],
+  ['others',['Others',['../namespaceLeanCloud_1_1Play.htm#a39a494546b3d1c4e01ab86caf9cf3e52a52ef9633d88a7480b3a938ff9eaa2a25',1,'LeanCloud::Play']]]
+];
