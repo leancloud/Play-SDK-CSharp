@@ -3,7 +3,7 @@
         // 协议版本号
         internal static string ProtocolVersion = "0";
         // SDK 版本号
-        internal static string SDKVersion = "0.2.0";
+        internal static string SDKVersion = "1.0.0";
 
         internal static string NorthCNServerURL = "https://game-router-cn-n1.leancloud.cn/v1/router";
 
