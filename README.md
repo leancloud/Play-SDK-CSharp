@@ -1,5 +1,8 @@
 # Play-SDK-CSharp
 
+![build](https://img.shields.io/travis/leancloud/Play-SDK-CSharp)
+![version](https://img.shields.io/github/v/release/leancloud/Play-SDK-CSharp)
+
 ## 安装
 
 从 Release 下载 SDK.zip，解压后将 Plugins 目录拖拽至 Unity 工程。如果项目中已有 Plugins 目录，则合并至项目中的 Plugins 目录。
