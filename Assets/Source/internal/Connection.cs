@@ -51,6 +51,7 @@ namespace LeanCloud.Play {
             string url = GetFastOpenUrl(newServer, appId, gameVersion, userId, sessionToken);
             url = $"{url}&i={i}";
             Logger.Debug($"Connect url: {url}");
+            responses.Add(i, tcs);
             ws.ConnectAsync(new Uri(url), default).ContinueWith(t => {
                 if (t.IsFaulted) {
                     throw t.Exception.InnerException;
@@ -58,7 +59,6 @@ namespace LeanCloud.Play {
                 isMessageQueueRunning = true;
                 messageQueue = new Queue<CommandWrapper>();
                 _ = StartReceive();
-                responses.Add(i, tcs);
             }, TaskScheduler.FromCurrentSynchronizationContext());
             return tcs.Task;
         }
