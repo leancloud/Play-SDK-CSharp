@@ -19,16 +19,15 @@ namespace LeanCloud.Play {
 
         [UnityTest]
         public IEnumerator Kick() {
-            var flag = false;
+            var f1 = false;
+            var f2 = false;
             var roomName = "kt0_r";
             var c0 = Utils.NewClient("kt0_0");
             var c1 = Utils.NewClient("kt0_1");
+            var c2 = Utils.NewClient("kt0_2");
             _ = c0.Connect().OnSuccess(_ => {
                 return c0.CreateRoom(roomName);
             }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
-                c0.OnPlayerRoomJoined += newPlayer => {
-                    _ = c0.KickPlayer(newPlayer.ActorId);
-                };
                 return c1.Connect();
             }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 c1.OnRoomKicked += (code, msg) => {
@@ -37,14 +36,25 @@ namespace LeanCloud.Play {
                     Assert.AreEqual(msg, null);
                     _ = c0.Close();
                     _ = c1.Close();
-                    flag = true;
+                    f1 = true;
                 };
                 return c1.JoinRoom(roomName);
             }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
                 Debug.Log($"{c1.UserId} joined room");
-            }, TaskScheduler.FromCurrentSynchronizationContext());
+                return c2.Connect();
 
-            while (!flag) {
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
+                c2.OnPlayerRoomLeft += leftPlayer => {
+                    Debug.Log($"{leftPlayer.UserId} is left");
+                    f2 = true;
+                };
+                return c2.JoinRoom(roomName);
+            }, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap().OnSuccess(_ => {
+                Debug.Log($"{c2.UserId} joined room");
+                _ = c0.KickPlayer(c1.Player.ActorId);
+            });
+
+            while (!f1 || !f2) {
                 yield return null;
             }
         }
